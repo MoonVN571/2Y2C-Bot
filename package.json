@@ -1,0 +1,15 @@
+{
+   "name": "2Y2C Bot",
+   "version": "1.0",
+   "description": "Status 2Y2C Bot",
+   "main": "2y2c.js",
+   "dependencies": {
+      "discord.js": "^11.5.0",
+      "dotenv": "^8.2.0",
+      "dotenv-flow": "^3.2.0"
+   },
+   "devDependencies": {},
+   "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+   }
+}
