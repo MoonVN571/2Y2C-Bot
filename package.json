@@ -2,11 +2,13 @@
    "name": "2Y2C Bot",
    "version": "1.0",
    "description": "Status 2Y2C Bot",
-   "main": "2y2c.js",
+   "main": "index.js",
    "dependencies": {
-      "discord.js": "^11.5.0",
+      "discord": "^0.8.2",
+      "discord.js-v11": "^12.1.1",
       "dotenv": "^8.2.0",
-      "dotenv-flow": "^3.2.0"
+      "dotenv-flow": "^3.2.0",
+      "minecraft-protocol": "^1.21.0"
    },
    "devDependencies": {},
    "scripts": {
