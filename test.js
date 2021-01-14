@@ -1,4 +1,4 @@
-﻿// 2Y2C
+// 2Y2C
 const Discord = require("discord.js");
 const client = new Discord.Client();
 
@@ -7,7 +7,6 @@ const token = require('dotenv').config();
 const config = {
   token: process.env.token
 };
-//db.set('test', 'a')
 
 // mc protocol ping
 const mc = require("minecraft-protocol")
@@ -21,8 +20,8 @@ var mineflayer = require('mineflayer')
 var tpsPlugin = require('mineflayer-tps')(mineflayer)
 var delay = require('delay')
 
-// Construct
 const footer = "2Y2C Bot 2021";
+
 
 client.on('ready', () => {
 	console.log('Bot online!');
@@ -37,6 +36,7 @@ function createBot () {
 		version: "1.12.2"
 	});
 
+	/// set default color embed
 	var color = "0x979797";
 
 	bot.loadPlugin(tpsPlugin);
@@ -52,8 +52,10 @@ function createBot () {
 		let min = ("00" + today.getMinutes()).slice(-2)
 		let sec = ("00" + today.getSeconds()).slice(-2)
 		var date = day +'/'+month+'/'+years+' ' + hours + ':' + min;
-		console.log(`I received a message from ${newUsername}: ${message}`)
-		bot.whisper(username, 'Bạn đang nhắn tin với 1 con bot! https://discord.gg/yrNvvkqp6w')
+
+		console.log(`I received a message from ${newUsername}: ${message} (${date})`)
+		bot.whisper(username, 'Bạn đã chat với bot. Tham gia: discord.gg/yrNvvkqp6w')
+
 	});
 
 	bot.on("login", () => {
@@ -62,25 +64,29 @@ function createBot () {
 				.setColor("FFFB00");
 
 		try {
-			client.channels.cache.get('795135669868822528').send(joined);
+			client.channels.cache.get("795135669868822528").send(joined);
 		} catch(e) {
 		
 		}
 	});
 
 	bot.on('windowOpen', () => { // slot button mode cb
-		bot.clickWindow(8,0,0)
-		bot.clickWindow(7,0,0)
-		bot.clickWindow(2,0,0)
-		bot.clickWindow(6,0,0)
+		console.log('Window open')
+		bot.clickWindow(8,0,0, null)
+		delay(1000)
+		bot.clickWindow(7,0,0, null)
+		delay(1000)
+		bot.clickWindow(2,0,0, null)
+		delay(1000)
+		bot.clickWindow(6,0,0, null)
 	});
 
 	bot.on('spawn', () => {
 		setInterval(function() {
 			bot.chat('/stats');
-			
 		}, 180000);
-
+		
+		
 		setInterval(function() {
 			chat();
 			function chat() {
@@ -98,7 +104,7 @@ function createBot () {
 		setInterval(function() {
 			prioqueue()
 			function prioqueue() {
-				bot.chat('> Bạn có thể xem hàng chờ bằng lệnh !prio hoặc !queue')
+				bot.chat('> Bạn có thể xem hàng chờ bằng lệnh !queue hoặc hàng chờ ưu tiên với lệnh !prio')
 			}
 		}, 900000);
 		
@@ -129,6 +135,20 @@ function createBot () {
 				bot.chat('> Xem toạ độ của bot: !coords')
 			}
 		}, 2100000);
+
+		setInterval(function() {
+			coords()
+			function coords() {
+				bot.chat('> Xem số ngày của world server: !time')
+			}
+		}, 2400000);
+
+		setInterval(function() {
+			notf()
+			function notf() {
+				bot.chat('> Nếu bạn dùng lệnh mà không thấy bot trả lời, có thể bạn đã chat quá nhanh./ Lưu ý')
+			}
+		}, 2700000);
 		
 	})
 	// PROJECTS
@@ -149,7 +169,7 @@ function createBot () {
 		if(logger.includes("!coords")) {
 			posFunc(username);
 			function posFunc (username) {
-				bot.chat(`> ${username}, vị trí của bot hiện tại: ${bot.entity.position}`)
+				bot.whisper(username, `Vị trí bot ${bot.entity.position}`)
 			}
 		}
 
@@ -229,7 +249,7 @@ function createBot () {
 			pingFunc();
 
 			function pingFunc() {
-					bot.chat("> My ping: " + bot.players.ping);
+					bot.chat(">  Ping của bot hiện tại: " + bot.player.ping);
 			}
 		}
 		
@@ -280,7 +300,6 @@ function createBot () {
 					bot.whisper(username, `Hàng chờ ưu tiên hiện tại: ${prio}`)
 				}
 			})
-			return;
 		}
 		
 		if (logger.startsWith("!queue")) {
@@ -311,7 +330,6 @@ function createBot () {
 					bot.whisper(username, `Hàng chờ bình thường hiện tại: ${queue}`)
 				}
 			})
-			return
 		}
 		
 		// Set topic
@@ -341,8 +359,6 @@ function createBot () {
 
 				var prio = replacestring2.toString().replace("2y2c §6Queue Size,§6Ưu Tiên: §l", "");
 				var status = "Queue: " + queue + " - Prio: " + prio + " - TPS: " + bot.getTps();
-
-				const chatChannel = client.channels.cache.get('795135669868822528')
 				
 				// Time
 				var today = new Date()
@@ -354,9 +370,9 @@ function createBot () {
 				let sec = ("00" + today.getSeconds()).slice(-2)
 				var date = day +'/'+month+'/'+years+' ' + hours + ':' + min;
 				
-				setTimeout(function() {
+				setInterval(function() {
 					try {
-						chatChannel.setTopic(status + ` - Online: ${result.players.online}` + ` Đã update lúc ${date}`)
+						client.channels.cache.get("795135669868822528").setTopic(status + ` - Online: ${result.players.online}` + ` | Đã update lúc ${date}`)
 					} catch (e) {
 						
 					}
@@ -371,17 +387,17 @@ function createBot () {
 		
 		// Waiting for chat
 		if(username === "CS") {
-			color = "0xFF5A00"; /*
+			color = "0xFF5A00";
 			var second = logger.replace(/Wait/, "")
 			var second2 = second.replace(/before sending another message!/, "")
 			const joined = new Discord.MessageEmbed()
 							.setDescription(`Cần chờ ${second2} để lập lại từ đó.`)
 							.setColor(color);
 			try {
-				client.channels.cache.get('795135669868822528').send(joined);
+				client.channels.cache.get("795135669868822528").send(joined);
 			} catch(e) {
 			
-			}*/
+			}
 			return;
 		} else {
 			// return default color
@@ -408,7 +424,7 @@ function createBot () {
 							.setColor("FFFB00");
 			// joining wile see UUID
 			try {
-				client.channels.cache.get('795135669868822528').send(joined);
+				client.channels.cache.get("795135669868822528").send(joined);
 			} catch(e) {
 			
 			}
@@ -438,7 +454,7 @@ function createBot () {
 		
 		
 		// Command whisper
-		if(logger === "Bạn đang nhắn tin với 1 con bot! https://discord.gg/yrNvvkqp6w"
+		if(logger === "Bạn đã chat với bot. Tham gia: discord.gg/yrNvvkqp6w"
 		|| logger === "Bạn sẽ chờ ít nhất 20 giây để bot tính toán tps chính xác."
 		|| logger === "Bạn có thể ghé thăm shop server: discord.gg/nzm2SnDBGX (Revolution Shop)"
 		|| logger === 'Link server discord: dicord.gg/yrNvvkqp6w'
@@ -453,9 +469,10 @@ function createBot () {
 		printChat(username, logger);
 
 		function printChat(username, logger) {
-			var newLogger = logger.replace("_", "_");
+			var dauhuyen = logger.toString().replace("`", "\`");
+			var newLogger = dauhuyen.replace("_", "\_");
 		
-			var newUsername = username.replace("_", "\_");
+			var newUsername = username.toString().replace("_", "\_");
 		
 			var today = new Date()
 			let day = ("00" +today.getDate()).slice(-2)
@@ -470,8 +487,7 @@ function createBot () {
 						.setDescription('`' + date + '` '+ `**${newUsername}:**  ${newLogger}`)
 						.setColor(color);
 			try {
-				 var chan = client.channels.cache.get('795135669868822528')
-				 chan.send(chat);
+				client.channels.cache.get("795135669868822528").send(chat);
 				 color = "0x979797";
 
 			} catch(e) {
@@ -482,10 +498,6 @@ function createBot () {
 	
 	// do it
 	client.on("message", async message => {
-		if(message.channel.id === '798718511777579038') {
-			bot.chat(message.content);
-		}
-
 		if(message.channel.id === '795135669868822528') {
 			var user = message.mentions.users.first();
 
@@ -505,8 +517,12 @@ function createBot () {
 				
 				var content = message.content;
 				if(!content) return;
-
-				bot.chat(`> [${message.author.tag}] ${content}`);
+				
+				if(message.author.id === "425599739837284362") {
+					bot.chat(`> [Dev: ${message.author.tag}] ${content}`);
+				} else {
+					bot.chat(`> [${message.author.tag}] ${content}`);
+				}
 					
 				const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");
 				message.react(send)
