@@ -8,7 +8,7 @@ client.config = config;
 
 client.on('ready', () => {
 	console.log('Bot online!');
-	client.user.setActivity(prefix + 'help for commands!', { type: 'LISTENING' });
+	client.user.setActivity(config.prefix + 'help for commands!', { type: 'LISTENING' });
 });
 
 fs.readdir("./events/", (err, files) => {

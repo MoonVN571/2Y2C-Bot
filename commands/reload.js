@@ -1,4 +1,4 @@
-exports.run = (client, message, args) => {
+exports.run2 = (client, message, args) => {
     if(!args || args.length < 1) return message.reply("Must provide a command name to reload.");
     const commandName = args[0];
     // Check if the command exists and is valid

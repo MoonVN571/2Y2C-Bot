@@ -61,11 +61,71 @@ function createBot () {
 	
 	bot.on('message', message => {
 		var logger = message.toString()
+		try {
+			client.channels.cache.get('797426761142632450').send(logger);
+		} catch(e) { 
+		
+		}
 
 		// basic check
 		if(logger === undefined) return;
 		if(logger.includes(':')) return;
 		
+		// kill
+		if(logger.includes('bị bắn chết bởi')) {
+			var str = logger;
+			var string = str.split(" ")[0];
+			var user = str.substring('5', string);
+
+			let data = db.get(`${user}_kills`);
+			
+			if(data === null) {
+				db.set(`${user}_kills`, 1)
+			} else {
+				db.add(`${user}_kills`, 1)
+			}
+
+		} else if (logger.includes('nhảy con mẹ nó vào lava khi bị truy sát bởi')) {
+			var str = logger;
+			var string = str.split(" ")[0];
+			var user = str.substring('12', string);
+			
+			let data = db.get(`${user}_kills`);
+			
+			if(data === null) {
+				db.set(`${user}_kills`, 1)
+			} else {
+				db.add(`${user}_kills`, 1)
+			}
+			
+		} else if(logger.includes('nổ banh xác bởi')) {
+			var str = logger;
+			var string = str.split(" ")[0];
+			var user = str.substring('5', string);
+			
+			let data = db.get(`${user}_kills`);
+			
+			if(data === null) {
+				db.set(`${user}_kills`, 1)
+			} else {
+				db.add(`${user}_kills`, 1)
+			}
+
+		} else if(logger.includes('đã bị đấm chết con mẹ nó bởi')) {
+			var str = logger;
+			var string = str.split(" ")[0];
+			var user = str.substring('9', string);
+			
+			let data = db.get(`${user}_kills`);
+			
+			if(data === null) {
+				db.set(`${user}_kills`, 1)
+			} else {
+				db.add(`${user}_kills`, 1)
+			}
+		}
+
+		// deaths
 		if(logger.includes('Té')
 		|| logger.includes('chợt')
 		|| logger.includes('đã')
@@ -75,15 +135,16 @@ function createBot () {
 		|| logger.includes('nổ')
 		|| logger.includes('đấm')
 		|| logger.includes('nhảy')
-		|| logger.includes('cháy')) {
-			var first = logger.split(" ")[0];
+		|| logger.includes('cháy')
+		|| logger.includes('bay')) {
+			var user = logger.split(" ")[0];
 
-			let name = db.get(`${first}_dead`);
+			let data = db.get(`${user}_kills`);
 			
-			if(name === null) {
-				db.set(`${first}_dead`, 1)
+			if(data === null) {
+				db.set(`${user}_kills`, 1)
 			} else {
-				db.add(`${first}_dead`, 1)
+				db.add(`${user}_kills`, 1)
 			}
 		}
 	})
@@ -105,13 +166,15 @@ function createBot () {
 		bot.clickWindow(8,0,0)
 		delay(1000)
 		bot.clickWindow(7,0,0)
-		delay(1000)
 		bot.clickWindow(2,0,0)
-		delay(1000)
 		bot.clickWindow(6,0,0)
 	});
 
 	bot.on('spawn', () => {
+		setInterval(function() {
+			bot.chat('/stats');
+			console.log('stats')
+		}, 180000)
 		setInterval(function() {
 			chat();
 			function chat() {
@@ -127,72 +190,40 @@ function createBot () {
 		}, 600000);
 
 		setInterval(function() {
-			prioqueue()
-			function prioqueue() {
-				bot.chat('> Bạn có thể xem hàng chờ bằng lệnh !queue hoặc hàng chờ ưu tiên với lệnh !prio')
-			}
+			bot.chat('> Bạn có thể xem hàng chờ bằng lệnh !queue hoặc hàng chờ ưu tiên với lệnh !prio')
+			
 		}, 900000);
 		
 		setInterval(function() {
-			ping()
-			function ping() {
-				bot.chat('> Xem ping của bạn: !ping')
-			}
+			bot.chat('> Xem ping của bạn: !ping')
+			
 		}, 1200000);
 		
 		setInterval(function() {
-			restart()
-			function restart() {
-				bot.chat('> Thông báo server restart tại: discord.gg/yrNvvkqp6w')
-			}
+			bot.chat('> Thông báo server restart tại: discord.gg/yrNvvkqp6w')
+		
 		}, 1500000);
 		
 		setInterval(function() {
-			buykit()
-			function buykit() {
-				bot.chat('> Bạn muốn mua kit dùng: !buykit')
-			}
+			bot.chat('> Bạn muốn mua kit dùng: !buykit')
+			
 		}, 1800000);
 		
 		setInterval(function() {
-			coords()
-			function coords() {
-				bot.chat('> Xem toạ độ của bot: !coords')
-			}
+			bot.chat('> Xem toạ độ của bot: !coords')
+			
 		}, 2100000);
 
 		setInterval(function() {
-			coords()
-			function coords() {
-				bot.chat('> Xem số ngày của world server: !time')
-			}
+			bot.chat('> Xem số ngày của world server: !time')
 		}, 2400000);
 
 		setInterval(function() {
-			notf()
-			function notf() {
-				bot.chat('> Nếu bạn dùng lệnh mà không thấy bot trả lời, có thể bạn đã chat quá nhanh./ Lưu ý')
-			}
-		}, 2700000);
-		
-	})
-	// PROJECTS
-	/*
-	bot.on("message", (jsonMsg, position) => {
-		//console.log(jsonMsg.toString()) 797426761142632450
-		if(jsonMsg === undefined) return;
-
-		try {
-				client.channels.cache.get('797426761142632450').send(jsonMsg.toString());
-			} catch(e) {
+			bot.chat('> Nếu bạn dùng lệnh mà không thấy bot trả lời, có thể bạn đã chat quá nhanh./ Lưu ý')
 			
-			}
-	}) */
-	bot._client.on("playerlist_footer", data => {
-		// const newData = data.replace('-', '');
-		console.log(data)
-		// console.log(newData)
-	})
+		}, 2700000);
+	
+	});
 	
 	bot.on('chat', function(username, logger) {
 		// coords
@@ -203,6 +234,7 @@ function createBot () {
 			}
 		}
 
+		// deaths
 		if(logger.startsWith("!deaths")) {
 			var newLog = logger.replace('!deaths', '')
 			var args2 = newLog.split(' ')
@@ -216,6 +248,22 @@ function createBot () {
 				return;
 			} else {
 				bot.whisper(username, `Người chơi ${args} đã chết ${count} lần.`)
+			}
+		}
+
+		if(logger.startsWith('!kills')) {
+			var newLog = logger.replace('!kills', '')
+			var args2 = newLog.split(' ')
+			const args3 = args2.toString().replace(',', '')
+			const args = args3.toString().replace('.', '')
+			
+			let count = db.get(`${args}_kills`);
+
+			if(count === null) {
+				bot.whisper(username, `Không tìm thấy ${args} trên data.`)
+				return;
+			} else {
+				bot.whisper(username, `Người chơi ${args} đã giết ${count} người.`)
 			}
 		}
 
@@ -258,13 +306,10 @@ function createBot () {
 		
 		// Ping
 		if(logger.startsWith("!ping")) {
-			var newLog = logger.replace('!ping', '')
-			//const args = newLog.split(',')
-			var args = username;
-			pingFunc(args);
+			pingFunc();
 
-			function pingFunc(args) {
-				bot.chat("> Ping của " + args + " là " + bot.players[args].ping + " | Lệnh dành cho mấy thằng lồn để chứng minh mình ping cao.");
+			function pingFunc() {
+				bot.chat("> Ping của " + username + " là " + bot.players[username].ping);
 			}
 		}
 
@@ -285,15 +330,6 @@ function createBot () {
 			}
 		} */
 		
-		// Ping
-		if(logger.startsWith("!botping")) {
-			pingFunc();
-
-			function pingFunc() {
-					bot.chat(">  Ping của bot hiện tại: " + bot.player.ping);
-			}
-		}
-		
 		// Health
 		if(logger.startsWith("!health")) {
 			health();
@@ -308,7 +344,6 @@ function createBot () {
 			killFunc();
 			function killFunc() {
 				bot.chat('/suicide')
-				bot.chat('Trying /suicide')
 			}
 		}
 		
@@ -462,6 +497,7 @@ function createBot () {
 		if(username === "auth") return;
 
 		if(logger === "Control passed.") {
+			
 			const joined = new Discord.MessageEmbed()
 							.setDescription(`**Bot joined the main server!**`)
 							.setColor("FFFB00");
@@ -472,10 +508,6 @@ function createBot () {
 			} catch(e) {
 			
 			}
-
-			setInterval(function() {
-				bot.chat('/stats');
-			}, 180000);
 		}
 
 		// Phải để sau
@@ -555,37 +587,73 @@ function createBot () {
 			if(user) return;
 			if(message.content.startsWith(">")) return;
 			if(message.content.startsWith(prefix)) return;
+
+			var e = new Discord.MessageEmbed()
+							.setDescription(`Server TPS: ${bot.getTps()}`)
+							setColor(0x56FF00)
 			
-			if(message.content === "!tps") return message.channel.send('> Server TPS: **' + bot.getTps() + "**");
+			if(message.content === "!tps") return message.channel.send(e);
 
 			var content = message.content;
 
 			if(!content) return;
 
-			chatFunc(content);
+			chatFunc();
 			
-			function chatFunc(content) {
-				bot.chat(`> [${message.author.tag}] ${content}`);
-			}
+			function chatFunc() {
+				try {
+				bot.chat(`> [${message.author.tag}] ${message.content}`);
+			
+				const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");
+				message.react(send)
+				} catch(e) {
 
-			const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");
-			message.react(send)
-			
+				}
+			}
 		}
 			
 		const args = message.content.slice(prefix.length).trim().split(/ +/g);
 		const command = args.shift().toLowerCase();
-		
-		if(command === "deaths") {
 
-			if (!args[0]) return message.channel.send('nhap ten username')
+		if(command === "deaths") {
+			var e = new Discord.MessageEmbed()
+							.setDescription(`Bạn cần nhập username để xem chỉ số. - ${prefix}deaths <name>`)
+							setColor(0x56FF00)
 			
+			if (!args[0]) return message.channel.send(e)
 			let count = db.get(`${args[0]}_dead`);
 			
 			if(count === null) {
-				message.channel.send(`Người chơi ${args[0]} không tìm thấy trong data. (Sẽ là embed sau)`)
+				var embed = new Discord.MessageEmbed()
+								.setDescription(`Người chơi *${args[0]}* không tìm thấy trong data.`)
+								setColor(0x56FF00)
+				message.channel.send(embed)
 			} else {
-				message.channel.send(`${args[0]} đã chết ${count} lần. (Sẽ làm embed sau)`)
+				var embed = new Discord.MessageEmbed()
+								.setDescription(`Người chơi *${args[0]}* đã chết **${count}** lần.`)
+								setColor(0x56FF00)
+				message.channel.send(embed)
+			}
+		}
+		
+		if (command === "kills") {
+			var e = new Discord.MessageEmbed()
+							.setDescription(`Bạn cần nhập username để xem chỉ số. - ${prefix}kills <name>`)
+							setColor(0x56FF00)
+			if (!args[0]) return message.channel.send(e)
+			
+			let count = db.get(`${args[0]}_kills`);
+			
+			if(count === null) {
+				var embed = new Discord.MessageEmbed()
+								.setDescription(`Người chơi *${args[0]}* không tìm thấy trong data.`)
+								setColor(0x56FF00)
+				message.channel.send(embed)
+			} else {
+				var embed = new Discord.MessageEmbed()
+								.setDescription(`Người chơi *${args[0]}* đã giết **${count}** lần.`)
+								setColor(0x56FF00)
+				message.channel.send(embed)
 			}
 		}
 
@@ -732,7 +800,7 @@ function createBot () {
 	});
 	
 	bot.on('error', err => console.log(err))
-	bot.on('end', createBot)
+	//bot.on('end', createBot)
 	
 	bot.on('kicked', (reason, loggedIn) => { 
 		console.log(reason, loggedIn);
