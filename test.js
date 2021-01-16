@@ -333,7 +333,6 @@ function createBot () {
 		// Health
 		if(logger.startsWith("!health")) {
 			health();
-
 			function health() {
 					bot.whisper(username, `Máu: ${bot.health}, Thức ăn: ${bot.food}`);
 			}
@@ -574,12 +573,14 @@ function createBot () {
 	
 	// do it
 	client.on("message", async message => {
-		/*
-		if(message.channel.id === '798718511777579038') {
+		if(message.channel.id === '797426761142632450') {
+			if(message.author == client.user) return;
+			
 			bot.chat(message.content);
-		} */
+		}
 
-		if(message.channel.id === defaultChannel) {
+
+		if(message.channel.id == defaultChannel) {
 			var user = message.mentions.users.first();
 
 			// return user = bot
@@ -590,7 +591,7 @@ function createBot () {
 
 			var e = new Discord.MessageEmbed()
 							.setDescription(`Server TPS: ${bot.getTps()}`)
-							setColor(0x56FF00)
+							setColor('0x56FF00')
 			
 			if(message.content === "!tps") return message.channel.send(e);
 
@@ -599,16 +600,11 @@ function createBot () {
 			if(!content) return;
 
 			chatFunc();
-			
 			function chatFunc() {
-				try {
-				bot.chat(`> [${message.author.tag}] ${message.content}`);
+				bot.chat(`> [${message.author.tag}] ${content}`);
 			
 				const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");
 				message.react(send)
-				} catch(e) {
-
-				}
 			}
 		}
 			
@@ -618,7 +614,7 @@ function createBot () {
 		if(command === "deaths") {
 			var e = new Discord.MessageEmbed()
 							.setDescription(`Bạn cần nhập username để xem chỉ số. - ${prefix}deaths <name>`)
-							setColor(0x56FF00)
+							.setColor('0x56FF00')
 			
 			if (!args[0]) return message.channel.send(e)
 			let count = db.get(`${args[0]}_dead`);
@@ -626,12 +622,12 @@ function createBot () {
 			if(count === null) {
 				var embed = new Discord.MessageEmbed()
 								.setDescription(`Người chơi *${args[0]}* không tìm thấy trong data.`)
-								setColor(0x56FF00)
+								setColor('0x56FF00')
 				message.channel.send(embed)
 			} else {
 				var embed = new Discord.MessageEmbed()
 								.setDescription(`Người chơi *${args[0]}* đã chết **${count}** lần.`)
-								setColor(0x56FF00)
+								.setColor('0x56FF00')
 				message.channel.send(embed)
 			}
 		}
@@ -639,7 +635,7 @@ function createBot () {
 		if (command === "kills") {
 			var e = new Discord.MessageEmbed()
 							.setDescription(`Bạn cần nhập username để xem chỉ số. - ${prefix}kills <name>`)
-							setColor(0x56FF00)
+							.setColor('0x56FF00')
 			if (!args[0]) return message.channel.send(e)
 			
 			let count = db.get(`${args[0]}_kills`);
