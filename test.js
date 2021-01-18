@@ -267,7 +267,9 @@ function createBot () {
 		|| logger.includes('nhảy')
 		|| logger.includes('cháy')
 		|| logger.includes('tự')
-		|| logger.includes('died')) {
+		|| logger.includes('died')
+		|| logger.includes('chết')
+		|| logger.includes('Chết')) {
 			if(logger.includes('<') && logger.includes('>')) return;
 
 			if(logger.includes('đã vào server lần đầu tiên')) {
@@ -1047,9 +1049,7 @@ function createBot () {
 			.setDescription(`**Reconnecting to the server!**`)
 			.setColor("0xFFFB00");
 
-		setTimeout(function() { 
-			createBot()
-
+		setTimeout(function() {
 			try {
 				client.channels.cache.get(defaultChannel).send(reconnect);
 			} catch(e) {
