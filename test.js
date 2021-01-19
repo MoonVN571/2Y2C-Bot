@@ -93,6 +93,7 @@ function createBot () {
 					.setColor("FFFB00");
 
 			try {
+				client.channels.cache.get(defaultChannel).send(joined);
 			} catch(e) {
 			
 			}
