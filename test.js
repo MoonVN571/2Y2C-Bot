@@ -27,7 +27,7 @@ const defaultChannel = '795135669868822528';
 
 client.on('ready', () => {
 	console.log('Bot online!');
-	client.user.setActivity(prefix + 'help for commands!', { type: 'LISTENING' });
+	client.user.setActivity(prefix + 'help để xem lệnh!', { type: 'LISTENING' });
 });
 
 createBot()
@@ -69,14 +69,14 @@ function createBot () {
 								.setDescription(logger)
 								.setColor(color) // default
 		try {
-			// /client.channels.cache.get('797426761142632450').send(embed);
+			client.channels.cache.get('797426761142632450').send(embed);
 		} catch(e) {
-		
+			console.log("CHAT CLONE ERROR", e)
 		}
 
 		if(logger === '2y2c đã full') {
 			const queuejoined = new Discord.MessageEmbed()
-					.setDescription(`**Joined the queue server!**`)
+					.setDescription(`**Bot đã tham gia hàng chờ!**`)
 					.setColor("FFFB00");
 
 			try {
@@ -89,7 +89,7 @@ function createBot () {
 		
 		if(logger === 'Đang vào 2y2c') {
 			const joined = new Discord.MessageEmbed()
-					.setDescription(`**Joined the main server!**`)
+					.setDescription(`**Bot đang vào server chính!**`)
 					.setColor("FFFB00");
 
 			try {
@@ -101,9 +101,9 @@ function createBot () {
 		}
 
 		// basic check
+		if(logger.startsWith('[me ->')) return;
 		if(logger === undefined) return; // return if msg is undefined
 		if(logger === null) return; // return if null msg
-		if(logger.includes(':')) return; // return chat because of :
 		if(logger.includes('<') && logger.includes(">")) return;
 		var deathMsg;
 
@@ -314,13 +314,6 @@ function createBot () {
 		|| logger.includes('died')
 		|| logger.includes('chết')
 		|| logger.includes('Chết')) {
-			if(logger.includes('<') && logger.includes('>')) return;
-
-			if(logger.includes('đã vào server lần đầu tiên')) {
-				deathMsg = logger;
-				return;
-			}
-
 			if(logger === "Donate để duy trì server admin đang đói chết con *ĩ *ẹ.") {
 				return;
 			}
@@ -337,7 +330,7 @@ function createBot () {
 		}
 
 		if(deathMsg === undefined) return;
-		var newDeathMsg = deathMsg.replace("_", "\\_")
+		var newDeathMsg = deathMsg.replace(/_/ig, "\\_")
 
 		var embedDeath = new Discord.MessageEmbed()
 							.setDescription(newDeathMsg)
@@ -352,8 +345,14 @@ function createBot () {
 
 	bot.on("playerJoined", (player) => {
 		var username = player.username;
-		var newUsername = username.replace("_", "\\_");
+		var newUsername = username.replace(/_/ig, "\\_");
 
+		if(newUsername === undefined) {
+			newUsername = username;
+		}
+		
+		if(newUsername === bot.username) return;
+ 
 		var embed = new Discord.MessageEmbed()
 							.setDescription(newUsername + " joined")
 							.setColor('0xb60000')
@@ -362,12 +361,19 @@ function createBot () {
 		} catch (e) {
 			console.log("JOIN MESSAGE ERROR", e)
 		}
+
 		
 	});
 
 	bot.on("playerLeft", (player) => {
 		var username = player.username;
-		var newUsername = username.replace("_", "\\_");
+		var newUsername = username.replace(/_/ig, "\\_");
+
+		if(newUsername === undefined) {
+			newUsername = username;
+		}
+
+		if(newUsername === bot.username) return;
 
 		var embed = new Discord.MessageEmbed()
 							.setDescription(newUsername + " left")
@@ -390,36 +396,46 @@ function createBot () {
 
 	bot.on('spawn', () => {
 		setInterval(function() {
+			var today = new Date()
+			let day = ("00" +today.getDate()).slice(-2)
+			let month = ("00" +(today.getMonth()+1)).slice(-2)
+			let years = ("00" + today.getFullYear()).slice(-2)
+			let hours = ("00" + today.getHours()).slice(-2)
+			let min = ("00" + today.getMinutes()).slice(-2)
+			let sec = ("00" + today.getSeconds()).slice(-2)
+			var date = day +'/'+month+'/'+years+' ' + hours + ':' + min + ":"+ sec;
+
+			//console.log(date + ' stats')
 			bot.chat('/stats');
 		}, 3*60*1000);
 
 		setInterval(function() {
 			bot.chat('> Tham gia discord của bot: https://discord.gg/yrNvvkqp6w')
-		}, 15*60*1000);
+		}, 10*60*1000);
 
 		setInterval(function() {
-			bot.chat('> Luyện tập crystal tại 2y2cpvp.sytes.net cùng với những thằng trùm crystal pvp.')
+			bot.chat('> Luyện tập crystal pvp tại: 2y2cpvp.sytes.net.')
 		}, 20*60*1000);
 
 		setInterval(function() {
 			bot.chat('> Kiểm tra hàng chờ hiện tại: !queue')
-		}, 25*60*1000);
+		}, 30*60*1000);
 		
 		setInterval(function() {
 			bot.chat('> Kiểm tra hàng chờ ưu tiên hiện tại: !prio')
-		}, 30*60*1000);
-
-		setInterval(function() {
-			bot.chat('> !ping để xem ping hiên tại của bạn hoặc của người khác.')
-		}, 35*60*1000);
-	
-		setInterval(function() {
-			bot.chat('> !stats <name> xem chỉ số người khác.')
 		}, 40*60*1000);
 
 		setInterval(function() {
+			bot.chat('> !ping để xem ping hiên tại của bạn hoặc của người khác.')
+		}, 50*60*1000);
+	
+		setInterval(function() {
+			bot.chat('> !stats <name> xem chỉ số người khác.')
+		}, 60*60*1000);
+
+		setInterval(function() {
 			bot.chat('> !kd <name> Xem số kill và death của ai đó.')
-		}, 45*60*1000);
+		}, 70*60*1000);
 
 	});
 
@@ -427,14 +443,15 @@ function createBot () {
 	bot.on('chat', function(username, logger) {
 		var botPrefix = "!";
 
-		// coords
-		if(logger.startsWith(botPrefix + "coords")) {
-			bot.whisper(username, `Vị trí bot hiện tại: ${bot.entity.position}`)
-		}
 
 		var newCmd;
 		if(logger.startsWith(botPrefix)) {
 			newCmd = logger.replace(".", "")
+		}
+
+		// coords
+		if(newCmd === botPrefix + "coords") {
+			bot.whisper(username, `Vị trí bot hiện tại: ${bot.entity.position}`)
 		}
 
 		// deaths
@@ -536,7 +553,7 @@ function createBot () {
 
 		// TPS
 		if(newCmd === botPrefix + "tps") {
-			bot.whisper(username, `Server TPS: ${bot.getTps()}`)
+			bot.whisper(username, `Server TPS: ${bot.getTps()} (Thông số không chắc chắn chính xác 100%!)`)
 		}
 		
 		// Ping
@@ -550,6 +567,10 @@ function createBot () {
 
 		// Ping other
 		if(logger.startsWith(botPrefix + "ping")) {
+			if(newCmd === botPrefix + "ping") {
+				return;
+			}
+
 			var newLog = logger.replace('!ping', '')
 			var args = newLog.split(',')
 			var name = args.toString();
@@ -665,11 +686,11 @@ function createBot () {
 				
 				setInterval(function() {
 					try {
-						client.channels.cache.get(defaultChannel).setTopic(status + ` - Online: ${result.players.online}` + ` | Đã cập nhật lại lúc ${date}`)
+						client.channels.cache.get(defaultChannel).setTopic(status + ` - Online: ${result.players.online}` + ` | Đã cập nhật lại lúc: ${date}`)
 					} catch (e) {
 						console.log("SET TOPIC ERROR", e)
 					}
-				}, 60000)
+				}, 5*60*1000);
 			}
 		});
 
@@ -698,10 +719,7 @@ function createBot () {
 			color = '0xb60000';
 		}
 		// dm
-		if(username.includes('[me ->')) return;
-		if(username.includes('me')) return;
-
-		//if(username === "ReadTimeoutException") return;
+		if(logger.startsWith('[me ->')) return;
 
 		// restarts
 		if(logger === "Server sẽ Restart sau 15 phút!")
@@ -718,29 +736,11 @@ function createBot () {
 		}
 
 		// new method msg
-		if(username === "i") return;
+		if(username === "i" && logger.includes("(") && logger.includes(")") && logger.includes(".") && logger.includes(",")) return;
+		if(username === "i" && logger === "<i> https://dicord.gg/yrNvvkqp6w") return;
+		if(username === "c" && logger === "vẫn đang được diễn ra trong diện tích 1000x1000 block với trung tâm là x:0 z:0 nether.")
 
 		var str = "";
-
-		// Command whisper
-		/*
-		if(logger === "Tại sao bạn lại nhắn tin cho 1 con bot ? - Tham gia: https://discord.gg/yrNvvkqp6w"
-		|| logger === "Bạn có thể ghé thăm shop: https://discord.gg/nzm2SnDBGX (Revolution Shop)"
-		|| logger === "Hiện tại shop revolution đang tạm đóng!"
-		|| logger === 'Link server discord: dicord.gg/yrNvvkqp6w'
-		|| logger === "Xem tất cả lệnh tại: https://dicord.gg/yrNvvkqp6w"
-		|| logger.includes('Hàng chờ bình thường hiện tại')
-		|| logger.includes('Hàng chờ ưu tiên hiện tại')
-		|| logger.includes('Bạn đã nhận được')
-		|| logger.includes('Server TPS:')
-		|| logger.includes('Máu:')
-		|| logger.includes("Vị trí bot hiện tại:")
-		|| logger.includes('Kills')
-		|| logger.includes('không tìm thấy')
-		|| logger.includes('Thế giới đã tồn tại được')) {
-			color = "0xFD00FF";
-			str = "To ";
-		} */
 
 		const dauhuyen = logger.replace(/`/ig, "\\`");
 		const newLogger = dauhuyen.replace(/_/ig, "\\_");
@@ -755,17 +755,9 @@ function createBot () {
 			newUsername = username;
 		}
 
-		var today = new Date()
-		let day = ("00" +today.getDate()).slice(-2)
-		let month = ("00" +(today.getMonth()+1)).slice(-2)
-		let years = ("00" + today.getFullYear()).slice(-2)
-		let hours = ("00" + today.getHours()).slice(-2)
-		let min = ("00" + today.getMinutes()).slice(-2)
-		var date = day +'.'+month+'.'+years+' ' + hours + ':' + min
-
 		// embed chat
 		var chat = new Discord.MessageEmbed()
-					// '`' + date + '` '+ 
+					// '`' + date + '` '+  
 					.setDescription(`**<${newUsername}>**  ${newLogger}`)
 					.setColor(color);
 		try {
@@ -778,7 +770,7 @@ function createBot () {
 	});
 		
 	bot.on('end', function(reason) {
-        waitUntil(180000, 20, function condition() {
+        waitUntil(180000, function condition() {
           try {
 			var today = new Date()
 			let day = ("00" +today.getDate()).slice(-2)
@@ -790,7 +782,7 @@ function createBot () {
 			console.log(date + " | Bot ended, attempting to reconnect...");
 
 			var reconnect = new Discord.MessageEmbed()
-				.setDescription(`**Reconnecting to the server!**`)
+				.setDescription(`**Đang cố gắng kết nối lại với server!**`)
 				.setColor("0xFFFB00");
 				createBot()
 			try {
@@ -809,276 +801,258 @@ function createBot () {
         });
    });
 
-	bot.on('kicked', (reason, loggedIn) => { 
-		console.log(reason, loggedIn);
-
-		var reconnect = new Discord.MessageEmbed()
-			.setDescription(`**I got kicked!**`)
-			.setColor("0xFFFB00");
-
-		setTimeout(function() {
-			try {
-				client.channels.cache.get(defaultChannel).send(reconnect);
-			} catch(e) {
-				console.log("CHAT MESSAGE ERROR", e)
-			}
-		}, 300000);
-	});
-
-
-
-
-
-	client.on("message", async message => {
-
-		// control
-		if(message.channel.id === '797426761142632450') {
-			if(message.author == client.user) return;
-			bot.chat(message.content);
+   client.on('message', msg => {
+	   	// control
+		if(msg.channel.id === '797426761142632450') {
+			if(msg.author == client.user) return;
+			bot.chat(msg.content);
 		}
 
-		if(message.channel.id == '795135669868822528') {
-			var user = message.mentions.users.first();
+		if(msg.channel.id == '795135669868822528') {
+			var user = msg.mentions.users.first();
 
 			// return user = bot
-			if(message.author.bot) return;
+			if(msg.author.bot) return;
 			if(user) return;
 
-			if(message.content.startsWith(">")) return;
-			if(message.content.startsWith(prefix)) return;
+			if(msg.content.startsWith(">")) return;
+			if(msg.content.startsWith(prefix)) return;
 			
-			var content = message.content;
+			var content = msg.content;
 
 			if(!content) return;
 			
 			chat(content);
 
 			function chat(content) {
-				bot.chat(`> [${message.author.tag}] ${content}`);
+				bot.chat(`> [${msg.author.tag}] ${content}`);
 			}
 
 			const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");
-			message.react(send);
+			msg.react(send);
 		}
-			
-		const args = message.content.slice(prefix.length).trim().split(/ +/g);
-		const command = args.shift().toLowerCase();
-
-		if(!message.content.startsWith(prefix) || message.author == client.user) return;
-
-		if(command === "stats") {
-			var e = new Discord.MessageEmbed()
-						.setDescription('Bạn cần nhập username để xem thông tin. - `' + prefix + 'deaths <name>`')
-						.setColor('0xC51515')
-						
-			if (!args[0]) return message.channel.send(e)
-
-			let kills = db.get(`${args[0]}_kills`);
-			let deads = db.get(`${args[0]}_dead`);
-
-			if(kills === null) {
-				kills = 0;
-			}
-
-			if(deads === null) {
-				deads = 0;
-			}
-
-			// alex, steve
-			var str = 'https://cdn.discordapp.com/attachments/799501137182720021/801345516721143818/Alex.png https://cdn.discordapp.com/attachments/799501137182720021/801345550120779786/Steve.png';
-			
-			var words = str.split(' ');
-
-			var random = words[Math.floor(Math.random() * words.length)];
-
-			var ratio = kills/deads;
-
-			var ratioFixed = ratio.toFixed(2);
-
-
-			if(ratioFixed === "NaN" || ratioFixed === "Infinity") {
-				ratioFixed = "None";
-			}
-
-			var embed = new Discord.MessageEmbed()
-							.setAuthor(`${args[0]}'s statistics`, random)
-							.addFields({ name: `Kills`, value: `${kills}`, inline: true})
-							.addFields({ name: `Deaths`, value: `${deads}`, inline: true})
-							.addFields({ name: `K/D Ratio`, value: `${ratioFixed}`, inline: true})
-							.setThumbnail(random)
-							.setColor(0x2EA711)
-							.setFooter(footer)
-							.setTimestamp();
-
-			message.channel.send(embed)
-		
-		}
-
-		if(command === "kd") {
-			var e = new Discord.MessageEmbed()
-						.setDescription('Bạn cần nhập username để xem thông tin. - `' + prefix + 'kd <name>`')
-						.setColor('C51515')
-						
-			if (!args[0]) return message.channel.send(e)
-
-			let kills = db.get(`${args[0]}_kills`);
-			let deads = db.get(`${args[0]}_dead`);
-
-			if(kills === null) {
-				kills = 0;
-
-			}
-
-			if(deads === null) {
-				deads = 0;
-			}
-
-			// alex, steve
-			var str = 'https://cdn.discordapp.com/attachments/799501137182720021/801345516721143818/Alex.png https://cdn.discordapp.com/attachments/799501137182720021/801345550120779786/Steve.png';
-			
-			var words = str.split(' ');
-
-			var random = words[Math.floor(Math.random() * words.length)];
-
-			var ratio = kills/deads;
-
-			var ratioFixed = ratio.toFixed(2);
-
-
-			if(ratioFixed === "NaN" || ratioFixed === "Infinity") {
-				ratioFixed = "None";
-			}
-
-			var embed = new Discord.MessageEmbed()
-							.setAuthor(`${args[0]}'s statistics`, random)
-							.addFields({ name: `Kills`, value: `${kills}`, inline: true})
-							.addFields({ name: `Deaths`, value: `${deads}`, inline: true})
-							.addFields({ name: `K/D Ratio`, value: `${ratioFixed}`, inline: true})
-							.setThumbnail(random)
-							.setColor(0x2EA711)
-							.setFooter(footer)
-							.setTimestamp();
-
-			message.channel.send(embed)
-		}
-		
-		mc.ping({"host": "2y2c.org"}, (err, result) =>{
-			if(err) {
-				client.user.setActivity('server down!', { type: 'PLAYING' });
-			}
-			if(result) {
-				try {
-					var players = [];
-					for(i = 0; result.players.sample.length > i; i++) {
-						players.push(result.players.sample[i].name);
-					}
-					var players2 = players.splice(0, Math.ceil(players.length / 2));
-					if (players == []) {
-						players.push(players2);
-						players2 = ".";
-					}
-				} catch {
-					var players = 'unknown';
-					var players2 = 'unknown';
-				}
-				var old = players.toString().replace(",§6Cựu binh: §l0", "");
-				var queue = old.toString().replace("§6Bình thường: §l", "");
-
-				var prio = players2.toString().replace("2y2c §6Queue Size,§6Ưu Tiên: §l", "");
-				var status = "Queue: " + queue + " - Prio: " + prio + " - TPS: " + bot.getTps();
-
-				// Help command
-				if(command === "help") {
-
-					const embed = new Discord.MessageEmbed()
-								.setColor(0x000DFF)
-								.setTitle('[Help Command]')
-								.addField("*[Help Command]*", prefix + 'help', false)
-								.addField("*[Status Command]*", prefix + 'status', false)
-								.addField("*[Online Command]*", prefix + 'online', false)
-								.addField("*[Queue Command]*", prefix + 'queue', false)
-								.addField("*[Priority Command]*", prefix + 'prio', false)
-								.addField("*[Stats Command]*", prefix + 'stats', false)
-								.setFooter(footer)
-								.setTimestamp();
-
-					message.channel.send(embed).then(message => {
-						message.delete({ timeout: 10000 });
-					});
-
-				}
-
-				// Queue command
-				if(command === "queue" || command === "q") {
-					const embed = new Discord.MessageEmbed()
-								.setColor(0x000DFF)
-								.setTitle('[Queue Command]')
-								.setDescription("Hàng chờ hiện tại: **" + queue + "**")
-								.setFooter(footer)
-								.setTimestamp();
-
-					message.channel.send(embed).then(message => {
-						message.delete({ timeout: 10000 });
-					});
-
-					setTimeout(function() {
-						message.delete()
-					}, 10000)
-
-				}
-				
-				// Prio command
-				if(command === "prio" || command === "p" || command === "priority") {
-
-					const embed = new Discord.MessageEmbed()
-								.setColor(0x000DFF)
-								.setTitle('[Priority Command]')
-								.setDescription("Hàng chờ ưu tiên hiện tại: **" + prio + "**")
-								.setFooter(footer)
-								.setTimestamp();
-
-					message.channel.send(embed).then(message => {
-						message.delete({ timeout: 10000 });
-					});
-				}
-				
-				// status command
-				if(command === "status" || command === "stt") {
-					const embed = new Discord.MessageEmbed()
-								.setColor(0x000DFF)
-								.setTitle('[Status Command]')
-								.setDescription(status)
-								.setFooter(footer)
-								.setTimestamp();
-
-					message.channel.send(embed).then(message => {
-						message.delete({ timeout: 10000 });
-					});
-				}
-				
-				// online command
-				if(command === "onl" || command === "online" || command === "o") {
-
-					const embed = new Discord.MessageEmbed()
-								.setColor(0x000DFF)
-								.setTitle('[Online Command]')
-								.setDescription("Số người chơi trong server: **" + result.players.online + "**")
-								.setFooter(footer)
-								.setTimestamp();
-
-					message.channel.send(embed).then(message => {
-						message.delete({ timeout: 10000 });
-					});
-					
-				}
-
-			}
-
-		});
-	
-	});
+   });
 	
 }
+
+client.on("message", async message => {
+	const args = message.content.slice(prefix.length).trim().split(/ +/g);
+	const command = args.shift().toLowerCase();
+
+	if(!message.content.startsWith(prefix) || message.author == client.user) return;
+
+	if(command === "stats") {
+		var e = new Discord.MessageEmbed()
+					.setDescription('Bạn cần nhập username để xem thông tin. - `' + prefix + 'deaths <name>`')
+					.setColor('0xC51515')
+					
+		if (!args[0]) return message.channel.send(e)
+
+		let kills = db.get(`${args[0]}_kills`);
+		let deads = db.get(`${args[0]}_dead`);
+
+		if(kills === null) {
+			kills = 0;
+		}
+
+		if(deads === null) {
+			deads = 0;
+		}
+
+		// alex, steve
+		var str = 'https://cdn.discordapp.com/attachments/799501137182720021/801345516721143818/Alex.png https://cdn.discordapp.com/attachments/799501137182720021/801345550120779786/Steve.png';
+		
+		var words = str.split(' ');
+
+		var random = words[Math.floor(Math.random() * words.length)];
+
+		var ratio = kills/deads;
+
+		var ratioFixed = ratio.toFixed(2);
+
+
+		if(ratioFixed === "NaN" || ratioFixed === "Infinity") {
+			ratioFixed = "None";
+		}
+
+		var embed = new Discord.MessageEmbed()
+						.setAuthor(`${args[0]}'s statistics`, random)
+						.addFields({ name: `Kills`, value: `${kills}`, inline: true})
+						.addFields({ name: `Deaths`, value: `${deads}`, inline: true})
+						.addFields({ name: `K/D Ratio`, value: `${ratioFixed}`, inline: true})
+						.setThumbnail(random)
+						.setColor(0x2EA711)
+						.setFooter(footer)
+						.setTimestamp();
+
+		message.channel.send(embed)
+	
+	}
+
+	if(command === "kd") {
+		var e = new Discord.MessageEmbed()
+					.setDescription('Bạn cần nhập username để xem thông tin. - `' + prefix + 'kd <name>`')
+					.setColor('C51515')
+					
+		if (!args[0]) return message.channel.send(e)
+
+		let kills = db.get(`${args[0]}_kills`);
+		let deads = db.get(`${args[0]}_dead`);
+
+		if(kills === null) {
+			kills = 0;
+
+		}
+
+		if(deads === null) {
+			deads = 0;
+		}
+
+		// alex, steve
+		var str = 'https://cdn.discordapp.com/attachments/799501137182720021/801345516721143818/Alex.png https://cdn.discordapp.com/attachments/799501137182720021/801345550120779786/Steve.png';
+		
+		var words = str.split(' ');
+
+		var random = words[Math.floor(Math.random() * words.length)];
+
+		var ratio = kills/deads;
+
+		var ratioFixed = ratio.toFixed(2);
+
+
+		if(ratioFixed === "NaN" || ratioFixed === "Infinity") {
+			ratioFixed = "None";
+		}
+
+		var embed = new Discord.MessageEmbed()
+						.setAuthor(`${args[0]}'s statistics`, random)
+						.addFields({ name: `Kills`, value: `${kills}`, inline: true})
+						.addFields({ name: `Deaths`, value: `${deads}`, inline: true})
+						.addFields({ name: `K/D Ratio`, value: `${ratioFixed}`, inline: true})
+						.setThumbnail(random)
+						.setColor(0x2EA711)
+						.setFooter(footer)
+						.setTimestamp();
+
+		message.channel.send(embed)
+	}
+	
+	mc.ping({"host": "2y2c.org"}, (err, result) =>{
+		if(err) {
+			client.user.setActivity('server down!', { type: 'PLAYING' });
+		}
+		if(result) {
+			try {
+				var players = [];
+				for(i = 0; result.players.sample.length > i; i++) {
+					players.push(result.players.sample[i].name);
+				}
+				var players2 = players.splice(0, Math.ceil(players.length / 2));
+				if (players == []) {
+					players.push(players2);
+					players2 = ".";
+				}
+			} catch {
+				var players = 'unknown';
+				var players2 = 'unknown';
+			}
+			
+			var old = players.toString().replace(",§6Cựu binh: §l0", "");
+			var queue = old.toString().replace("§6Bình thường: §l", "");
+
+			var prio = players2.toString().replace("2y2c §6Queue Size,§6Ưu Tiên: §l", "");
+			var status = "Queue: " + queue + " - Prio: " + prio + " - Online: " + result.players.online;
+
+			// Help command
+			if(command === "help") {
+				var channel = client.channels.cache.get('795193962541481994').toString();
+
+				const embed = new Discord.MessageEmbed()
+							.setColor(0x000DFF)
+							.setTitle('[Help Command]')
+							.addField("*[Help Command]*", prefix + 'help - ``Mở bản này``', false)
+							.addField("*[Status Command]*", prefix + 'status - ``Xem trạng thái của server hàng chờ, online``', false)
+							.addField("*[Online Command]*", prefix + 'online - ``Xem số người online``', false)
+							.addField("*[Queue Command]*", prefix + 'queue - ``Xem hàng chờ bình thường``', false)
+							.addField("*[Priority Command]*", prefix + 'prio - ``Xem hàng chờ ưu tiên``', false)
+							.addField("*[Stats Command]*", prefix + 'stats - ``Xem chỉ số của người chơi``', false)
+							.addField("*[Stats Command]*", prefix + 'kd - ``Xem số KD của ai đó``', false)
+							.addFields({ name: '\u200b', value: '\u200b', inline: false })
+							.addFields({ name: "\u200b", value: "Xem tất cả lệnh trong **GAME** tại " + channel + " (click)", inline: false})
+							.setFooter(footer)
+							.setTimestamp();
+
+				message.channel.send(embed).then(message => {
+					message.delete({ timeout: 10000 });
+				});
+
+			}
+
+			// Queue command
+			if(command === "queue" || command === "q") {
+				const embed = new Discord.MessageEmbed()
+							.setColor(0x000DFF)
+							.setTitle('[Queue Command]')
+							.setDescription("Hàng chờ hiện tại: **" + queue + "**")
+							.setFooter(footer)
+							.setTimestamp();
+
+				message.channel.send(embed).then(message => {
+					message.delete({ timeout: 10000 });
+				});
+
+			}
+			
+			// Prio command
+			if(command === "prio" || command === "p" || command === "priority") {
+
+				const embed = new Discord.MessageEmbed()
+							.setColor(0x000DFF)
+							.setTitle('[Priority Command]')
+							.setDescription("Hàng chờ ưu tiên hiện tại: **" + prio + "**")
+							.setFooter(footer)
+							.setTimestamp();
+
+				message.channel.send(embed).then(message => {
+					message.delete({ timeout: 10000 });
+				});
+			}
+			
+			// status command
+			if(command === "status" || command === "stt") {
+				const embed = new Discord.MessageEmbed()
+							.setColor(0x000DFF)
+							.setTitle('[Status Command]')
+							.setDescription(status)
+							.setFooter(footer)
+							.setTimestamp();
+
+				message.channel.send(embed).then(message => {
+					message.delete({ timeout: 10000 });
+				});
+			}
+			
+			// online command
+			if(command === "onl" || command === "online" || command === "o") {
+
+				const embed = new Discord.MessageEmbed()
+							.setColor(0x000DFF)
+							.setTitle('[Online Command]')
+							.setDescription("Số người chơi trong server: **" + result.players.online + "**")
+							.setFooter(footer)
+							.setTimestamp();
+
+				message.channel.send(embed).then(message => {
+					message.delete({ timeout: 10000 });
+				});
+				
+			}
+
+		}
+
+	});
+
+});
 
 client.login(config.token).catch(err => console.log(err));
 client.on("error", (e) => { console.error(e) });
