@@ -1,4 +1,4 @@
-exports.run2 = (client, message, args) => {
+exports.run = (client, message, args) => {
     if(!args || args.length < 1) return message.reply("Must provide a command name to reload.");
     const commandName = args[0];
     // Check if the command exists and is valid
@@ -11,5 +11,5 @@ exports.run2 = (client, message, args) => {
     client.commands.delete(commandName);
     const props = require(`./${commandName}.js`);
     client.commands.set(commandName, props);
-    message.reply(`The command ${commandName} has been reloaded`);
+    message.reply(`The command ${commandName}.js has been reloaded`);
   };

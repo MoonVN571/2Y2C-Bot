@@ -22,14 +22,94 @@ var tpsPlugin = require('mineflayer-tps')(mineflayer)
 var delay = require('delay')
 var db = require('quick.db');
 
+// footer
 const footer = "moonbot dev";
 const defaultChannel = '795135669868822528';
 
-client.on('ready', () => {
-	console.log('Bot online!');
-	client.user.setActivity(prefix + 'help để xem lệnh!', { type: 'LISTENING' });
+// debugger
+var debug = false;
+var debugMsg = false;
+var debugError = false;
+
+
+//const fs = require("fs");
+
+// Command new
+/*
+fs.readdir("./events/", (err, files) => {
+	if (err) return console.error(err);
+	files.forEach(file => {
+		const event = require(`./events/${file}`);
+		let eventName = file.split(".")[0];
+		client.on(eventName, event.bind(null, client));
+	});
 });
 
+client.commands = new Discord.Collection();
+client.aliases = new Discord.Collection()
+
+fs.readdir("./commands/", (err, files) => {
+	if (err) return console.error(err);
+	files.forEach(file => {
+		if (!file.endsWith(".js")) return;
+		let props = require(`./commands/${file}`);
+		let commandName = file.split(".")[0];
+
+		if (props.aliases) {
+			props.aliases.forEach(alias => {
+				client.aliases.set(alias, command)
+			})
+		}
+
+		console.log(`Loaded ${commandName}`);
+		client.commands.set(commandName, props);
+	});
+}); */
+
+// client.footer = footer;
+// client.prefix = prefix;
+
+client.on('ready', () => {
+	console.log('Bot online!');
+	client.user.setActivity('Minecraft', { type: 'PLAYING' });
+
+	// Show DEBUG status
+	if(debug) {
+		console.log('---------------------')
+		console.log('DEBUG Mode: True')
+		console.log('---------------------')
+		client.user.setActivity('Debug', { type: 'LISTING' });
+	} else {
+		console.log('---------------------')
+		console.log('DEBUG Mode: False')
+		console.log('---------------------')
+	}
+
+	if(debugMsg) {
+		console.log('---------------------')
+		console.log('DEBUG Send Message Mode: True')
+		console.log('---------------------')
+		client.user.setActivity('Debug', { type: 'PLAYING' });
+	} else {
+		console.log('---------------------')
+		console.log('DEBUG Send Message Mode: False')
+		console.log('---------------------')
+	}
+
+	if(debugError) {
+		console.log('---------------------')
+		console.log('DEBUG Error Code Mode: True')
+		console.log('---------------------')
+		client.user.setActivity('Minecraft', { type: 'PLAYING' });
+	} else {
+		console.log('---------------------')
+		console.log('DEBUG Error Code Mode: False')
+		console.log('---------------------')
+	}
+	
+});
+
+// Create this bot
 createBot()
 
 function createBot () {
@@ -55,10 +135,9 @@ function createBot () {
 		let min = ("00" + today.getMinutes()).slice(-2)
 		let sec = ("00" + today.getSeconds()).slice(-2)
 		var date = day +'/'+month+'/'+years+' ' + hours + ':' + min;
-
 		if(username === bot.usermame) return;
 		//console.log(`${date} | ${username}: ${message}`)
-		bot.whisper(username, 'Tại sao bạn lại nhắn tin cho 1 con bot ? - Tham gia: https://discord.gg/yrNvvkqp6w')
+		bot.whisper(username, 'Bạn đã nhắn với bot. Tham gia: https://discord.gg/yrNvvkqp6w')
 
 	});
 
@@ -71,7 +150,8 @@ function createBot () {
 		try {
 			client.channels.cache.get('797426761142632450').send(embed);
 		} catch(e) {
-			console.log("CHAT CLONE ERROR", e)
+			if(!debugMsg) return;
+				console.log("CHAT CLONE ERROR ", e)
 		}
 
 		if(logger === '2y2c đã full') {
@@ -82,9 +162,14 @@ function createBot () {
 			try {
 				client.channels.cache.get(defaultChannel).send(queuejoined);
 			} catch(e) {
-				console.log("JOINING ERROR", e)
+				if(!debugMsg) return;
+				console.log("JOINED THE SERVER MESSAGE ERROR ", e)
 			}
 			return;
+		}
+
+		if(logger === "Dự án quét sạch mọi block trên y119 (không tính đường cao tốc) vẫn đang được diễn ra trong diện tích 1000x1000 block với trung tâm là x:0 z:0 nether.") {
+			newcolor = "0xb60000";
 		}
 		
 		if(logger === 'Đang vào 2y2c') {
@@ -95,242 +180,309 @@ function createBot () {
 			try {
 				client.channels.cache.get(defaultChannel).send(joined);
 			} catch(e) {
-				console.log("JOINING ERROR", e)
+				if(!debugMsg) return;
+				console.log("JOINED THE MAIN SERVER MSG ERROR ", e)
 			}
 			return;
 		}
 
-		// basic check
-		if(logger.startsWith('[me ->')) return;
 		if(logger === undefined) return; // return if msg is undefined
 		if(logger === null) return; // return if null msg
+
+		// return message on chat
 		if(logger.includes('<') && logger.includes(">")) return;
-		var deathMsg;
 
-		// kill
-		if(logger.includes('chết cháy khi đánh với')) {
-			var str = logger;
-			var string = str.split(" ")[0];
-			var user = str.substring('6', string);
-
-			let data = db.get(`${user}_kills`);
-			
-			if(data === null) {
-				db.set(`${user}_kills`, 1)
-			} else {
-				db.add(`${user}_kills`, 1)
-			}
-			deathMsg = logger;
-		}
-
-		if(logger.includes('bị bắn chết bởi')) {
-			var str = logger;
-			var string = str.split(" ")[0];
-			var user = str.substring('5', string);
-
-			let data = db.get(`${user}_kills`);
-			
-			if(data === null) {
-				db.set(`${user}_kills`, 1)
-			} else {
-				db.add(`${user}_kills`, 1)
-			}
-			deathMsg = logger;
-		}
-
-		if (logger.includes('nhảy con mẹ nó vào lava khi bị truy sát bởi')) {
-			if(logger.includes('Wither')) {
-				deathMsg = logger;
-				return;
-			}
-
-			if(logger.includes('Sì-ke')) {
-				deathMsg = logger;
-				return;
-			}
-
-			if(logger.includes('Zombie Villager')) {
-				deathMsg = logger;
-				return;
-			}
-
-			var str = logger;
-			var string = str.split(" ")[0];
-			var user = str.substring('12', string);
-			
-			let data = db.get(`${user}_kills`);
-			
-			if(data === null) {
-				db.set(`${user}_kills`, 1)
-			} else {
-				db.add(`${user}_kills`, 1)
-			}
-			deathMsg = logger;
-			
-		}
-
-		if(logger.includes('chết chìm khi cố gắng thoát khỏi')) {
-			var str = logger;
-			var string = str.split(" ")[0];
-			var user = str.substring('8', string);
-			
-			let data = db.get(`${user}_kills`);
-			
-			if(data === null) {
-				db.set(`${user}_kills`, 1)
-			} else {
-				db.add(`${user}_kills`, 1)
-			}
-			deathMsg = logger;
-
-		}
-
-		if(logger.includes('nổ banh xác bởi')) {
-			var str = logger;
-			var string = str.split(" ")[0];
-			var user = str.substring('5', string);
-			
-			let data = db.get(`${user}_kills`);
-			
-			if(data === null) {
-				db.set(`${user}_kills`, 1)
-			} else {
-				db.add(`${user}_kills`, 1)
-			}
-			deathMsg = logger;
-
-		}
-
-		if(logger.includes('đã bị đấm chết con mẹ nó bởi')) {
-			var str = logger;
-			var string = str.split(" ")[0];
-			var user = str.substring('9', string);
-			
-			let data = db.get(`${user}_kills`);
-			
-			if(data === null) {
-				db.set(`${user}_kills`, 1)
-			} else {
-				db.add(`${user}_kills`, 1)
-			}
-			deathMsg = logger;
-		}
-
-		if(logger.includes('té dập con mẹ nó mặt vì')) {
-			var str = logger;
-			var string = str.split(" ")[0];
-			var user = str.substring('8', string);
-			
-			let data = db.get(`${user}_kills`);
-			
-			if(data === null) {
-				db.set(`${user}_kills`, 1)
-			} else {
-				db.add(`${user}_kills`, 1)
-			}
-			deathMsg = logger;
-		}
-
-		if(logger.includes('bay con mẹ nó lên trời bởi')) {
-			var str = logger;
-			var string = str.split(" ")[0];
-			var user = str.substring('8', string);
-			
-			let data = db.get(`${user}_kills`);
-			
-			if(data === null) {
-				db.set(`${user}_kills`, 1)
-			} else {
-				db.add(`${user}_kills`, 1)
-			}
-			deathMsg = logger;
-
-		}
-
-		if(logger.includes('đã bị phản sát thương bởi')) {
-			var str = logger;
-			var string = str.split(" ")[0];
-			var user = str.substring('7', string);
-
-			let data = db.get(`${user}_kills`);
-			
-			if(data === null) {
-				db.set(`${user}_kills`, 1)
-			} else {
-				db.add(`${user}_kills`, 1)
-			}
-			deathMsg = logger;
-
-		}
-
-		if(logger.includes('đã bị giết bởi')) {
-			if(logger.includes('Zombie Pigman')) {
-				deathMsg = logger;
-				return;
-			}
-
-			if(logger.includes('Wither')) {
-				deathMsg = logger;
-				return;
-			}
-
-			if(logger.includes('Sì-ke')) {
-				deathMsg = logger;
-				return;
-			}
-
-			var str = logger;
-			var string = str.split(" ")[0];
-			var user = str.substring('5', string);
-			
-			let data = db.get(`${user}_kills`);
-			
-			if(data === null) {
-				db.set(`${user}_kills`, 1)
-			} else {
-				db.add(`${user}_kills`, 1)
-			}
-			deathMsg = logger;
-
-		}
-
+		// suicide when see this
 		if(logger === "You cannot chat until you move!") {
 			bot.chat('/kill')
 		}
-		
-		// deaths
-		if(logger.includes('Té')
-		|| logger.includes('té')
-		|| logger.includes('chợt')
-		|| logger.includes('đã')
-		|| logger.includes('đéo')
-		|| logger.includes('bị')
-		|| logger.includes('chạy')
-		|| logger.includes('nổ')
-		|| logger.includes('đấm')
-		|| logger.includes('nhảy')
-		|| logger.includes('cháy')
-		|| logger.includes('tự')
-		|| logger.includes('died')
-		|| logger.includes('chết')
-		|| logger.includes('Chết')) {
-			if(logger === "Donate để duy trì server admin đang đói chết con *ĩ *ẹ.") {
-				return;
+
+		// value to embed
+		var deathMsg;
+
+		// kill Message
+			if(logger.includes('chết cháy khi đánh với')) {
+				var str = logger;
+				var user = str.split(" ")[6];
+
+				let data = db.get(`${user}_kills`);
+
+				if(debug) {
+					console.log(logger);
+					console.log(user);
+					console.log('--------------------')
+				}
+
+				if(data === null) {
+					db.set(`${user}_kills`, 1)
+				} else {
+					db.add(`${user}_kills`, 1)
+				}
+				deathMsg = logger;
 			}
 
-			var user = logger.split(" ")[0];
-			let data = db.get(`${user}_dead`);
+			if(logger.includes('bị bắn chết bởi')) {
+				var str = logger;
+				var user = str.split(" ")[5];
+
+				let data = db.get(`${user}_kills`);
+
+				if(debug) {
+					console.log(logger);
+					console.log(user);
+					console.log('--------------------')
+				}
+				
+				if(data === null) {
+					db.set(`${user}_kills`, 1)
+				} else {
+					db.add(`${user}_kills`, 1)
+				}
+				deathMsg = logger;
+			}
+
+			if (logger.includes('nhảy con mẹ nó vào lava khi bị truy sát bởi')) {
+				if(logger.includes('Wither')) {
+					deathMsg = logger;
+					return;
+				}
+
+				if(logger.includes('Sì-ke')) {
+					deathMsg = logger;
+					return;
+				}
+
+				if(logger.includes('Zombie Villager')) {
+					deathMsg = logger;
+					return;
+				}
+
+				var str = logger;
+				var user = str.split(" ")[12];
+				
+				if(debug) {
+					console.log(logger);
+					console.log(user);
+					console.log('--------------------')
+				}
+
+				let data = db.get(`${user}_kills`);
+				
+				if(data === null) {
+					db.set(`${user}_kills`, 1)
+				} else {
+					db.add(`${user}_kills`, 1)
+				}
+				deathMsg = logger;
+				
+			}
+
+			if(logger.includes('chết chìm khi cố gắng thoát khỏi')) {
+				var str = logger;
+				var user = str.split(" ")[8];
+				
+				let data = db.get(`${user}_kills`);
+
+				if(debug) {
+					console.log(logger);
+					console.log(user);
+					console.log('--------------------')
+				}
+				
+				if(data === null) {
+					db.set(`${user}_kills`, 1)
+				} else {
+					db.add(`${user}_kills`, 1)
+				}
+				deathMsg = logger;
+
+			}
+
+			if(logger.includes('nổ banh xác bởi')) {
+				var str = logger;
+				var user = str.split(" ")[5];
+				
+				let data = db.get(`${user}_kills`);
+				
+				if(debug) {
+					console.log(logger);
+					console.log(user);
+					console.log('--------------------')
+				}
+				
+				if(data === null) {
+					db.set(`${user}_kills`, 1)
+				} else {
+					db.add(`${user}_kills`, 1)
+				}
+				deathMsg = logger;
+
+			}
+
+			if(logger.includes('đã bị đấm chết con mẹ nó bởi')) {
+				var str = logger;
+				var user = str.split(" ")[9];
+				
+				let data = db.get(`${user}_kills`);
+
+				if(debug) {
+					console.log(logger);
+					console.log(user);
+					console.log('--------------------')
+				}
+				
+				if(data === null) {
+					db.set(`${user}_kills`, 1)
+				} else {
+					db.add(`${user}_kills`, 1)
+				}
+				deathMsg = logger;
+			}
+
+			if(logger.includes('té dập con mẹ nó mặt vì')) {
+				var str = logger;
+				var user = str.split(" ")[8];
+				
+				let data = db.get(`${user}_kills`);
+				
+				if(debug) {
+					console.log(logger);
+					console.log(user);
+					console.log('--------------------')
+				}
+				
+				if(data === null) {
+					db.set(`${user}_kills`, 1)
+				} else {
+					db.add(`${user}_kills`, 1)
+				}
+				deathMsg = logger;
+			}
+
+			if(logger.includes('bay con mẹ nó lên trời bởi')) {
+				var str = logger;
+				var user = str.split(" ")[8];
+				
+				let data = db.get(`${user}_kills`);
+				
+				if(debug) {
+					console.log(logger);
+					console.log(user);
+					console.log('--------------------')
+				}
+				
+				if(data === null) {
+					db.set(`${user}_kills`, 1)
+				} else {
+					db.add(`${user}_kills`, 1)
+				}
+				deathMsg = logger;
+
+			}
+
+			if(logger.includes('đã bị phản sát thương bởi')) {
+				var str = logger;
+				var user = str.split(" ")[7];
+
+				let data = db.get(`${user}_kills`);
+				
+				if(debug) {
+					console.log(logger);
+					console.log(user);
+					console.log('--------------------')
+				}
+				
+				if(data === null) {
+					db.set(`${user}_kills`, 1)
+				} else {
+					db.add(`${user}_kills`, 1)
+				}
+				deathMsg = logger;
+
+			}
+
+			if(logger.includes('đã bị giết bởi')) {
+				if(logger.includes('Zombie Pigman')) {
+					deathMsg = logger;
+					return;
+				} else if(logger.includes('Wither')) {
+					deathMsg = logger;
+					return;
+				} else if(logger.includes('Sì-ke')) {
+					deathMsg = logger;
+					return;
+				} else if (logger.includes('cá bạc')) {
+					deathMsg = logger;
+					return;
+				} else if (logger.includes('Blaze')) {
+					deathMsg = logger;
+					return;
+				}
+
+				var str = logger;
+				var user = str.split(" ")[5];
+
+				if(debug) {
+					console.log(logger);
+					console.log(user);
+					console.log('--------------------')
+				}
+				
+				let data = db.get(`${user}_kills`);
+				
+				if(data === null) {
+					db.set(`${user}_kills`, 1)
+				} else {
+					db.add(`${user}_kills`, 1)
+				}
+				deathMsg = logger;
+
+			}
 			
-			if(data === null) {
-				db.set(`${user}_dead`, 1)
-			} else {
-				db.add(`${user}_dead`, 1)
-			}
-			deathMsg = logger;
-		}
+			// listening death message
+			if(logger.includes('Té')
+			|| logger.includes('té')
+			|| logger.includes('chợt')
+			|| logger.includes('đã')
+			|| logger.includes('đéo')
+			|| logger.includes('bị')
+			|| logger.includes('chạy')
+			|| logger.includes('nổ')
+			|| logger.includes('đấm')
+			|| logger.includes('nhảy')
+			|| logger.includes('cháy')
+			|| logger.includes('tự')
+			|| logger.includes('died')
+			|| logger.includes('chết')
+			|| logger.includes('Chết')) {
+				if(logger === "Donate để duy trì server admin đang đói chết con *ĩ *ẹ.") {
+					newcolor = '0xb60000';
+					deathMsg = logger;
+					return;
+				} else if(logger.startsWith("[Server]")) {
+					newcolor = '0xb60000';
+					deathMsg = logger;
+					return;
+				}
 
+				var user = logger.split(" ")[0];
+				let data = db.get(`${user}_dead`);
+				
+				if(data === null) {
+					db.set(`${user}_dead`, 1)
+				} else {
+					db.add(`${user}_dead`, 1)
+				}
+
+				deathMsg = logger;
+			}
+		
+		// return error message
 		if(deathMsg === undefined) return;
-		var newDeathMsg = deathMsg.replace(/_/ig, "\\_")
+
+		// replace all _ with cancel \_
+		var newDeathMsg2 = deathMsg.replace(/`/ig, "\\`")
+		var newDeathMsg = newDeathMsg2.replace(/_/ig, "\\_")
 
 		var embedDeath = new Discord.MessageEmbed()
 							.setDescription(newDeathMsg)
@@ -338,7 +490,9 @@ function createBot () {
 
 		try {
 			client.channels.cache.get(defaultChannel).send(embedDeath);
+			newcolor = "DB2D2D";
 		} catch (e) {
+			if(!debugMsg) return;
 			console.log("CHAT MESSAGE ERROR", e)
 		}
 	})
@@ -359,10 +513,9 @@ function createBot () {
 		try {
 			client.channels.cache.get(defaultChannel).send(embed);
 		} catch (e) {
+			if(!debugMsg) return;
 			console.log("JOIN MESSAGE ERROR", e)
 		}
-
-		
 	});
 
 	bot.on("playerLeft", (player) => {
@@ -381,68 +534,61 @@ function createBot () {
 		try {
 			client.channels.cache.get(defaultChannel).send(embed);
 		} catch (e) {
+			if(!debugMsg) return;
 			console.log("LEAVE MESSAGE ERROR", e)
 		}
 	});
 
 	bot.on('windowOpen', () => { // slot button mode cb
-		console.log('Window open')
-		bot.clickWindow(8,0,0)
+		if(debug) {
+			console.log('Window open')
+		}
+
+		bot.clickWindow(4,0,0)
 		delay(1000)
+		bot.clickWindow(3,0,0)
 		bot.clickWindow(7,0,0)
-		bot.clickWindow(2,0,0)
-		bot.clickWindow(6,0,0)
+		bot.clickWindow(1,0,0)
 	});
 
 	bot.on('spawn', () => {
 		setInterval(function() {
-			var today = new Date()
-			let day = ("00" +today.getDate()).slice(-2)
-			let month = ("00" +(today.getMonth()+1)).slice(-2)
-			let years = ("00" + today.getFullYear()).slice(-2)
-			let hours = ("00" + today.getHours()).slice(-2)
-			let min = ("00" + today.getMinutes()).slice(-2)
-			let sec = ("00" + today.getSeconds()).slice(-2)
-			var date = day +'/'+month+'/'+years+' ' + hours + ':' + min + ":"+ sec;
-
-			//console.log(date + ' stats')
 			bot.chat('/stats');
 		}, 3*60*1000);
 
 		setInterval(function() {
 			bot.chat('> Tham gia discord của bot: https://discord.gg/yrNvvkqp6w')
-		}, 10*60*1000);
+		}, 5*60*1000);
 
 		setInterval(function() {
 			bot.chat('> Luyện tập crystal pvp tại: 2y2cpvp.sytes.net.')
-		}, 20*60*1000);
+		}, 10*60*1000);
 
 		setInterval(function() {
 			bot.chat('> Kiểm tra hàng chờ hiện tại: !queue')
-		}, 30*60*1000);
+		}, 15*60*1000);
 		
 		setInterval(function() {
 			bot.chat('> Kiểm tra hàng chờ ưu tiên hiện tại: !prio')
-		}, 40*60*1000);
+		}, 20*60*1000);
 
 		setInterval(function() {
 			bot.chat('> !ping để xem ping hiên tại của bạn hoặc của người khác.')
-		}, 50*60*1000);
+		}, 25*60*1000);
 	
 		setInterval(function() {
 			bot.chat('> !stats <name> xem chỉ số người khác.')
-		}, 60*60*1000);
+		}, 30*60*1000);
 
 		setInterval(function() {
 			bot.chat('> !kd <name> Xem số kill và death của ai đó.')
-		}, 70*60*1000);
+		}, 35*60*1000);
 
 	});
 
 	
 	bot.on('chat', function(username, logger) {
 		var botPrefix = "!";
-
 
 		var newCmd;
 		if(logger.startsWith(botPrefix)) {
@@ -455,8 +601,8 @@ function createBot () {
 		}
 
 		// deaths
-		if(newCmd === botPrefix + "stats") {
-			bot.whisper(username, `Lưu ý: Bạn phải nhập tên để có thể xem được.`)
+		if(logger.startsWith(botPrefix + "stats")) {
+			bot.whisper(username, `Lưu ý: Bạn phải nhập tên để xem được.`)
 
 			var newLog = logger.replace('!stats', '')
 			var args2 = newLog.split(' ')
@@ -483,10 +629,10 @@ function createBot () {
 
 			setTimeout(function() {
 				bot.whisper(username, `Kills: ${kills} - Deaths: ${die} - K/D Ratio : ${ratioFixed}`)
-			}, 5*1000); // 5seconds
+			}, 5*1000);
 		}
 
-		if(newCmd === "!kd") {
+		if(logger.startsWith(botPrefix + "kd")) {
 			bot.whisper(username, `Lưu ý: Bạn phải nhập tên để có thể xem được.`)
 
 			var newLog = logger.replace('!kd', '')
@@ -514,7 +660,7 @@ function createBot () {
 
 			setTimeout(function() {
 				bot.whisper(username, `Kills: ${kills} - Deaths: ${die} - K/D Ratio : ${ratioFixed}`)
-			}, 5*1000); // 5seconds
+			}, 5*1000);
 			
 		}
 
@@ -581,7 +727,8 @@ function createBot () {
 			try {
 				bot.chat("> Ping của người chơi " + newname + " là " + bot.players[newname].ping + "ms");
 			} catch (e) { 
-				console.log("PING OTHER ERROR", e)
+				if(!debug) return;
+				console.log("PING OTHER DEBUG ", e)
 			}
 			
 		}
@@ -617,7 +764,6 @@ function createBot () {
 					}
 				}
 				var prio = players2.toString().replace("2y2c §6Queue Size,§6Ưu Tiên: §l", "");
-
 				bot.whisper(username, `Hàng chờ ưu tiên hiện tại: ${prio}`)
 			})
 
@@ -650,51 +796,50 @@ function createBot () {
 			})
 		}
 		
-		topic.ping({"host": "2y2c.org"}, (err, result) =>{
-			if(result) {
-				try {
-					var players = [];
-					for(i = 0; result.players.sample.length > i; i++) {
-						players.push(result.players.sample[i].name);
+		setInterval(function() {
+			topic.ping({"host": "2y2c.org"}, (err, result) =>{
+				if(result) {
+					try {
+						var players = [];
+						for(i = 0; result.players.sample.length > i; i++) {
+							players.push(result.players.sample[i].name);
+						}
+						var players2 = players.splice(0, Math.ceil(players.length / 2));
+						if (players == []) {
+							players.push(players2);
+							players2 = ".";
+						}
+					} catch {
+						var players = 'unknwn';
+						var players2 = 'unknwn';
 					}
-					var players2 = players.splice(0, Math.ceil(players.length / 2));
-					if (players == []) {
-						players.push(players2);
-						players2 = ".";
-					}
-				} catch {
-					var players = 'unknwn';
-					var players2 = 'unknwn';
-				}
 
-				var oldold = players.toString().replace(",§6Cựu binh: §l0", "");
-				var old = oldold.toString().replace(",§6Cựu binh: §l1", "");
-				var queue = old.toString().replace("§6Bình thường: §l", "");
+					var oldold = players.toString().replace(",§6Cựu binh: §l0", "");
+					var old = oldold.toString().replace(",§6Cựu binh: §l1", "");
+					var queue = old.toString().replace("§6Bình thường: §l", "");
 
-				var prio = players2.toString().replace("2y2c §6Queue Size,§6Ưu Tiên: §l", "");
-				var status = "Queue: " + queue + " - Prio: " + prio + " - TPS: " + bot.getTps();
-				
-				// Time
-				var today = new Date()
-				let day = ("00" +today.getDate()).slice(-2)
-				let month = ("00" +(today.getMonth()+1)).slice(-2)
-				let years = ("00" + today.getFullYear()).slice(-2)
-				let hours = ("00" + today.getHours()).slice(-2)
-				let min = ("00" + today.getMinutes()).slice(-2)
-				let sec = ("00" + today.getSeconds()).slice(-2)
-				var date = day +'/'+month+'/'+years+' ' + hours + ':' + min;
-				
-				setInterval(function() {
+					var prio = players2.toString().replace("2y2c §6Queue Size,§6Ưu Tiên: §l", "");
+					var status = "Queue: " + queue + " - Prio: " + prio + " - TPS: " + bot.getTps();
+					
+					// Time
+					var today = new Date()
+					let day = ("00" +today.getDate()).slice(-2)
+					let month = ("00" +(today.getMonth()+1)).slice(-2)
+					let years = ("00" + today.getFullYear()).slice(-2)
+					let hours = ("00" + today.getHours()).slice(-2)
+					let min = ("00" + today.getMinutes()).slice(-2)
+					let sec = ("00" + today.getSeconds()).slice(-2)
+					var date = day +'/'+month+'/'+years+' ' + hours + ':' + min;
+					
 					try {
 						client.channels.cache.get(defaultChannel).setTopic(status + ` - Online: ${result.players.online}` + ` | Đã cập nhật lại lúc: ${date}`)
 					} catch (e) {
+						if(!debug) return;
 						console.log("SET TOPIC ERROR", e)
 					}
-				}, 5*60*1000);
-			}
-		});
-
-		//if(username === "whispers") return;
+				}
+			});
+		}, 5*60*1000);
 		
 		// Waiting for chat
 		if(username === "CS") return;
@@ -715,11 +860,8 @@ function createBot () {
 		// cancel uuid
 		if(username === "UUID") return;
 		
-		if(username === "c" || username === "d" || username === "Broadcast") {
-			color = '0xb60000';
-		}
-		// dm
-		if(logger.startsWith('[me ->')) return;
+		if(username === "c" || username === "d") return;
+		if(username === "Broadcast") return;
 
 		// restarts
 		if(logger === "Server sẽ Restart sau 15 phút!")
@@ -740,11 +882,29 @@ function createBot () {
 		if(username === "i" && logger === "<i> https://dicord.gg/yrNvvkqp6w") return;
 		if(username === "c" && logger === "vẫn đang được diễn ra trong diện tích 1000x1000 block với trung tâm là x:0 z:0 nether.")
 
-		var str = "";
+		var str;
+
+		// Command whisper
+		if(logger === "Tại sao bạn lại nhắn tin cho 1 con bot ? - Tham gia: https://discord.gg/yrNvvkqp6w"
+		|| logger === "Bạn có thể ghé thăm shop: https://discord.gg/nzm2SnDBGX (Revolution Shop)"
+		|| logger === "Hiện tại shop revolution đang tạm đóng!"
+		|| logger === 'Link server discord: dicord.gg/yrNvvkqp6w'
+		|| logger === "Xem tất cả lệnh tại: https://dicord.gg/yrNvvkqp6w"
+		|| logger.includes('Hàng chờ bình thường hiện tại')
+		|| logger.includes('Hàng chờ ưu tiên hiện tại')
+		|| logger.includes('Bạn đã nhận được')
+		|| logger.includes('Server TPS:')
+		|| logger.includes('Máu:')
+		|| logger.includes("Vị trí bot hiện tại:")
+		|| logger.includes('Kills')
+		|| logger.includes('không tìm thấy')
+		|| logger.includes('Thế giới đã tồn tại được')) {
+			color = "0xFD00FF";
+			str = "To ";
+		}
 
 		const dauhuyen = logger.replace(/`/ig, "\\`");
 		const newLogger = dauhuyen.replace(/_/ig, "\\_");
-
 		const newUsername = username.replace(/_/ig, "\\_");
 		
 		if(newLogger === undefined) {
@@ -755,10 +915,17 @@ function createBot () {
 			newUsername = username;
 		}
 
+		var usernameFormatted;
+
+		if(str === "To ") {
+			usernameFormatted = `nhắn cho **${newUsername}:**`;
+		} else {
+			usernameFormatted = `**<${newUsername}>**`;
+		}
+
 		// embed chat
 		var chat = new Discord.MessageEmbed()
-					// '`' + date + '` '+  
-					.setDescription(`**<${newUsername}>**  ${newLogger}`)
+					.setDescription(`${usernameFormatted}  ${newLogger}`)
 					.setColor(color);
 		try {
 			client.channels.cache.get(defaultChannel).send(chat);
@@ -770,7 +937,7 @@ function createBot () {
 	});
 		
 	bot.on('end', function(reason) {
-        waitUntil(180000, function condition() {
+        waitUntil(180000, 25, function condition() {
           try {
 			var today = new Date()
 			let day = ("00" +today.getDate()).slice(-2)
@@ -778,7 +945,7 @@ function createBot () {
 			let years = ("00" + today.getFullYear()).slice(-2)
 			let hours = ("00" + today.getHours()).slice(-2)
 			let min = ("00" + today.getMinutes()).slice(-2)
-			var date = day +'.'+month+'.'+years+' ' + hours + ':' + min
+			var date = day +'.'+month+'.'+years+' ' + hours + ':' + min;
 			console.log(date + " | Bot ended, attempting to reconnect...");
 
 			var reconnect = new Discord.MessageEmbed()
@@ -795,9 +962,8 @@ function createBot () {
                 console.log("Error: " + error);
                 return false;
             }
-            // Callback function that is only executed when condition is true or time allotted has elapsed
         }, function done(result) { // show result
-            console.log("Connection attempt result was: " + result);
+            console.log("Completed: " + result);
         });
    });
 
@@ -834,6 +1000,8 @@ function createBot () {
    });
 	
 }
+
+
 
 client.on("message", async message => {
 	const args = message.content.slice(prefix.length).trim().split(/ +/g);
@@ -893,7 +1061,7 @@ client.on("message", async message => {
 		var e = new Discord.MessageEmbed()
 					.setDescription('Bạn cần nhập username để xem thông tin. - `' + prefix + 'kd <name>`')
 					.setColor('C51515')
-					
+
 		if (!args[0]) return message.channel.send(e)
 
 		let kills = db.get(`${args[0]}_kills`);
@@ -964,6 +1132,7 @@ client.on("message", async message => {
 			var status = "Queue: " + queue + " - Prio: " + prio + " - Online: " + result.players.online;
 
 			// Help command
+			/*
 			if(command === "help") {
 				var channel = client.channels.cache.get('795193962541481994').toString();
 
@@ -986,7 +1155,7 @@ client.on("message", async message => {
 					message.delete({ timeout: 10000 });
 				});
 
-			}
+			} */
 
 			// Queue command
 			if(command === "queue" || command === "q") {
