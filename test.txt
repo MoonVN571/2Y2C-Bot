@@ -1,0 +1,30 @@
+// Ping
+		if(newCmd === botPrefix + "ping") {
+			try {
+				bot.chat("> Ping của người chơi " + username + " là " + bot.players[username].ping + "ms");
+			} catch (E) {
+				if(!debug) return;
+				console.log("PING ERROR", E)
+			}
+		}
+
+		// Ping other
+		if(logger.startsWith(botPrefix + "ping")) { 
+			
+			var str = logger;
+			var user = str.split(" ")[1];
+
+			var newname = user.replace(".", "");
+			console.log(newname)
+			if(!newname) {
+				return;
+			}
+
+			try {
+				bot.chat("> Ping của người chơi " + newname + " là " + bot.players[newname].ping + "ms");
+			} catch (e) { 
+				if(!debug) return;
+				console.log("PING OTHER DEBUG ", e)
+			}
+			
+		}
