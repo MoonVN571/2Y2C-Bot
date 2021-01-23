@@ -22,90 +22,75 @@ var tpsPlugin = require('mineflayer-tps')(mineflayer)
 var delay = require('delay')
 var db = require('quick.db');
 
-// footer
-const footer = "moonbot dev";
-const defaultChannel = '795135669868822528';
-
 // debugger
 var debug = false;
+
+// Sending message with error and catch
 var debugMsg = false;
-var debugError = false;
 
+// Developer mode
+var dev = false;
 
-//const fs = require("fs");
+// death message log
+var deathLog = false;
 
-// Command new
-/*
-fs.readdir("./events/", (err, files) => {
-	if (err) return console.error(err);
-	files.forEach(file => {
-		const event = require(`./events/${file}`);
-		let eventName = file.split(".")[0];
-		client.on(eventName, event.bind(null, client));
-	});
-});
+// footer
+const footer = "moonbot dev";
 
-client.commands = new Discord.Collection();
-client.aliases = new Discord.Collection()
+var defaultChannel;
 
-fs.readdir("./commands/", (err, files) => {
-	if (err) return console.error(err);
-	files.forEach(file => {
-		if (!file.endsWith(".js")) return;
-		let props = require(`./commands/${file}`);
-		let commandName = file.split(".")[0];
+// check channel debug
+if(dev) { // 795135669868822528 main
+	defaultChannel = '802454010400604161';
+} else {
+	defaultChannel = '795135669868822528';
+}
 
-		if (props.aliases) {
-			props.aliases.forEach(alias => {
-				client.aliases.set(alias, command)
-			})
-		}
+if(deathLog) {
+	console.log('---------------------')
+	console.log('Death Logger Mode True')
+	console.log('---------------------')
+} else {
+	console.log('---------------------')
+	console.log('Death Logger Mode: False')
+	console.log('---------------------')
+}
 
-		console.log(`Loaded ${commandName}`);
-		client.commands.set(commandName, props);
-	});
-}); */
+// Show DEBUG status
+if(debug) {
+	console.log('---------------------')
+	console.log('DEBUG Mode: True')
+	console.log('---------------------')
+} else {
+	console.log('---------------------')
+	console.log('DEBUG Mode: False')
+	console.log('---------------------')
+}
 
-// client.footer = footer;
-// client.prefix = prefix;
+if(dev) {
+	console.log('---------------------')
+	console.log('Developer Mode: True')
+	console.log('---------------------')
+} else {
+	console.log('---------------------')
+	console.log('Developer Mode: False')
+	console.log('---------------------')
+}
+
+if(debugMsg) {
+	console.log('---------------------')
+	console.log('DEBUG Send Message Mode: True')
+	console.log('---------------------')
+} else {
+	console.log('---------------------')
+	console.log('DEBUG Send Message Mode: False')
+	console.log('---------------------')
+}
+
 
 client.on('ready', () => {
 	console.log('Bot online!');
 	client.user.setActivity('Minecraft', { type: 'PLAYING' });
-
-	// Show DEBUG status
-	if(debug) {
-		console.log('---------------------')
-		console.log('DEBUG Mode: True')
-		console.log('---------------------')
-		client.user.setActivity('Debug', { type: 'LISTING' });
-	} else {
-		console.log('---------------------')
-		console.log('DEBUG Mode: False')
-		console.log('---------------------')
-	}
-
-	if(debugMsg) {
-		console.log('---------------------')
-		console.log('DEBUG Send Message Mode: True')
-		console.log('---------------------')
-		client.user.setActivity('Debug', { type: 'PLAYING' });
-	} else {
-		console.log('---------------------')
-		console.log('DEBUG Send Message Mode: False')
-		console.log('---------------------')
-	}
-
-	if(debugError) {
-		console.log('---------------------')
-		console.log('DEBUG Error Code Mode: True')
-		console.log('---------------------')
-		client.user.setActivity('Minecraft', { type: 'PLAYING' });
-	} else {
-		console.log('---------------------')
-		console.log('DEBUG Error Code Mode: False')
-		console.log('---------------------')
-	}
 	
 });
 
@@ -122,6 +107,8 @@ function createBot () {
 
 	/// set default color embed
 	var color = "0x979797";
+
+	var lobby = false;
 
 	bot.loadPlugin(tpsPlugin);
 
@@ -141,6 +128,21 @@ function createBot () {
 
 	});
 
+	bot.on('login', () => {
+		lobby = true;
+
+		const queuejoined = new Discord.MessageEmbed()
+					.setDescription(`**Bot đã tham gia hàng chờ!**`)
+					.setColor("FFFB00");
+
+		try {
+			client.channels.cache.get(defaultChannel).send(queuejoined);
+		} catch(e) {
+			if(!debugMsg) return;
+			console.log("JOINED THE SERVER MESSAGE ERROR ", e)
+		}
+	})
+
 	bot.on('message', message => {
 		var newcolor = 'DB2D2D';
 		var logger = message.toString()
@@ -148,31 +150,39 @@ function createBot () {
 								.setDescription(logger)
 								.setColor(color) // default
 		try {
-			client.channels.cache.get('797426761142632450').send(embed);
+			if(!dev) {
+				client.channels.cache.get('797426761142632450').send(embed);
+			} else {
+				client.channels.cache.get('802456011252039680').send(embed);
+			}
 		} catch(e) {
 			if(!debugMsg) return;
 				console.log("CHAT CLONE ERROR ", e)
 		}
 
-		if(logger === '2y2c đã full') {
-			const queuejoined = new Discord.MessageEmbed()
-					.setDescription(`**Bot đã tham gia hàng chờ!**`)
-					.setColor("FFFB00");
-
-			try {
-				client.channels.cache.get(defaultChannel).send(queuejoined);
-			} catch(e) {
-				if(!debugMsg) return;
-				console.log("JOINED THE SERVER MESSAGE ERROR ", e)
-			}
-			return;
-		}
+		if(logger === '2y2c đã full') return;
 
 		if(logger === "Dự án quét sạch mọi block trên y119 (không tính đường cao tốc) vẫn đang được diễn ra trong diện tích 1000x1000 block với trung tâm là x:0 z:0 nether.") {
 			newcolor = "0xb60000";
+			deathmsg = logger;
+		}
+
+		if(logger.startsWith("[Broadcast]")) {
+			newcolor = "0xb60000";
+			deathmsg = logger;
+		}
+		
+		if(logger === "Donate để duy trì server admin đang đói chết con *ĩ *ẹ.") {
+			newcolor = '0xb60000';
+			deathMsg = logger;
+		}
+		if(logger.startsWith("[Server]")) {
+			newcolor = '0xb60000';
+			deathMsg = logger;
 		}
 		
 		if(logger === 'Đang vào 2y2c') {
+			lobby = false;
 			const joined = new Discord.MessageEmbed()
 					.setDescription(`**Bot đang vào server chính!**`)
 					.setColor("FFFB00");
@@ -183,7 +193,6 @@ function createBot () {
 				if(!debugMsg) return;
 				console.log("JOINED THE MAIN SERVER MSG ERROR ", e)
 			}
-			return;
 		}
 
 		if(logger === undefined) return; // return if msg is undefined
@@ -200,6 +209,7 @@ function createBot () {
 		// value to embed
 		var deathMsg;
 
+
 		// kill Message
 			if(logger.includes('chết cháy khi đánh với')) {
 				var str = logger;
@@ -207,7 +217,7 @@ function createBot () {
 
 				let data = db.get(`${user}_kills`);
 
-				if(debug) {
+				if(deathLog) {
 					console.log(logger);
 					console.log(user);
 					console.log('--------------------')
@@ -227,7 +237,7 @@ function createBot () {
 
 				let data = db.get(`${user}_kills`);
 
-				if(debug) {
+				if(deathLog) {
 					console.log(logger);
 					console.log(user);
 					console.log('--------------------')
@@ -260,7 +270,7 @@ function createBot () {
 				var str = logger;
 				var user = str.split(" ")[12];
 				
-				if(debug) {
+				if(deathLog) {
 					console.log(logger);
 					console.log(user);
 					console.log('--------------------')
@@ -283,7 +293,7 @@ function createBot () {
 				
 				let data = db.get(`${user}_kills`);
 
-				if(debug) {
+				if(deathLog) {
 					console.log(logger);
 					console.log(user);
 					console.log('--------------------')
@@ -304,7 +314,7 @@ function createBot () {
 				
 				let data = db.get(`${user}_kills`);
 				
-				if(debug) {
+				if(deathLog) {
 					console.log(logger);
 					console.log(user);
 					console.log('--------------------')
@@ -325,7 +335,7 @@ function createBot () {
 				
 				let data = db.get(`${user}_kills`);
 
-				if(debug) {
+				if(deathLog) {
 					console.log(logger);
 					console.log(user);
 					console.log('--------------------')
@@ -345,7 +355,7 @@ function createBot () {
 				
 				let data = db.get(`${user}_kills`);
 				
-				if(debug) {
+				if(deathLog) {
 					console.log(logger);
 					console.log(user);
 					console.log('--------------------')
@@ -365,7 +375,7 @@ function createBot () {
 				
 				let data = db.get(`${user}_kills`);
 				
-				if(debug) {
+				if(deathLog) {
 					console.log(logger);
 					console.log(user);
 					console.log('--------------------')
@@ -386,7 +396,7 @@ function createBot () {
 
 				let data = db.get(`${user}_kills`);
 				
-				if(debug) {
+				if(deathLog) {
 					console.log(logger);
 					console.log(user);
 					console.log('--------------------')
@@ -422,7 +432,7 @@ function createBot () {
 				var str = logger;
 				var user = str.split(" ")[5];
 
-				if(debug) {
+				if(deathLog) {
 					console.log(logger);
 					console.log(user);
 					console.log('--------------------')
@@ -455,19 +465,15 @@ function createBot () {
 			|| logger.includes('died')
 			|| logger.includes('chết')
 			|| logger.includes('Chết')) {
-				if(logger === "Donate để duy trì server admin đang đói chết con *ĩ *ẹ.") {
-					newcolor = '0xb60000';
-					deathMsg = logger;
-					return;
-				} else if(logger.startsWith("[Server]")) {
-					newcolor = '0xb60000';
-					deathMsg = logger;
-					return;
-				}
-
 				var user = logger.split(" ")[0];
 				let data = db.get(`${user}_dead`);
-				
+
+				if(deathLog) {
+					console.log(logger);
+					console.log(user);
+					console.log('--------------------')
+				}
+
 				if(data === null) {
 					db.set(`${user}_dead`, 1)
 				} else {
@@ -510,6 +516,7 @@ function createBot () {
 		var embed = new Discord.MessageEmbed()
 							.setDescription(newUsername + " joined")
 							.setColor('0xb60000')
+
 		try {
 			client.channels.cache.get(defaultChannel).send(embed);
 		} catch (e) {
@@ -552,6 +559,52 @@ function createBot () {
 	});
 
 	bot.on('spawn', () => {
+		/*
+		setInterval(function() {
+			topic.ping({"host": "2y2c.org"}, (err, result) =>{
+				if(result) {
+					try {
+						var players = [];
+						for(i = 0; result.players.sample.length > i; i++) {
+							players.push(result.players.sample[i].name);
+						}
+						var players2 = players.splice(0, Math.ceil(players.length / 2));
+						if (players == []) {
+							players.push(players2);
+							players2 = ".";
+						}
+					} catch {
+						var players = 'unknwn';
+						var players2 = 'unknwn';
+					}
+
+					var oldold = players.toString().replace(",§6Cựu binh: §l0", "");
+					var old = oldold.toString().replace(",§6Cựu binh: §l1", "");
+					var queue = old.toString().replace("§6Bình thường: §l", "");
+
+					var prio = players2.toString().replace("2y2c §6Queue Size,§6Ưu Tiên: §l", "");
+					var status = "Queue: " + queue + " - Prio: " + prio + " - TPS: " + bot.getTps();
+					
+					// Time
+					var today = new Date()
+					let day = ("00" +today.getDate()).slice(-2)
+					let month = ("00" +(today.getMonth()+1)).slice(-2)
+					let years = ("00" + today.getFullYear()).slice(-2)
+					let hours = ("00" + today.getHours()).slice(-2)
+					let min = ("00" + today.getMinutes()).slice(-2)
+					let sec = ("00" + today.getSeconds()).slice(-2)
+					var date = day +'/'+month+'/'+years+' ' + hours + ':' + min;
+					
+					try {
+						client.channels.cache.get(defaultChannel).setTopic(status + ` - Online: ${result.players.online}` + ` | Đã cập nhật lại lúc: ${date}`)
+					} catch (e) {
+						if(!debugMsg) return;
+						console.log("SET TOPIC ERROR", e)
+					}
+				}
+			});
+		}, 5*60*1000); */
+
 		setInterval(function() {
 			bot.chat('/stats');
 		}, 3*60*1000);
@@ -562,34 +615,84 @@ function createBot () {
 
 		setInterval(function() {
 			bot.chat('> Luyện tập crystal pvp tại: 2y2cpvp.sytes.net.')
-		}, 10*60*1000);
+		}, 11*60*1000);
 
 		setInterval(function() {
 			bot.chat('> Kiểm tra hàng chờ hiện tại: !queue')
-		}, 15*60*1000);
+		}, 16*60*1000);
 		
 		setInterval(function() {
 			bot.chat('> Kiểm tra hàng chờ ưu tiên hiện tại: !prio')
-		}, 20*60*1000);
+		}, 23*60*1000);
 
 		setInterval(function() {
 			bot.chat('> !ping để xem ping hiên tại của bạn hoặc của người khác.')
-		}, 25*60*1000);
+		}, 42*60*1000);
 	
 		setInterval(function() {
 			bot.chat('> !stats <name> xem chỉ số người khác.')
-		}, 30*60*1000);
+		}, 48*60*1000);
 
 		setInterval(function() {
 			bot.chat('> !kd <name> Xem số kill và death của ai đó.')
-		}, 35*60*1000);
-
+		}, 58*60*1000);
 	});
 
-	
-	bot.on('chat', function(username, logger) {
-		var botPrefix = "!";
+	// Tablist content to show queue
+	bot._client.on("playerlist_header", data => {
+		//if(!dev) return;
+		if(lobby) {
+			var header = data.header;
+			var s1 = header.replace(/\\n/ig, " ");
+			var s2 = s1.replace(/ 2y2c  2y2c §bđã full /ig, "");
+			var s3 = s2.replace(/§b|§l|§6/ig, "");
+			var s4 = s3.replace(/{"text":"/ig, "");
+			var s5 = s4.replace(/"}/ig, "");
 
+			queueLog(s5);
+		} else {
+			var footer = data.footer;
+			//console.log(footer)
+			var s1 = footer.replace(/\\n/ig, " ");
+			var s2 = s1.replace(/-/ig, "");
+			var s3 = s2.replace(/§3|§d|§a\§r/ig, "");
+			var s4 = s3.replace(/{"text":"/ig,"")
+			var tps = s4.split(" ")[1];
+			var online = s4.split(" ")[3];
+			var ping = s4.split(" ")[5];
+			//setTimeout(function() {
+				// console.log("tps " + tps + " online " + online + "ping " +ping)
+				// console.log(s4)
+			//}, 20000)
+		}
+		 
+	})
+
+	function queueLog(s5) {
+		setTimeout(function() {
+			if(!lobby) return;
+			//if(!dev) return;
+				try {
+					var embed = new Discord.MessageEmbed()
+									.setDescription(s5)
+									.setColor("0xFFCE00")
+					client.channels.cache.get(defaultChannel).send(embed);
+				} catch (e) {
+					if(!debugMsg) return;
+					console.log("QUEUE MESSAGE ", e)
+				}
+			
+		}, 10000);
+	}
+
+	bot.on('chat', function(username, logger) {
+		var botPrefix;
+		if(!dev) {
+			botPrefix = "!";
+		} else {
+			botPrefix = "Dev!";
+		}
+		
 		var newCmd;
 		if(logger.startsWith(botPrefix)) {
 			newCmd = logger.replace(".", "")
@@ -602,12 +705,13 @@ function createBot () {
 
 		// deaths
 		if(logger.startsWith(botPrefix + "stats")) {
-			bot.whisper(username, `Lưu ý: Bạn phải nhập tên để xem được.`)
+			if(newCmd === botPrefix + "stats") {
+				bot.whisper(username, "Bạn phải nhập tên - !stats <name>")
+				return;
+			}
 
-			var newLog = logger.replace('!stats', '')
-			var args2 = newLog.split(' ')
-			const args3 = args2.toString().replace(',', '')
-			const args = args3.toString().replace('.', '')
+			var str = logger.replace(".", "");
+			var args = str.split(" ")[1];
 			
 			let die = db.get(`${args}_dead`);
 			let kills = db.get(`${args}_kills`);
@@ -628,17 +732,18 @@ function createBot () {
 			}
 
 			setTimeout(function() {
-				bot.whisper(username, `Kills: ${kills} - Deaths: ${die} - K/D Ratio : ${ratioFixed}`)
+				bot.chat(`> ${args}'s statistics - Kills: ${kills} | Deaths: ${die} | K/D Ratio : ${ratioFixed}`)
 			}, 5*1000);
 		}
 
 		if(logger.startsWith(botPrefix + "kd")) {
-			bot.whisper(username, `Lưu ý: Bạn phải nhập tên để có thể xem được.`)
+			if(newCmd === botPrefix + "kd") {
+				bot.whisper(username, "Bạn phải nhập tên - !kd <name>")
+				return;
+			}
 
-			var newLog = logger.replace('!kd', '')
-			var args2 = newLog.split(' ')
-			const args3 = args2.toString().replace(',', '')
-			const args = args3.toString().replace('.', '')
+			var str = logger.replace(".", "");
+			var args = str.split(" ")[1];
 			
 			let die = db.get(`${args}_dead`);
 			let kills = db.get(`${args}_kills`);
@@ -659,7 +764,7 @@ function createBot () {
 			}
 
 			setTimeout(function() {
-				bot.whisper(username, `Kills: ${kills} - Deaths: ${die} - K/D Ratio : ${ratioFixed}`)
+				bot.chat(`> ${args}'s statistics - Kills: ${kills} | Deaths: ${die} | K/D Ratio : ${ratioFixed}`)
 			}, 5*1000);
 			
 		}
@@ -680,6 +785,7 @@ function createBot () {
 		
 		// Kit
 		if(logger.startsWith(botPrefix + "kit")) {
+
 			var newLog = logger.replace('!kit', '')
 			var args = newLog.split(',')
 			
@@ -693,8 +799,7 @@ function createBot () {
 
 		// buykit
 		if(newCmd === botPrefix + "buykit") {
-			//bot.whisper(username, 'Bạn có thể ghé thăm shop: https://discord.gg/nzm2SnDBGX (Revolution Shop)')
-			bot.whisper(username, 'Hiện tại shop revolution đang tạm đóng!')
+			bot.whisper(username, 'Đéo có shop cho bạn, hãy tự tìm hiểu.')
 		}
 
 		// TPS
@@ -703,44 +808,33 @@ function createBot () {
 		}
 		
 		// Ping
-		if(newCmd === botPrefix + "ping") {
+		if(logger === botPrefix + "ping.") {
 			try {
 				bot.chat("> Ping của người chơi " + username + " là " + bot.players[username].ping + "ms");
 			} catch (E) {
+				if(!debug) return;
 				console.log("PING ERROR", E)
 			}
 		}
 
 		// Ping other
 		if(logger.startsWith(botPrefix + "ping")) {
-			if(newCmd === botPrefix + "ping") {
-				return;
-			}
-
-			var newLog = logger.replace('!ping', '')
-			var args = newLog.split(',')
-			var name = args.toString();
-
-			var newname2 = name.replace(".", "");
-			var newname = newname2.replace(" ", "");
-
+			if(logger === botPrefix + "ping.") return;
+			var str = logger.replace(".", "");
+			var user = str.split(" ")[1];
+			// console.log(user)	
 			try {
-				bot.chat("> Ping của người chơi " + newname + " là " + bot.players[newname].ping + "ms");
+				bot.chat("> Ping của người chơi " + user + " là " + bot.players[user].ping + "ms");
 			} catch (e) { 
 				if(!debug) return;
 				console.log("PING OTHER DEBUG ", e)
 			}
 			
 		}
-		
-		// Health
-		if(newCmd === botPrefix + "health") {
-			bot.whisper(username, `Máu: ${bot.health}, Thức ăn: ${bot.food}`);
-		}
 
 		// Kill
 		if(newCmd === botPrefix + "kill" || newCmd === botPrefix + 'suicide') {
-			bot.chat('Attemping /kill on chat.')
+			bot.chat('> Attemping /kill.')
 			bot.chat('/kill')
 		}
 		
@@ -796,51 +890,6 @@ function createBot () {
 			})
 		}
 		
-		setInterval(function() {
-			topic.ping({"host": "2y2c.org"}, (err, result) =>{
-				if(result) {
-					try {
-						var players = [];
-						for(i = 0; result.players.sample.length > i; i++) {
-							players.push(result.players.sample[i].name);
-						}
-						var players2 = players.splice(0, Math.ceil(players.length / 2));
-						if (players == []) {
-							players.push(players2);
-							players2 = ".";
-						}
-					} catch {
-						var players = 'unknwn';
-						var players2 = 'unknwn';
-					}
-
-					var oldold = players.toString().replace(",§6Cựu binh: §l0", "");
-					var old = oldold.toString().replace(",§6Cựu binh: §l1", "");
-					var queue = old.toString().replace("§6Bình thường: §l", "");
-
-					var prio = players2.toString().replace("2y2c §6Queue Size,§6Ưu Tiên: §l", "");
-					var status = "Queue: " + queue + " - Prio: " + prio + " - TPS: " + bot.getTps();
-					
-					// Time
-					var today = new Date()
-					let day = ("00" +today.getDate()).slice(-2)
-					let month = ("00" +(today.getMonth()+1)).slice(-2)
-					let years = ("00" + today.getFullYear()).slice(-2)
-					let hours = ("00" + today.getHours()).slice(-2)
-					let min = ("00" + today.getMinutes()).slice(-2)
-					let sec = ("00" + today.getSeconds()).slice(-2)
-					var date = day +'/'+month+'/'+years+' ' + hours + ':' + min;
-					
-					try {
-						client.channels.cache.get(defaultChannel).setTopic(status + ` - Online: ${result.players.online}` + ` | Đã cập nhật lại lúc: ${date}`)
-					} catch (e) {
-						if(!debug) return;
-						console.log("SET TOPIC ERROR", e)
-					}
-				}
-			});
-		}, 5*60*1000);
-		
 		// Waiting for chat
 		if(username === "CS") return;
 
@@ -855,6 +904,7 @@ function createBot () {
 		|| username === "Streak"
 		|| username === "Elo") return;
 		
+		if(username === "Achievement") return;
 		//if(username === "auth") return;
 
 		// cancel uuid
@@ -880,23 +930,22 @@ function createBot () {
 		// new method msg
 		if(username === "i" && logger.includes("(") && logger.includes(")") && logger.includes(".") && logger.includes(",")) return;
 		if(username === "i" && logger === "<i> https://dicord.gg/yrNvvkqp6w") return;
-		if(username === "c" && logger === "vẫn đang được diễn ra trong diện tích 1000x1000 block với trung tâm là x:0 z:0 nether.")
+		if(username === "c" && logger === "vẫn đang được diễn ra trong diện tích 1000x1000 block với trung tâm là x:0 z:0 nether.") return;
 
 		var str;
 
 		// Command whisper
 		if(logger === "Tại sao bạn lại nhắn tin cho 1 con bot ? - Tham gia: https://discord.gg/yrNvvkqp6w"
-		|| logger === "Bạn có thể ghé thăm shop: https://discord.gg/nzm2SnDBGX (Revolution Shop)"
-		|| logger === "Hiện tại shop revolution đang tạm đóng!"
+		|| logger === "Đéo có shop cho bạn, hãy tự tìm hiểu."
 		|| logger === 'Link server discord: dicord.gg/yrNvvkqp6w'
 		|| logger === "Xem tất cả lệnh tại: https://dicord.gg/yrNvvkqp6w"
+		|| logger === "Bạn phải nhập tên - !kd <name>"
 		|| logger.includes('Hàng chờ bình thường hiện tại')
 		|| logger.includes('Hàng chờ ưu tiên hiện tại')
 		|| logger.includes('Bạn đã nhận được')
 		|| logger.includes('Server TPS:')
 		|| logger.includes('Máu:')
 		|| logger.includes("Vị trí bot hiện tại:")
-		|| logger.includes('Kills')
 		|| logger.includes('không tìm thấy')
 		|| logger.includes('Thế giới đã tồn tại được')) {
 			color = "0xFD00FF";
@@ -968,8 +1017,43 @@ function createBot () {
    });
 
    client.on('message', msg => {
-	   	// control
+		// control
+
+		if(dev) {
+			if(msg.channel.id === "802456011252039680") {
+				if(msg.author == client.user) return;
+				bot.chat(msg.content);
+			}
+			// 2y2c dev
+			if(msg.channel.id == '802454010400604161') {
+				var user = msg.mentions.users.first();
+	
+				// return user = bot
+				if(msg.author.bot) return;
+				if(user) return;
+	
+				if(msg.content.startsWith(">")) return;
+				if(msg.content.startsWith(prefix)) return;
+				
+				var str = msg.content;
+				var content = str.charAt(0).toUpperCase() + str.slice(1);
+
+				if(!content) return;
+				
+				chat(content);
+	
+				function chat(content) {
+					bot.chat(`> [DEV: ${msg.author.tag}] ${content}`);
+				}
+	
+				const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");
+				msg.react(send);
+			}
+			return;
+		}
+
 		if(msg.channel.id === '797426761142632450') {
+			if(dev) return;
 			if(msg.author == client.user) return;
 			bot.chat(msg.content);
 		}
