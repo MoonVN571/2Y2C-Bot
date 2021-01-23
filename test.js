@@ -23,13 +23,13 @@ var delay = require('delay')
 var db = require('quick.db');
 
 // debugger
-var debug = false;
+var debug = true;
 
 // Sending message with error and catch
-var debugMsg = false;
+var debugMsg = true;
 
 // Developer mode
-var dev = false;
+var dev = true;
 
 // death message log
 var deathLog = false;
@@ -101,7 +101,7 @@ function createBot () {
 	const bot = mineflayer.createBot({
 		host: '2y2c.org',
 		port: 25565,
-		username: '2y2cBot',
+		username: '2y2cBot2',
 		version: "1.12.2"
 	});
 
@@ -559,7 +559,6 @@ function createBot () {
 	});
 
 	bot.on('spawn', () => {
-		/*
 		setInterval(function() {
 			topic.ping({"host": "2y2c.org"}, (err, result) =>{
 				if(result) {
@@ -603,7 +602,7 @@ function createBot () {
 					}
 				}
 			});
-		}, 5*60*1000); */
+		}, 5*60*1000);
 
 		setInterval(function() {
 			bot.chat('/stats');
@@ -650,6 +649,7 @@ function createBot () {
 			var s5 = s4.replace(/"}/ig, "");
 
 			queueLog(s5);
+
 		} else {
 			var footer = data.footer;
 			//console.log(footer)
@@ -687,10 +687,10 @@ function createBot () {
 
 	bot.on('chat', function(username, logger) {
 		var botPrefix;
-		if(!dev) {
-			botPrefix = "!";
-		} else {
+		if(dev) {
 			botPrefix = "Dev!";
+		} else {
+			botPrefix = "!";
 		}
 		
 		var newCmd;
