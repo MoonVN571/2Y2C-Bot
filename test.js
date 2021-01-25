@@ -54,7 +54,7 @@ function createBot () {
 	const bot = mineflayer.createBot({
 		host: '2y2c.org',
 		port: 25565,
-		username: '2y2cBot',
+		username: '2y2cBot3',
 		version: "1.12.2"
 	});
 
@@ -91,7 +91,7 @@ function createBot () {
 		}
 
 		const queuejoined = new Discord.MessageEmbed()
-					.setDescription(`**Bot đã tham gia hàng chờ!**`)
+					.setDescription(`**Bot** đã tham gia hàng chờ!`)
 					.setColor("FFFB00");
 
 		try {
@@ -169,7 +169,7 @@ function createBot () {
 		if(logger === 'Đang vào 2y2c') {
 			lobby = false;
 			const joined = new Discord.MessageEmbed()
-					.setDescription(`**Bot đang vào server chính!**`)
+					.setDescription(`**Bot** đang vào server chính!`)
 					.setColor("FFFB00");
 
 			try {
@@ -708,6 +708,7 @@ function createBot () {
 
 			var str = logger.replace(".", "");
 			args = str.split(" ")[1];
+
 			if(newCmd === botPrefix + "kd") {
 				args = username;
 			}
@@ -863,6 +864,9 @@ function createBot () {
 		
 		if(username === "Achievement") return;
 		//if(username === "auth") return;
+
+		if(username === "n") return;
+		if(username === "ReadTimeoutException") return;
 
 		// cancel uuid
 		if(username === "UUID") return;
