@@ -54,7 +54,7 @@ function createBot () {
 	const bot = mineflayer.createBot({
 		host: '2y2c.org',
 		port: 25565,
-		username: '2y2cBot3',
+		username: '2y2cBot',
 		version: "1.12.2"
 	});
 
