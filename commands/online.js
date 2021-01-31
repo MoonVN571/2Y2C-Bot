@@ -1,10 +1,7 @@
 const Discord = require("discord.js");
 const mc = require("minecraft-protocol")
 
-exports.run = (client, message, args) => {
-	const args = message.content.slice(client.prefix.length).trim().split(/ +/g);
-    const command = args.shift().toLowerCase();
-    
+exports.run = (client, message) => {
     if(command === "o" || command === "online") {
         mc.ping({"host": "2y2c.org"}, (err, result) =>{
             if(result) {

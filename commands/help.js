@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const mc = require("minecraft-protocol")
 
-exports.run = (client, message, args) => {
+exports.run = (client, message) => {
     var channel = client.channels.cache.get('795193962541481994').toString();
     var prefix = client.prefix;
 

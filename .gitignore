@@ -103,4 +103,4 @@ dist
 .tern-port
 
 # Custom file
-json.sqlite
+.sqlite

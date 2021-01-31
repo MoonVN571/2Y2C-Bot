@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const mc = require("minecraft-protocol")
 
-exports.run = (client, message, args) => {
+exports.run = (client, message) => {
 	const args = message.content.slice(client.prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
     

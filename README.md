@@ -1,2 +1,2 @@
 # 2Y2C Bot Dev
- 2Y2C Status and chat logger
+Simple 2Y2C Minecraft bot by Moonz
