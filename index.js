@@ -25,7 +25,7 @@ const footer = "moonbot dev";
 var prefix = "$";
 
 // Developer mode
-var dev = true;
+var dev = false;
 
 // uptime server
 var minutes;
