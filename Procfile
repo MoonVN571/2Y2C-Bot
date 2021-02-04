@@ -1,1 +1,1 @@
-Worker: node test
+worker node test
