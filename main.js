@@ -8,7 +8,7 @@ client.config = config;
 client.footer = "moonbot dev";
 
 var mineflayer = require('mineflayer')
-var tpsPlugin = require('mineflayer-tps')(mineflayer)
+// var tpsPlugin = require('mineflayer-tps')(mineflayer)
 
 
 client.on('ready', () => {
@@ -50,6 +50,8 @@ fs.readdir("./commands/", (err, files) => {
   });
 });
 
+client.igCommands = new Discord.Collection();
+
 fs.readdir("./ingame-commands/", (err, files) => {
   if (err) return console.error(err);
 
@@ -58,7 +60,7 @@ fs.readdir("./ingame-commands/", (err, files) => {
     let props = require(`./ingame-commands/${file}`);
     let commandName = file.split(".")[0];
     console.log(`Loaded ${commandName}`);
-    client.commands.set(commandName, props);
+    client.igCommands.set(commandName, props);
   });
 });
 
