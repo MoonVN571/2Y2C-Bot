@@ -2,14 +2,10 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
 
-// env files
-const token = require('dotenv').config();
-const config = {
-	token: process.env.token, // Discord token
-	ip: process.env.ip, // Server IP
-};
 var mineflayer = require('mineflayer')
 var delay = require('delay')
+var waitUntil = require('wait-until')
+
 // Minecraft protocol
 const mc = require("minecraft-protocol");
 
@@ -22,51 +18,123 @@ client.on('ready', () => {
 
 function createBot () {
 	const bot = mineflayer.createBot({
-		host: config.ip,
+		host: "2y2c.org",
 		port: 25565,
-		username: "mo0nbot2",
+		username: "0Channy",
 		version: "1.12.2"
     }); // Start bot
-    bot.on('windowOpen', () => { // slot button mode cb
 
-      bot.clickWindow(4, 0, 0)
-      delay(1000)
-      bot.clickWindow(3, 0, 0)
-      bot.clickWindow(7, 0, 0)
-      bot.clickWindow(1, 0, 0)
-      
-      bot.setQuickBarSlot(0)
-      bot.activateItem()
-    });
-    var sending = false;
-    var stats = false;
-    bot.on('spawn', () => {
-      setInterval(function() {
-        if(stats) return;
-        stats = true;
-        // bot.chat('/stats');
-        bot.swingArm("left");
-        bot.look(Math.floor(Math.random() * Math.floor("360")), 0, true, null);
-        antiAfk();
-      }, 1*60*1000);
-  
-      function antiAfk() {
-        setTimeout(function() {
-          stats = false;
-        }, 6*1000);
-      }
-  
-    });
-    bot.on("chat", (username, message, translate, jsonMsg, matches) => {
-      console.log(username + ":" + message)
-        if(jsonMsg.translate == 'chat.type.announcement' || jsonMsg.translate == 'chat.type.text') {
-            var user = jsonMsg.with[0].text;
-            var msg = jsonMsg.with[1];
-            // if(username === client.username) return;
-            console.log(user + ": " + msg)
-          }
+    bot.on('login', () => {
+      client.channels.cache.get("808903676873539614").send("Connected to the server.");
     })
+    var one = false;
+    bot.on('windowOpen', () => { // slot button mode cb
+      if(one) return;
+      one = true;
+      setTimeout(() => {
+        var random =  (Math.floor(Math.random("1") * Math.floor("9")) + 1) /*(Math.floor(Math.random("1") * 4)+ 5)*/ + " " +
+                      (Math.floor(Math.random("1") * Math.floor("9")) + 1) + " " +
+                      (Math.floor(Math.random("1") * Math.floor("9")) + 1) + " " +
+                      (Math.floor(Math.random("1") * Math.floor("9")) + 1);
+
+        console.log("try: " + random);
+        
+        if(random !== undefined) {
+          client.channels.cache.get("808903676873539614").send("Try " + bot.username + " with " + random);
+        }
+        var pin1 = random.split(' ')[0]
+        var pin2 = random.split(' ')[1]
+        var pin3 = random.split(' ')[2]
+        var pin4 = random.split(' ')[3]
+
+        bot.clickWindow(pin1, 0, 0)
+        delay(1000)
+        bot.clickWindow(pin2, 0, 0)
+        bot.clickWindow(pin3, 0, 0)
+        bot.clickWindow(pin4, 0, 0)
+
+        setTimeout(() => {
+          one = false;
+        }, 1*1000);
+      }, 3*1000);
+
+    });
+
+    bot.on('title', function(title)  {
+      console.log(title)
+      if(title.includes("§c§lSai PIN")) {
+        client.channels.cache.get("808903676873539614").send("Wrong PIN! Trying another.");
+        console.log("wrong")
+      }
+      if(title.includes("§a§lWelcome")) {
+        client.channels.cache.get("808903676873539614").send("Logged in to the server.");
+        console.log("correct")
+      }
+    })
+
+    bot.on('message', msg => {
+      console.log(msg.toString())
+      if(msg.toString().startsWith("Exception")
+      || msg.toString() === "Kicked whilst connecting to auth: You have lost connection to the server") {
+        bot.quit("error")
+      }
+    })
+
+    var spawn = 0;
+    bot.on('spawn', () => {
+      console.log("spawn " + spawn)
+      spawn++;
+      console.log(bot.entity.position)
+      var position = bot.entity.position;
+      if(position === undefined) return;
+      client.channels.cache.get("808903676873539614").send("I spawned at " + position);
+
+      setTimeout(() => {
+        if(spawn < 3) {
+            bot.quit("dis")
+        }
+      }, 30*1000);
+    });
+
+    // bot.on('message', msg => {
+    //   console.log(msg.toString())
+    // })
+
+    bot.on('kicked', (reason) => {
+      console.log(reason)
+      setTimeout(() => {
+
+      }, 3*1000)
+    })
+    
+    bot.on('end', () => {
+      client.channels.cache.get("808903676873539614").send("I have kicked!");
+      console.log("I have kicked")
+      waitUntil(240000, 30, function condition() {
+        client.channels.cache.get("808903676873539614").send("Trying to reconnect...");
+				try {
+					var today = new Date()
+					let day = ("00" + today.getDate()).slice(-2)
+					let month = ("00" + (today.getMonth() + 1)).slice(-2)
+					let years = ("00" + today.getFullYear()).slice(-2)
+					let hours = ("00" + today.getHours()).slice(-2)
+					let min = ("00" + today.getMinutes()).slice(-2)
+					var date = day + '.' + month + '.' + years + ' ' + hours + ':' + min
+					console.log(date + " | Bot ended, attempting to reconnect... \n-----------------------------");
+					
+					createBot(); // reconnect
+					
+					return true;
+				} catch (error) {
+					console.log("Error: " + error);
+					return false;
+				}
+			}, function done(result) {
+				console.log("Completed: " + result);
+			});
+    })
+
 }
 
-client.login("NzY4NDQ4NzI4MTI1NDA3MjQy.X5AnpQ.CR2KnoF7inw0jDjqAiQcOMGck28").catch(err => console.log(err));
+client.login("ODA4OTA1MTUzNzYzMzQ0Mzg0.YCNVoQ.N5ZBxVzhTfL6ViNU4oEQUZ4C-MQ").catch(err => console.log(err));
 client.on("error", (e) => { console.error(e) });
