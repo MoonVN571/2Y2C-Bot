@@ -105,7 +105,6 @@ dist
 node_modules
 json.sqlite
 json.sqlite-journal
-*.bat
+login.bat
 test.js
-testpacket.js
 testpacket.js
