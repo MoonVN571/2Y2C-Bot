@@ -6,3 +6,4 @@ if(a < 2) {
     b = a;
 }
 console.log("str " + b + "c")
+false

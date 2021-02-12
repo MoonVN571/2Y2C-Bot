@@ -12,7 +12,6 @@ const mc = require("minecraft-protocol");
 client.on('ready', () => {
 	console.log('Bot online!');
 
-	// create this bot
 	createBot()
 });
 
