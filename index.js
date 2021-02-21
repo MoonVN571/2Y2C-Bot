@@ -1,29 +1,30 @@
-﻿// Discord modules
-const Discord = require("discord.js");
+﻿const Discord = require("discord.js");
 const client = new Discord.Client();
 
-// env files
 const token = require('dotenv').config();
 const config = {
 	token: process.env.token, // Discord token
 	ip: process.env.ip // Server IP
 };
 
-// Minecraft protocol
 const mc = require("minecraft-protocol");
 const queue = require("minecraft-protocol");
 const topic = require("minecraft-protocol");
 const stt = require("minecraft-protocol");
 
-const superagent = require("superagent")
-var waitUntil = require('wait-until')
-var mineflayer = require('mineflayer')
 var delay = require('delay')
 var db = require('quick.db');
 
-// Some type
+const superagent = require("superagent")
+var waitUntil = require('wait-until')
+
+var mineflayer = require('mineflayer')
+var tpsPlugin = require('mineflayer-tps')(mineflayer)
+
 const footer = "moonbot 2021";
 var prefix = "$";
+
+var fs = require('fs')
 
 // Developer mode
 var dev = true;
@@ -34,6 +35,7 @@ if (dev) {
 } else {
 	console.log('Developer Mode: False')
 }
+
 
 var defaultChannel;
 var devuser = "mo0nbot";
@@ -95,18 +97,20 @@ function createBot() {
 
 	var lobby = true; // check if bot in lobby or else
 
+    bot.loadPlugin(tpsPlugin)
+
 	// uptime bot on server
 	var minutes = 0;
 	var hour = 0;
 	var totalSeconds = 0;
 	var seconds = 0;
+	
 	// minecraft bot uptime
 	function setTime() {
 		totalSeconds += 1;
 		hour = parseInt(totalSeconds / 3600)
 		minutes = parseInt((totalSeconds - (hour * 3600)) / 60);
 		seconds = parseInt(totalSeconds % 60) 
-		// console.log(hour + " " + minutes + " " + seconds)
 	}
 
 	// uptime bot on server
@@ -128,18 +132,16 @@ function createBot() {
 	 * 
 	 */
 	var isMainServer = false; // lan 2, check main server de disconnect neu nhu tab ccontent /= 2YOUNG
-	// var dmLoginKhoVailon = false;
+	var isOpen = false;
+	var isOpenCount = 0;
 	bot.on('windowOpen', () => { // slot button mode cb
-		// if(dmLoginKhoVailon) return;
-		// dmLoginKhoVailon = true;
-		// setTimeout(() => {
-		// 	dmLoginKhoVailon = false;
-		// }, 3 * 1000)
-		bot.clickWindow(4, 0, 0)
-		delay(1000)
-		bot.clickWindow(3, 0, 0)
-		bot.clickWindow(7, 0, 0)
-		bot.clickWindow(1, 0, 0)
+		// check fire time and return
+		isOpen = true;
+		isOpenCount++;
+			bot.clickWindow(4, 0, 0)
+			bot.clickWindow(3, 0, 0)
+			bot.clickWindow(7, 0, 0)
+			bot.clickWindow(1, 0, 0)
 	});
 
 	/*
@@ -149,7 +151,10 @@ function createBot() {
 	 * 
 	 */
 	var disconnectRequest = false;
-	bot.on('login', () => {
+	var isEnded = false;
+	var sending = false;
+	var stats = false;
+	bot.once('login', () => {
 		// uptime method
 		totalSeconds = 0;
 		totalSecondss = 0;
@@ -163,17 +168,17 @@ function createBot() {
 			stats = true;
 			bot.swingArm("left");
 			bot.look(Math.floor(Math.random() * Math.floor("360")), 0, true, null);
-			// console.log("a")
-			antiAFK()
+			antiAFK();
 		}, 1 * 60 * 1000);
+
 		function antiAFK() {
 			setTimeout(function () {
 				stats = false;
 			}, 10 * 1000);
 		}
 
-		if(!dev) {
-			var str = "> Xem tất cả lệnh bot: !help | > Tham server luyện tập pvp: 2y2cpvp.sytes.net | > !buykit để xem thông tin và đặt hàng. | > !order [tên kit] [discord] để đặt hàng kit, người bán sẽ liên hệ với bạn và cho xem các kit. Ví dụ !order pvpkit blabla#0001."
+		if(!dev) { // | > !buykit để xem thông tin và đặt hàng. | > !order [tên kit] [discord] để đặt hàng kit.
+			var str = "> Mua kit tại discord của bot: !buykit | > Xem các lệnh bot: https://mo0nbot.tk/ | > Xem luật của server !rules. | > !report <name> để tố cáo người chơi. | > Luyện tập pvp crystal : 2y2cpvp.ga"
 			var words = str.split(' | ');
 			var random = words[Math.floor(Math.random() * words.length)];
 
@@ -191,34 +196,56 @@ function createBot() {
 			}
 		}
 
+		
 		// Playtime
+		setInterval(function () {
+			if (lobby) return; // Object, map : search gg
+			Object.values(bot.players).forEach(player => addPlayTime(player.username));
+			
+			function addPlayTime(player) {
+				let playtime = db.get(`${player}_playtime2`);
+				// db.set(`${player}_playtime2`, 0);
+				if(dev) {
+					// fs.readFile(`./data/playtime/${player}.txt`, function(err, data) {
+					// 	console.log(data)
+					// })
+					// fs.write(`./data/playtime/${player}.txt`, "10000", function(err) {
+					// 	if(err) {
+					// 		console.log("Creating new files")
+					// 		// fs.writeFile(`./data/playtime/${player}.txt`, "10000", function(err) {
+					// 		// 	if(err) {
+					// 		// 		console.log(err)
+					// 		// 	}
+					// 		//   });
+					// 	}
+					//   });
+				
+				}
+
+				if (playtime === null) { // tao database playtime
+					db.set(`${player}_playtime2`, 10000); // dm cai nay lam kho t vl nha:))
+				} else { // tao database va tinh thoi gian
+					db.add(`${player}_playtime2`, 10000);
+				}
+			}
+		}, 10 * 1000); // dcm
+
+		
+		/*
 		setInterval(function () {
 			if (lobby) return;
 			Object.values(bot.players).map(player => addPlayTime(player.username));
-
+			
 			function addPlayTime(player) {
-				let playtime = db.get(`${player}_playtime`);
-
+				// console.log("add " + player)
+				let playtime = db.get(`${player}_playtime2`);
 				if (playtime === null) { // tao database playtime
-					db.set(`${player}_playtime`, 10000);
-				} else if (playtime < 2) { // do database nen se phai lam cai nay
-					db.add(`${player}_playtime`, 9999);
+					db.set(`${player}_playtime2`, 10 * 1000);
 				} else { // tao database va tinh thoi gian
-					db.add(`${player}_playtime`, 10000);
+					db.add(`${player}_playtime2`, 10 * 1000);
 				}
 			}
-		}, 10 * 1000);
-
-		if (dev) {
-			var today = new Date()
-			let day = ("00" + today.getDate()).slice(-2)
-			let month = ("00" + (today.getMonth() + 1)).slice(-2)
-			let years = ("00" + today.getFullYear()).slice(-2)
-			let hours = ("00" + today.getHours()).slice(-2)
-			let min = ("00" + today.getMinutes()).slice(-2)
-			var date = day + '.' + month + '.' + years + ' ' + hours + ':' + min;
-			console.log(date + " | joined the server.")
-		}
+		}, 10 * 1000); */
 
 		const queuejoined = new Discord.MessageEmbed()
 			.setDescription(`Bot đang vào server..`)
@@ -253,11 +280,11 @@ function createBot() {
 			.setColor(color);
 
 		if (dev) {
-			if(logger !== undefined) {
+			if(logger !== undefined || logger !== null) {
 				client.channels.cache.get("802456011252039680").send(embed)
 			}
 		} else {
-			if(logger !== undefined) {
+			if(logger !== undefined || logger !== null) {
 				client.channels.cache.get("797426761142632450").send(embed)
 			}
 		}
@@ -267,20 +294,21 @@ function createBot() {
 
 		if (logger === '2y2c đã full') return;
 
-
 		// Nếu đang vào 2y2c thì sẽ check xem player có trong server hay không
-
 		if (logger === "Đang vào 2y2c") {
 			setTimeout(() => {
 				if (!isMainServer) {
+					if(isOpenCount == 2) return; 
 					disconnectRequest = true;
 					setTimeout(() => {
 						bot.quit("fi")
+						console.log("quit")
 					}, 5*1000);
 				}
 			}, 2 * 60 * 1000);
 
 			setTimeout(() => { // delay before login
+				if(isOpen) return;
 				lobby = false;
 			}, 3 * 1000);
 
@@ -349,6 +377,16 @@ function createBot() {
 			notfMsg = logger;
 		}
 
+		if (logger.startsWith("Bad commands")) {
+			colorNotf = '0xb60000';
+			notfMsg = logger;
+		}
+
+		if (logger.startsWith("2y2c:")) {
+			colorNotf = '0xb60000';
+			notfMsg = logger;
+		}
+
 		if (logger.startsWith("[Broadcast]")) {
 			colorNotf = "0xb60000";
 			notfMsg = logger;
@@ -366,6 +404,21 @@ function createBot() {
 		if (logger === "server thường back up vào 1h sáng nên tps đsẽ tụt vào khoảng thời gian này.") {
 			colorNotf = '0xb60000';
 			notfMsg = logger;
+		}
+
+		if(logger === "Kicked whilst connecting to auth: You have lost connection to the server") {
+			bot.quit("re")
+			disconnectRequest = true;
+			notfMsg = logger;
+			colorNotf = '0xb60000';
+		}
+
+		if(logger === "Exception Connecting:ReadTimeoutException : null") {
+			bot.quit("re")
+			disconnectRequest = true;
+			notfMsg = logger;
+			colorNotf = '0xb60000';
+
 		}
 
 		// return error message
@@ -387,6 +440,7 @@ function createBot() {
 		if (logger.includes('chết cháy khi đánh với')) {
 			var str = logger;
 			var user = str.split(" ")[6];
+			
 			if(user == "Zombie") {
 				deathMsg = logger;
 			} else {
@@ -399,6 +453,7 @@ function createBot() {
 				}
 				deathMsg = logger;
 			}
+			deathMsg = logger;
 		}
 
 		if (logger.includes('bị bắn chết bởi')) {
@@ -416,8 +471,6 @@ function createBot() {
 		}
 
 		if (logger.includes('nhảy con mẹ nó vào lava khi bị truy sát bởi')) {
-			// if (logger.includes('Wither') || logger.includes('Sì-ke')
-			// || logger.includes('cá')) {
 			var str = logger;
 			var user = str.split(" ")[12];
 			var userSplit = str.split(" ")[13];
@@ -455,6 +508,22 @@ function createBot() {
 		if (logger.includes('nổ banh xác bởi')) {
 			var str = logger;
 			var user = str.split(" ")[5];
+
+			let data = db.get(`${user}_kills`);
+
+			if (data === null) {
+				db.set(`${user}_kills`, 1)
+			} else {
+				db.add(`${user}_kills`, 1)
+			}
+			deathMsg = logger;
+
+		}
+
+		if (logger.includes('nổ banh xác')) {
+			var str = logger;
+			var user = str.split(" ")[5];
+			var killer = str.split(" ")[0];
 
 			let data = db.get(`${user}_kills`);
 
@@ -528,12 +597,12 @@ function createBot() {
 				deathMsg = logger;
 			}
 		}
-
-		if (logger.includes('đã bị phản sát thương bởi')) {
+		
+		if (logger.includes('bị phản sát thương khi đánh')) {
 			var str = logger;
 			var user = str.split(" ")[7];
+			
 			if(user !== undefined) {
-
 				let data = db.get(`${user}_kills`);
 
 				if (data === null) {
@@ -546,10 +615,11 @@ function createBot() {
 			
 		}
 
-		if (logger.includes('đã bị giết bởi')) {
+		if (logger.includes('bị giết bởi')) {
 			var str = logger;
-			var user = str.split(" ")[5];
-			if(user == "Wither" || user == "cá" || user == "Zombie") {
+			var user = str.split(" ")[4];
+			if(user == "Wither" || user == "cá" || user == "Zombie" || user === "Magma" && logger.includes("Magma Cube") || logger.includes("Ghast")
+			|| user == "Enderman") {
 				deathMsg = logger;
 			} else {
 				let data = db.get(`${user}_kills`);
@@ -581,29 +651,118 @@ function createBot() {
 
 		}
 
+		if (logger.includes('bị') && logger.includes("đẩy té mẹ ra khỏi game") || logger.includes("đá xuống lava")) {
+			var str = logger;
+			var user = str.split(" ")[3];
+			let data = db.get(`${user}_kills`);
+
+			// khong can check username vi dieu kien cua bị
+			if (data === null) {
+				db.set(`${user}_kills`, 1)
+			} else {
+				db.add(`${user}_kills`, 1)
+			}
+			deathMsg = logger;
+
+		}
+
+		if (logger.includes('bị hội đồng bởi một đám')) {
+			var str = logger;
+			var user = str.split(" ")[7];
+			if(user == "Wither" || logger.includes("Zombie Pigman")) {
+				deathMsg = logger;
+			} else {
+				var newUser = user;
+				if(user.includes("'s")) {
+					newUser = user.replace("'s", "")
+				}
+				let data = db.get(`${newUser}_kills`);
+
+				if (data === null) {
+					db.set(`${newUser}_kills`, 1)
+				} else {
+					db.add(`${newUser}_kills`, 1)
+				}
+				deathMsg = logger;
+			}
+
+		}
+
+		if (logger.includes('bị bởi một đám')) {
+			var str = logger;
+			var user = str.split(" ")[5];
+			if(user == "Wither" || logger.includes("Zombie Pigman")) {
+				deathMsg = logger;
+			} else {
+				var newUser = user;
+				if(user.includes("'s")) {
+					newUser = user.replace("'s", "")
+				}
+				let data = db.get(`${newUser}_kills`);
+
+				if (data === null) {
+					db.set(`${newUser}_kills`, 1)
+				} else {
+					db.add(`${newUser}_kills`, 1)
+				}
+				deathMsg = logger;
+			}
+
+		}
+
+		if (logger.includes('giết') && logger.includes("bằng")) {
+			var str = logger;
+			var user = str.split(" ")[2];
+			var killer = str.split(" ")[1];
+			if(user == "Wither") {
+				deathMsg = logger;
+			} else {
+				let data = db.get(`${killer}_kills`);
+				let dead = db.get(`${user}_dead`)
+				if (data === null) {
+					db.set(`${killer}_kills`, 1)
+				} else {
+					db.add(`${killer}_kills`, 1)
+				}
+				if (dead === null) {
+					db.set(`${killer}_dead`, 1)
+				} else {
+					db.add(`${killer}_dead`, 1)
+				}
+				deathMsg = logger;
+			}
+
+		}
+
 		// listening death message
 		if (logger.includes('Té')
-			|| logger.includes('té')
-			|| logger.includes('trèo')
-			|| logger.includes('chợt')
-			|| logger.includes('đã')
-			|| logger.includes('đéo')
-			|| logger.includes('bị')
-			|| logger.includes('chạy')
-			|| logger.includes('nổ')
-			|| logger.includes('đấm')
-			|| logger.includes('nhảy')
-			|| logger.includes('cháy')
-			|| logger.includes('tự')
-			|| logger.includes('died')
-			|| logger.includes('chết')
-			|| logger.includes('Chết')
-			|| logger.includes('khô')
-			|| logger.includes('đi')
-			|| logger.includes('chạy')
-			|| logger.includes('không')
-			|| logger.includes('thế')
-			|| logger.includes('was')) {
+		|| logger.includes('té')
+		|| logger.includes('trèo')
+		|| logger.includes('chợt')
+		|| logger.includes('đã')
+		|| logger.includes('đéo')
+		|| logger.includes('bị')
+		|| logger.includes('chạy')
+		|| logger.includes('nổ')
+		|| logger.includes('đấm')
+		|| logger.includes('nhảy')
+		|| logger.includes('cháy')
+		|| logger.includes('tự')
+		|| logger.includes('died')
+		|| logger.includes('chết')
+		|| logger.includes('Chết')
+		|| logger.includes('khô')
+		|| logger.includes('đi')
+		|| logger.includes('chạy')
+		|| logger.includes('không')
+		|| logger.includes('thế')
+		|| logger.includes('was')
+		|| logger.includes('tập')
+		|| logger.includes('đập')
+		|| logger.includes('bóp')
+		|| logger.includes('đang')
+		|| logger.includes('cứ')
+		|| logger.includes('tưởng')) {
 			var user = logger.split(" ")[0];
 			let data = db.get(`${user}_dead`);
 			
@@ -659,10 +818,8 @@ function createBot() {
 	 *  
 	 * 
 	 */
-		// var joinCount = 0;
+	var botJoinCount = 0;	
 	bot.on("playerJoined", (p) => {
-		// joinCount++;
-
 		var username = p.username;
 		var newUsername = username.replace(/_/ig, "\\_");
 
@@ -685,43 +842,62 @@ function createBot() {
 			client.channels.cache.get("807048523027578890").send(username + " joined");
 		}
 
-		if (username === "0Channy" || username === "TheGreatWall") {
-			if(dev) return;
-			client.channels.cache.get("808927553314226186").send(username + " joined");
+		// return spam join message
+		if(username == bot.username) {
+			botJoinCount++;
 		}
 
-		// move xuong vi newUsername de replace username khac
-		if(username === "A_Andrew" ||  username === "TheGreatWall"
-		|| username === "Huymouse" || username === "ZzEnderDragonz7") {
-			if(dev) return;
-
-			var embed = new Discord.MessageEmbed()
-				.setDescription(newUsername + " joined")
-				.setColor('0xb60000')
+		// console.log(botJoinCount)
+		if(isOpenCount < 2) {
+			if(botJoinCount <= 3) {
 				
-			client.channels.cache.get("807506107840856064").send(embed);
-			// bot.chat(`> ${username} đã tham gia vào server!`);
+				// botJoinCount = 4;
+				return;
+			}
+		} else{
+			if(botJoinCount <= 2) {
+
+				// botJoinCount = 4;
+				return;
+			}
+
+		}
+		if(botJoinCount > 3) {
+			botJoinCount = 4;
+		}
+		// botJoinCount = 0;
+
+		if(username == bot.username) return; // return bot join message
+
+		if(username === "HomelessBaseBot") {
+			setTimeout(() => {
+				// bot.chat("> HomelessBaseBot đã tham gia vào server!!")
+			}, 1*1000)
 		}
 
 		if (newUsername === undefined) {
 			newUsername = username;
 		}
 
-		if (newUsername === bot.username) return;
+		// phai dat duoi nay
+		if(username === "A_Andrew" || username === "Meloncheo"|| username === "TheGreatWall"
+			|| username === "Huymouse" || username === "ZzEnderDragonz7") {
+				if(dev) return;
 
-		// var name = Object.values(bot.players).map(p => p.username);
+				var embed = new Discord.MessageEmbed()
+					.setDescription(newUsername + " joined")
+					.setColor('0xb60000')
+
+				client.channels.cache.get("807506107840856064").send(embed);
+				// bot.chat(`> ${username} đã thoát khỏi server!`);
+		}
 		
-		// console.log(name.length)
-		// var count = joinCount - name.length;
-		// console.log(count)
-		// if(count < 0) return ;
-		if(dev) return;
 		var embed = new Discord.MessageEmbed()
 			.setDescription(newUsername + " joined")
 			.setColor('0xb60000');	
 
 		client.channels.cache.get(defaultChannel).send(embed);
-			
+		
 	});
 	
 	/*
@@ -744,7 +920,7 @@ function createBot() {
 		}
 
 		// move xuong vi newUsername de replace username khac
-		if(username === "A_Andrew" || username === "TheGreatWall"
+		if(username === "A_Andrew" || username === "Meloncheo"|| username === "TheGreatWall"
 			|| username === "Huymouse" || username === "ZzEnderDragonz7") {
 				if(dev) return;
 
@@ -766,9 +942,22 @@ function createBot() {
 			db.set(`${username}_lastseen`, time)
 		}
 
-		if (newUsername === bot.username) return;
+		
+		// console.log(botJoinCount)
+		if(isOpenCount < 2) {
+			if(botJoinCount <= 3) {
+				
+				// botJoinCount = 4;
+				return;
+			}
+		} else{
+			if(botJoinCount <= 2) {
 
-		if (dev) return
+				// botJoinCount = 4;
+				return;
+			}
+
+		}
 
 		var embed = new Discord.MessageEmbed()
 			.setDescription(newUsername + " left")
@@ -783,12 +972,8 @@ function createBot() {
 	 *  
 	 * 
 	 */
-	var sending = false;
-	var stats = false;
-	var spawnCount = 0;
-	bot.on('spawn', () => {
+	bot.on('spawn', () => { // check player are spawned
 		// if (lobby) return;
-		spawnCount++;
 	});
 
 	/*
@@ -805,6 +990,13 @@ function createBot() {
 			ontab = true;
 			checktab();
 			var header = data.header;
+			
+			// sửa lỗi
+			if(header.includes("2YOUNG")) {
+				lobby = false;
+				return;
+			}
+
 			var s1 = header.replace(/\\n/ig, " ");
 			var s2 = s1.replace(/ 2y2c  2y2c §bđã full /ig, "");
 			var s3 = s2.replace(/§b|§l|§6/ig, "");
@@ -918,6 +1110,7 @@ function createBot() {
 					var prio = players2.toString().replace("2y2c §6Queue Size,§6Ưu Tiên: §l", "");
 
 					var status = "Hàng chờ: " + queue + " - Ưu tiên: " + prio + " - TPS: " + tps;
+					// var status = "TPS: " + tps;
 					if(status.startsWith("§6Donate")) return;
 					client.user.setActivity(status, { type: 'PLAYING' });
 				}
@@ -968,7 +1161,7 @@ function createBot() {
 		}
 
 		if (msg === "Server Restarting!") {
-			isRestarting = true;
+			restartingMsg = true;
 			if (dev) return;
 			var embed = new Discord.MessageEmbed()
 						.setDescription("[AutoRestart] " + msg)
@@ -1044,7 +1237,8 @@ function createBot() {
 	 */
 	
 	// bot end with restart
-	var isRestarting;
+	var isRestarting = false;
+	var restartingMsg = false;
 	bot.on('message', msg => {
 		// Start
 		if (!(msg.toString().startsWith("<"))) return; // return message no <
@@ -1061,12 +1255,10 @@ function createBot() {
 				username = username2;
 			}
 		}
-		//console.log(username)
 		var log = msg.toString().replace(username, "");
 		var logger;
 		if (log.startsWith("<[Donator]")) {
 			logger = log.replace("<[Donator]> ", "")
-
 		} else {
 			if (log.startsWith("<[2B2T]")) {
 				logger = log.replace("<[2B2T]> ", "")
@@ -1075,10 +1267,19 @@ function createBot() {
 				logger = log.replace("<> ", "")
 			}
 		}
-
+		//checking command
+		// mc_cmd_list.forEach(element => {
+		// 	if(element.command === command) require("./commands/discord/"+element.filepath+'js')
+		// });
+		// console.log(username)
+		// console.log(username.toString())
+		// if(username.toString() == "haiYhaiC") {
+		// 	console.log("complete")
+		// }
+		
 		var bp;
 		if (dev) {
-			bp = "Dev!";
+			bp = "dev!";
 		} else {
 			bp = "!";
 		}
@@ -1090,6 +1291,7 @@ function createBot() {
 			newCmd = n1.replace(bp, "");
 			// console.log(n1)
 			// console.log(newCmd)
+			
 		} else {
 			newCmd = logger;
 		}
@@ -1101,7 +1303,7 @@ function createBot() {
 			}, 2 * 1000);
 		}
 
-		if (logger.startsWith(bp + "seen")) {
+		if (logger.toLowerCase().startsWith(bp + "seen") || logger.toLowerCase().startsWith(bp + "seen")) {
 			var args;
 
 			var str = logger.replace(".", "");
@@ -1203,7 +1405,7 @@ function createBot() {
 				args = username;
 			}
 
-			let playtime = db.get(`${args}_playtime`);
+			let playtime = db.get(`${args}_playtime2`);
 
 			setTimeout(function () {
 				if (playtime === null) {
@@ -1211,7 +1413,8 @@ function createBot() {
 					return;
 				}
 
-				var temp = playtime / 1000;
+				var correct = playtime / 2;
+				var temp = correct / 1000;
 				var day = 0, hour = 0, minutes = 0;
 				day = parseInt(temp / 86400)
 				hour = parseInt(((temp - day * 86400) / 3600))
@@ -1222,7 +1425,7 @@ function createBot() {
 						string = hour + " giờ " + minutes + " phút";		
 					}
 					if(minutes < 1 && hour > 0) {
-						string = hour + " giờ ";
+						string = hour + " giờ";
 					}
 					if(minutes > 0 && hour < 1) {
 						string = minutes + " phút";
@@ -1232,7 +1435,7 @@ function createBot() {
 						string = day + " ngày " + hour + " giờ " + minutes + " phút";		
 					}
 					if(minutes < 1 && hour > 0) {
-						string = day + " ngày " + hour + " giờ ";
+						string = day + " ngày " + hour + " giờ";
 					}
 					if(minutes > 0 && hour < 1) {
 						string = day + " ngày " + minutes + " phút";
@@ -1287,40 +1490,16 @@ function createBot() {
 		}
 
 		if (newCmd === "help") {
-			setTimeout(function () {
-				bot.whisper(username, '> !coords, !discord, !tps, !kill, !ping, !q, !stats, !jd, !playtime, !seen, !2bqueue, !buykit, !players, !runtime, !order. Tham gia discord xem chi tiết!')
+			setTimeout(function () { // !coords, !discord, !tps, !kill, !ping, !q, !stats, !jd, !playtime, !seen, !2bqueue, !buykit, !players, !runtime, !order. Tham gia discord xem chi tiết!
+				bot.whisper(username, '> Commands: https://mo0nbot.tk/')
 			}, 2 * 1000);
 		}
 
 		// TPS
 		if (newCmd === "tps") {
-			var o = false;
-			bot._client.on("playerlist_header", data => {
-				if(lobby) {
-					bot.whisper(username, "Không khả dụng ngay lúc này.")
-					return;
-				}
-				if(o) return;
-				o = true;
-				setTimeout(() => {
-					var footer = data.footer;
-					var ss1 = footer.replace(/\\n/ig, " ");
-					var ss2 = ss1.replace(/-/ig, "");
-					var ss3 = ss2.replace(/§3|§d|§a|§r/ig, "");
-					var ss4 = ss3.replace(/{"text":"/ig, "")
-
-					// replace all space to none
-					var ss5 = ss4.replace("    ", " ")
-					var ss6 = ss5.replace("    ", " ")
-					var tps = ss6.split(" ")[1];
-					bot.whisper(username, "TPS: " + tps + " - TAB")
-					
-				}, 2*1000);
-			});
-			o = false;
-			// setTimeout(function () {
-			// 	bot.whisper(username, `> TPS theo thời gian thực : ${bot.getTps()}`)
-			// }, 2 * 1000);
+			setTimeout(function () {
+				bot.whisper(username, `> TPS ước tính : ${bot.getTps()}`)
+			}, 2 * 1000);
 		}
 
 		if (newCmd === "discord") {
@@ -1330,9 +1509,15 @@ function createBot() {
 		}
 
 		if (logger.toLowerCase().startsWith(bp + "ping")) {
-			if (logger.toLowerCase() === "ping") {
+			if (newCmd === "ping") {
+				var ping = bot.players[username].ping;
+				if(ping < 1) {
+					ping = "Không thể kiểm tra lúc này. Thử lại sau vài giây.";
+				} else {
+					ping = "> Ping của bạn : " + bot.players[username].ping + "ms";
+				}
 				setTimeout(() => {
-					bot.whisper(username, "> Ping của bạn : " + bot.players[username].ping + "ms");
+					bot.whisper(username, ping);
 				}, 2 * 1000);
 			} else {
 				var str = logger.replace(".", "");
@@ -1342,12 +1527,21 @@ function createBot() {
 					user = username;
 				}
 
+				var regex = /[a-z]|[A-Z]|[0-9]/i;
 				if(!user.match(regex)) {
 					user = username;
 				}
+
+				var ping = bot.players[user].ping;
+				if(ping < 1) {
+					ping = "Không thể kiểm tra lúc này. Thử lại sau vài giây.";
+				} else {
+					ping = bot.players[user].ping + "ms";
+				}
+
 				setTimeout(function () {
 					try {
-						bot.whisper(username, "> " + user + " : " + bot.players[user].ping + "ms");
+						bot.whisper(username, "> " + user + " : " + ping);
 					} catch (e) {
 						if (!dev) return;
 						console.log("PING OTHER DEBUG ", e)
@@ -1435,49 +1629,87 @@ function createBot() {
 		}
 
 		// !order [tên kit] [discord] để đặt hàng kit, người bán sẽ liên hệ với bạn và cho xem các kit. Ví dụ !order pvpkit blabla#0001
-		if(logger.startsWith(bp + "order")) {
+		/*if(logger.startsWith(bp + "order")) {
 			var name = logger.split(' ')[1];
 			// var discord = logger.split(' ')[2];
 			// console.log(name)
-			var discord = logger.substr(6 + name.length + 5, logger.length)
+
+			var discord = logger.split(' ')[2];
+			if(discord !== undefined) {
+				discord = logger.substr(6 + name.length + 2, logger.length)
+			}
+
 			// console.log(discord)
 			setTimeout(() => {
-				if(name === undefined) {
-					bot.whisper(username, "> Bạn phải nhập tên kit bạn đang cần. - !order [kit] [discord]")
-					return;
-				}
-
-				if(discord === undefined && name !== undefined) {
-					bot.whisper(username, "> Bạn phải nhập tên discord để người bán liên hệ. - !order " + name.toLowerCase() + " [discord]")
-					return;
-				}
-
+				// check neu command la !order
 				if(discord === undefined && name === undefined) {
-					bot.whisper(username, "> Bạn phải nhập tên discord để người bán liên hệ. - !order [kit] [discord]")
+					bot.whisper(username, "> Bạn phải nhập thông tin để người bán liên hệ.")
+					setTimeout(() => {
+						bot.whisper(username, "Cách sử dụng: !order [kit] [discord]");
+					}, 1*1000)
+					return;
+				}
+
+				if(name === undefined) {
+					bot.whisper(username, "> Bạn phải nhập tên kit bạn đang cần. Bạn cần thêm từ kit ở phía sau và không cách.")
+					setTimeout(() => {
+						bot.whisper(username, "Cách sử dụng: !order [kit] [discord]");
+					}, 1*1000)
+					return;
+				}
+
+				// check neu command la !order a <rỗng>
+				if(discord === undefined && name !== undefined) {
+					bot.whisper(username, "> Bạn phải nhập tên discord để người bán liên hệ.")
+					setTimeout(() => {
+						bot.whisper(username, "Cách sử dụng: !order " + name.toLowerCase() + "kit [discord]");
+					}, 1*1000)
+					return;
+				}
+
+				if(discord !== undefined && name === undefined) {
+					bot.whisper(username, "> Bạn phải nhập tên kit để người bán liên hệ.")
+					setTimeout(() => {
+						bot.whisper(username, "Ví dụ: !order pvpkit " + discord);
+					}, 1*1000)
 					return;
 				}
 
 				if(name !== undefined && discord !== undefined) {
 					if(!(name.toLowerCase().endsWith("kit"))) {
-						bot.whisper(username, "> Kit không đúng định dạng. Bạn phải thêm từ kit ở sau và viết liền với tên kit. - Ví dụ: Mua kit tên pvp thì : !order pvpkit abcxyz#0001")
+						bot.whisper(username, "> Kit không đúng định dạng. Bạn phải thêm từ kit ở sau và viết liền với tên kit.")
+						setTimeout(() => {
+							bot.whisper(username, "Ví dụ: Mua kit tên pvp thì : !order pvpkit abc xyz#0001");
+						}, 1*1000)
 						return;
 					}
+
 					if(!(discord.includes("#"))) {
 						bot.whisper(username, "> Tên discord không đúng định dạng. - Ví dụ: !order pvpkit abcxyz#0001")
+						setTimeout(() => {
+							bot.whisper(username, "Ví dụ: !order pvpkit abc xyz#0001");
+						}, 1*1000)
 						return;
 					}
 
 					if(discord.includes("#")) {
 						var split = discord.split('#')[1]; 
 						// console.log(split)
+						// check regex
 						var regex = /[0-9]/g;
 						if(split.length > 4) {
-							bot.whisper(username, "> Tên discord không hợp lý. - Ví dụ: !order pvpkit abcxyz#0001")
+							bot.whisper(username, "> Tên discord không hợp lý.")
+							setTimeout(() => {
+								bot.whisper(username, "Ví dụ: !order pvpkit abc xyz#0001");
+							}, 1*1000)
 							return;
 						}
 
 						if(!(split.match(regex))) {
-							bot.whisper(username, "> Tên discord không đúng định dạng. - Ví dụ: !order pvpkit abcxyz#0001")
+							bot.whisper(username, "> Tên discord không đúng định dạng.")
+							setTimeout(() => {
+								bot.whisper(username, "Ví dụ: !order pvpkit abc xyz#0001");
+							}, 1*1000)
 							return;
 						}
 					}
@@ -1493,13 +1725,44 @@ function createBot() {
 
 						user.send(embed);
 					});
+					client.users.fetch('422249808611508225', false).then((user) => {
+						var embed = new Discord.MessageEmbed()
+											.setTitle(`Đơn hàng`)
+											.setDescription("Người mua: **" + username + "**\nDiscord: **" + discord + "**\nLoại kit: **" + name + "**")
+											.setColor(0x008080)
+											.setTimestamp();
+
+						user.send(embed);
+					});
 				}
 			}, 1*1000)
-
-		}
+		} */
+		
 		if(newCmd === "buykit") {
+			var invite;
+				var o = false;
+				client.on('message', async message => {
+					if(o) return;
+					o = true;
+					createInvite(message);
+					async function createInvite(message) { 
+						invite = await message.channel.createInvite(
+						{
+						maxAge: 10 * 60 * 1000, // maximum time for the invite, in milliseconds
+						maxUses: 1 // maximum times it can be used
+						},
+						`Requested with command by ${message.author.tag}`
+					).catch(console.log);
+
+					
+				// bot.whisper(username, "> Gõ !order [tên kit] [discord] để đặt hàng kit, người bán sẽ liên hệ với bạn và cho xem các kit. Ví dụ !order pvpkit blabla#0001.")			
+					}	
+				});
 			setTimeout(() => {
-				bot.whisper(username, "> Gõ !order [tên kit] [discord] để đặt hàng kit, người bán sẽ liên hệ với bạn và cho xem các kit. Ví dụ !order pvpkit blabla#0001.")			
+				bot.whisper(username, invite ? "Đã tạo lời mời discord là: https://discord.gg/" + invite + ". Link sẽ hết hạn sau 10 phút!" : "Không thể tạo lời mời!");
+				setTimeout(() => { 
+				o = false;
+				}, 5*1000);
 			}, 1*1000);
 		}
 
@@ -1519,11 +1782,127 @@ function createBot() {
 
 		if(newCmd === "runtime") {
 			setTimeout(function () {
-				bot.whisper(username, "> Bot đã hoạt động từ " + hour + "h " + minutes + "	m " + seconds + "s trước.");
+				bot.whisper(username, "> Bot đã hoạt động từ " + hour + "h " + minutes + "m " + seconds + "s trước.");
 			}, 2 * 1000);
 		}
 
+		if (logger.startsWith(bp + "report")) {
+			var args = logger.split(' ')[1];
 
+			setTimeout(function () {
+				if(args === undefined) {
+					bot.whisper(username, '> Bạn phải nhập tên để báo cáo người chơi!')
+					return;
+				}
+				bot.whisper(username, `> Bạn đã báo cáo người chơi tên ${args}, admin sẽ xem xét để tiến hành cấm người chơi!`)
+			}, 2 * 1000);
+		}
+
+		if (newCmd === "rules") {
+			setTimeout(function () {
+				bot.whisper(username, `> Server này làm gì có luật hã mạy ??`)
+			}, 2 * 1000);
+
+		}
+
+		if(newCmd.startsWith(bp + "gm") || newCmd.startsWith(bp + "gamemode")) {
+			var args = logger.split("")[1];
+			if(args === "c" || args === "creative" || args === "1") {
+				bot.chat(`> ${username} đã chuyển sang gamemode ` + args)
+			}
+			
+			if(args === "s" || args === "survival" || args === "0") {
+				bot.chat(`> ${username} đã chuyển sang gamemode ` + args)
+				
+			}
+
+			if(args === "sp" || args === "spectator" || args === "3") {
+				bot.chat(`> ${username} đã chuyển sang gamemode ` + args)		
+			}
+		}
+
+		if(newCmd.startsWith(bp + "dupe")) {
+			var splito = logger.split(' ')[0];
+			var log = logger.substr(splito.length, logger.length)
+			var args = log.split(" ");
+			
+			if(args === undefined) {
+				bot.chat("> Bạn phải nhập tên item để dupe!");
+			} else {
+				bot.chat(`> ${username} đã dupe được item tên ${args}`);
+			}
+		}
+
+		if(newCmd.startsWith(bp + "kick")) {
+			var name = logger.split(" ");
+			var cmd = logger.split(" ")[0];
+			var reason = logger.substr(cmd.length + name.length + 2, logger.length)
+
+			if(args === undefined) {
+				bot.chat("> Bạn phải nhập tên để kick người chơi!");
+			} else {
+				bot.chat(`> ${username} đã kick người chơi ${name} với lý do là ${reason}.`);
+			}
+		}
+
+		if(newCmd.startsWith(bp + "ban")) {
+			var name = logger.split(" ")[1];
+			var cmd = logger.split(" ")[0];
+			var reason = logger.substr(cmd.length + name.length + 2, logger.length)
+
+			if(args === undefined) {
+				bot.chat("> Bạn phải nhập tên để ban người chơi!");
+			} else {
+				bot.chat(`> ${username} đã ban người chơi ${name} với lý do là ${reason}.`);
+			}
+		}
+		
+		if(newCmd.startsWith(bp + "ignore")) {
+			var name = logger.split(" ")[1];
+
+			if(name === undefined) {
+				bot.chat("> Bạn phải nhập tên để ignore người chơi!");
+			} else {
+				bot.chat(`> ${username} đã ignore người chơi ${name}.`);
+			}
+		}
+
+		if(newCmd.startsWith(bp + "ip")) {
+			var name = logger.split(" ")[1];
+
+			fs.readFile("ip.txt", 'utf8', function (err, data) {
+				if (err) throw err;
+				const lines = data.split(/\r?\n/);
+				if (lines[0]) {
+					const line = lines.pop()
+					check(line)
+				}
+			});
+
+			function check(ip) {
+				let ips = ip.split(":")[0]
+				if(name === undefined) {
+					bot.chat("> Bạn phải nhập tên để check ip của người chơi!");
+				} else {
+					bot.chat(`> ${name}: ${ips}.`);
+				}
+			}
+		}
+
+		// // if(newCmd === "bestping") {
+		// 	var name = bot.players.username;
+		// 	if(name == undefined) return; 
+		// 	var ping = bot.players[name].ping;
+			
+		// 	var lowestPing;
+		// 	if(ping > 0) {
+				
+		// 		lowestPing = Math.min(ping)
+		// 		console.log(name + " " + lowestPing)
+			
+		// }
+			// bot.whisper(username, "")
+		// }
 		// check > msg
 		if (logger.startsWith(">")) {
 			color = "2EA711";
@@ -1593,10 +1972,53 @@ function createBot() {
 	
 	bot.on('end', () => {
 		client.user.setActivity("");
+		console.log('Bot ended')
+		isEnded = true;
 		setTimeout(() => {
+			if(restartingMsg) {
+				var reconnect = new Discord.MessageEmbed()
+				.setDescription(`Bot đã ngắt kết nối vì server restart. Bot sẽ vào lại sau 10 phút.\nĐã hoạt động từ ${hour}h ${minutes}m ${seconds}s trước.`)
+				.setColor("F71319");
+
+				var notf = new Discord.MessageEmbed()
+										.setDescription("🏮 Bot đã ngắt kết nối đến server. 🏮")
+										.setColor("F71319"); // cam
+
+					client.channels.cache.get(defaultChannel).send(notf);
+				if(dev) {
+					client.channels.cache.get("807045720699830273").send(reconnect);
+				} else {
+					client.channels.cache.get("806881615623880704").send(reconnect);
+				}
+
+				waitUntil(60000, 30, function condition() {
+					try {
+						var today = new Date()
+						let day = ("00" + today.getDate()).slice(-2)
+						let month = ("00" + (today.getMonth() + 1)).slice(-2)
+						let years = ("00" + today.getFullYear()).slice(-2)
+						let hours = ("00" + today.getHours()).slice(-2)
+						let min = ("00" + today.getMinutes()).slice(-2)
+						var date = day + '.' + month + '.' + years + ' ' + hours + ':' + min
+						console.log(date + " | Bot ended, attempting to reconnect...");
+						
+						createBot(); // reconnect
+						
+						return true;
+					} catch (error) {
+						console.log("Error: " + error);
+						return false;
+					}
+				}, function done(result) {
+					console.log("Completed: " + result);
+				});
+				
+				return;
+			}
+
 			if(isRestarting) {
 				var reconnect = new Discord.MessageEmbed()
-					.setDescription(`⚠️ Server đang restart hoặc đã crash. Bot sẽ vào lại server sau 5 phút! ⚠️`)
+					.setDescription(`⚠️ Server đã crash. Bot sẽ kết nối lại server sau 5 phút! ⚠️`)
 					.setColor("F71319");
 
 				if(dev) {
@@ -1631,7 +2053,7 @@ function createBot() {
 
 			if(disconnectRequest) {
 				var log = new Discord.MessageEmbed()
-										.setDescription("Bot đã ngắt kết nối đến server. Vào lại sau 1 phút." + `\nĐã hoạt động từ ${hour}h ${minutes}m ${seconds}s trước.`)
+										.setDescription("Bot đã ngắt kết nối đến server. Bot sẽ vào lại sau 1 phút." + `\nĐã hoạt động từ ${hour}h ${minutes}m ${seconds}s trước.`)
 										.setColor("F71319"); // cam
 
 				var notf = new Discord.MessageEmbed()
@@ -1671,8 +2093,8 @@ function createBot() {
 
 			if(unknownReason) {
 				var log = new Discord.MessageEmbed()
-								.setDescription("Bot đã mất kết nối đến server. Vào lại sau 1 phút." + `\nĐã hoạt động từ ${hour}h ${minutes}m ${seconds}s trước.`)
-								.setColor("F71319"); // cam
+				.setDescription("Bot đã mất kết nối đến server. Bot sẽ vào lại sau 1 phút." + `\nĐã hoạt động từ ${hour}h ${minutes}m ${seconds}s trước.`)
+				.setColor("F71319"); // cam
 
 				var notf = new Discord.MessageEmbed()
 										.setDescription("🏮 Bot đã mất kết nối đến server. 🏮")
@@ -1736,6 +2158,8 @@ function createBot() {
 				}, 1 * 1000);
 			}
 			if (msg.channel.id == '802454010400604161') {
+				console.log(msg.content)
+
 				if (msg.content.startsWith(">")) return;
 				if (msg.content.startsWith(prefix)) return;
 
@@ -1766,13 +2190,13 @@ function createBot() {
 						}, 1*1000);
 					}
 				}
-
-				var str = content;
-				var chat = str.charAt(0).toUpperCase() + str.substr(1, str.length);
-
+				
+				var str = msg.content.toString().split('\n')[0];
+				var chat= str.charAt(0).toUpperCase() + str.substr(1, str.length);
+				
 				if(msg.content.startsWith("/")) return;
 				setTimeout(() => {
-					bot.chat(`> ${msg.author.tag} » ${chat}`);
+					bot.chat(`> 『 ${msg.author.tag} 』 »  ${chat}`);
 				}, 1 * 1000);
 
 				const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");
@@ -1820,12 +2244,12 @@ function createBot() {
 				}
 			}
 
-			var str = content;
-			var chat = str.charAt(0).toUpperCase() + str.substr(1, str.length);
-
+			var str = msg.content.toString().split('\n')[0];
+			var chat= str.charAt(0).toUpperCase() + str.substr(1, str.length);
+			
+			if(msg.content.startsWith("/")) return;
 			setTimeout(() => {
-				if(msg.content.startsWith("/")) return;
-				bot.chat(`> ${msg.author.tag} » ${chat}`);
+				bot.chat(`>『 ${msg.author.tag} 』»  ${chat}`);
 			}, 1 * 1000);
 
 			const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");
@@ -1859,6 +2283,7 @@ client.on("message", async message => {
 			message.delete();
 		}, 3000);
 		message.channel.send(cmdonly).then(msg => { msg.delete({ timeout: 10000 }) })
+		return;
 	}
 
 	if(command === "resetdata") {
@@ -1936,20 +2361,21 @@ client.on("message", async message => {
 
 		if (!args[0]) return message.channel.send(e)
 
-		let playtime = db.get(`${args[0]}_playtime`);
+		let playtime = db.get(`${args[0]}_playtime2`);
 
 		setTimeout(() => {
-			if (playtime === null) {
-				playtime = `Chưa từng được tính thời gian.`;
+			if (playtime === null || playtime === undefined) {
+				playtime = "Chưa từng được tính thời gian.";
 				var nodata = new Discord.MessageEmbed()
-					.setDescription(`${args[0]}: Chưa từng được tính thời gian.`)
+					.setDescription(`${args[0]}: ` + playtime)
 					.setColor('0xC51515')
 
 				message.channel.send(nodata);
 				return;
 			}
 
-			var temp = playtime / 1000;
+			var correct = playtime / 2;
+			var temp = correct / 1000;
 			var day = 0, hour = 0, minutes = 0;
 			day = parseInt(temp / 86400)
 			hour = parseInt(((temp - day * 86400) / 3600))
@@ -2065,11 +2491,11 @@ client.on("message", async message => {
 
 	if (command === "2bq" || command === "2bqueue") {
 		superagent.get("https://2b2t.io/api/queue?last=true").end((err, data) => {
-			let queue = data.body[0][1];
+			let queuequeue = data.body[0][1];
 			superagent.get("https://api.2b2t.dev/prioq").end((err, dataq) => {
 				let prio = dataq.body[1];
 				var queue = new Discord.MessageEmbed()
-									.setDescription("Hàng chờ bình thường là " + queue + "\n Hàng chờ ưu tiên là " + prio)
+									.setDescription("Hàng chờ bình thường là " + queuequeue + "\n Hàng chờ ưu tiên là " + prio)
 									.setColor(0x2EA711);
 				message.channel.send(queue);
 			});
@@ -2113,10 +2539,18 @@ client.on("message", async message => {
 				+ '!pt - ``Xem thời gian bạn đã chơi. ( Bắt đầu từ ngày 1/2 )`` \n'
 				+ '!seen - ``Xem lần hoạt động gần nhất của người chơi. ( Tính từ 2/2 )`` \n'
 				+ '!2bqueue - ``Xem hàng chờ hiện tại của 2b2t.`` \n'
-				+ '!buykit - ``Xem cách đặt hàng kit.`` \n'
+				+ '!buykit - ``Nhận link discord để mua kit.`` \n'
 				+ '!players - ``Xem người chơi online.`` \n'
-				+ '!runtime - ``Xem thời gian bot đã ở trong server.`` \n')
-				+ '!order - ``Đặt hàng kit riêng.`` \n'
+				+ '!runtime - ``Xem thời gian bot đã ở trong server.`` \n'
+				+ '!report - ``Báo cáo người chơi cho admin server.`` \n'
+				+ '!kick - ``Kick 1 người chơi ra khỏi server..`` \n'
+				+ '!ban - ``Ban 1 người nào đó bất kì.`` \n'
+				+ '!ignore - ``Ẩn chat của người chơi.`` \n'
+				+ '!ip - ``Check ip của người chơi bất kì đang được kết nối đến server.`` \n'
+				+ '!gamemode - ``Thay đổi chế độ chơi hiện tại.`` \n'
+				+ '!dupe - ``Dupe item của bạn.`` \n'
+				// + '!order - ``Đặt hàng kit riêng.`` \n'
+				)
 				.setFooter(footer)
 				.setTimestamp();
 
@@ -2126,7 +2560,8 @@ client.on("message", async message => {
 			var check = new Discord.MessageEmbed()
 				.setTitle("*[Check Command]*")
 				.setColor(0x000DFF)
-				.setDescription(prefix + 'kd - ``Xem chỉ số K/D.``'
+				.setDescription(
+				prefix + 'kd - ``Xem chỉ số K/D.``'
 				+ prefix + 'jd - ``Xem ngày người chơi lần đầu tham gia server.`` \n'
 				+ prefix + 'pt - ``Xem thời người chơi đã chơi.`` \n'
 				+ prefix + 'seen - ``Xem lần hoạt động gần nhất của người chơi.`` \n')
@@ -2141,7 +2576,7 @@ client.on("message", async message => {
 								.setTitle('[Help Command]')
 								.addField("*[Discord Command]*", "help*, status, online, queue, prio. ($)", false)
 								.addField("*[Check Command]*", "stats, playtime, joindate, seen. ($)", false)
-								.addField("*[Ingame Command]*", "help, tps, coordinate, kill, ping, queue, prio, stats, joindate, playtime, seen, 2bqueue, buykit, players, runtime. (!)", false)
+								.addField("*[Ingame Command]*", "help, tps, coordinate, kill, ping, queue, prio, stats, joindate, playtime, seen, 2bqueue, buykit, players, runtime, report, kick, ban, ignore, gamemode, dupe. (!)", false)
 								.setFooter(footer)
 								.setTimestamp();
 

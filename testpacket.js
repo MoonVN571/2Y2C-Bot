@@ -12,6 +12,7 @@ const mc = require("minecraft-protocol");
 client.on('ready', () => {
 	console.log('Bot online!');
 
+	// create this bot
 	createBot()
 });
 
@@ -19,7 +20,7 @@ function createBot () {
 	const bot = mineflayer.createBot({
 		host: "2y2c.org",
 		port: 25565,
-		username: "0Channy",
+		username: "mlem411",
 		version: "1.12.2"
     }); // Start bot
 
