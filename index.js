@@ -100,20 +100,6 @@ function createBot() {
     bot.loadPlugin(tpsPlugin)
 
 	// uptime bot on server
-	var minutes = 0;
-	var hour = 0;
-	var totalSeconds = 0;
-	var seconds = 0;
-	
-	// minecraft bot uptime
-	function setTime() {
-		totalSeconds += 1;
-		hour = parseInt(totalSeconds / 3600)
-		minutes = parseInt((totalSeconds - (hour * 3600)) / 60);
-		seconds = parseInt(totalSeconds % 60) 
-	}
-
-	// uptime bot on server
 	var minutess = 0;
 	var hourss = 0;
 	var totalSecondss = 0;
@@ -124,14 +110,13 @@ function createBot() {
 		minutess = parseInt((totalSecondss - (hourss * 3600)) / 60);
 		secondss = parseInt(totalSecondss % 60)
 	}
-
 	/*
 	 *
 	 *					WINDOW_OPEN
 	 *  
 	 * 
 	 */
-	var isMainServer = false; // lan 2, check main server de disconnect neu nhu tab ccontent /= 2YOUNG
+	var isMainServer = false;
 	var isOpen = false;
 	var isOpenCount = 0;
 	bot.on('windowOpen', () => { // slot button mode cb
@@ -158,8 +143,21 @@ function createBot() {
 		// uptime method
 		totalSeconds = 0;
 		totalSecondss = 0;
-		setInterval(setTime, 1000);
-		setInterval(setTime2, 5*60*1000);
+		setInterval(setTime2, 5 * 60 * 1000);
+		// db.delete(`uptime`);
+
+		let ut = db.get(`uptime`);
+
+		if(ut === null) {
+			var d = new Date();
+			var time = d.getTime();
+			db.set(`uptime`, time);
+		} else {
+			var d = new Date();
+			var time = d.getTime();
+			db.delete(`uptime`)
+			db.set(`uptime`, time);
+		}
 
 		disconnectRequest = false;
 		setInterval(function () {
@@ -178,7 +176,7 @@ function createBot() {
 		}
 
 		if(!dev) { // | > !buykit để xem thông tin và đặt hàng. | > !order [tên kit] [discord] để đặt hàng kit.
-			var str = "> Mua kit tại discord của bot: !buykit | > Xem các lệnh bot: https://mo0nbot.tk/ | > Xem luật của server !rules. | > !report <name> để tố cáo người chơi. | > Luyện tập pvp crystal : 2y2cpvp.ga"
+			var str = "> Mua kit tại discord của bot: !buykit | > Xem các lệnh bot: https://mo0nbot.tk/ | > Xem luật của server: !rules. | > Luyện tập pvp crystal : 2y2cpvp.ga"
 			var words = str.split(' | ');
 			var random = words[Math.floor(Math.random() * words.length)];
 
@@ -196,7 +194,6 @@ function createBot() {
 			}
 		}
 
-		
 		// Playtime
 		setInterval(function () {
 			if (lobby) return; // Object, map : search gg
@@ -230,29 +227,12 @@ function createBot() {
 			}
 		}, 10 * 1000); // dcm
 
-		
-		/*
-		setInterval(function () {
-			if (lobby) return;
-			Object.values(bot.players).map(player => addPlayTime(player.username));
-			
-			function addPlayTime(player) {
-				// console.log("add " + player)
-				let playtime = db.get(`${player}_playtime2`);
-				if (playtime === null) { // tao database playtime
-					db.set(`${player}_playtime2`, 10 * 1000);
-				} else { // tao database va tinh thoi gian
-					db.add(`${player}_playtime2`, 10 * 1000);
-				}
-			}
-		}, 10 * 1000); */
-
 		const queuejoined = new Discord.MessageEmbed()
 			.setDescription(`Bot đang vào server..`)
 			.setColor(0x15ff00); // xanh lam
 
 
-			const joined = new Discord.MessageEmbed()
+		const joined = new Discord.MessageEmbed()
 			.setDescription(`☘️ Bot đã tham gia vào server. ☘️`)
 			.setColor(0x15ff00); // xanh lam
 		if(dev) {
@@ -289,36 +269,7 @@ function createBot() {
 			}
 		}
 
-		// value to embed
-		var deathMsg;
-
-		if (logger === '2y2c đã full') return;
-
-		// Nếu đang vào 2y2c thì sẽ check xem player có trong server hay không
-		if (logger === "Đang vào 2y2c") {
-			setTimeout(() => {
-				if (!isMainServer) {
-					if(isOpenCount == 2) return; 
-					disconnectRequest = true;
-					setTimeout(() => {
-						bot.quit("fi")
-						console.log("quit")
-					}, 5*1000);
-				}
-			}, 2 * 60 * 1000);
-
-			setTimeout(() => { // delay before login
-				if(isOpen) return;
-				lobby = false;
-			}, 3 * 1000);
-
-		}
-
-		if (logger === undefined) return; // return if msg is undefined
-		if (logger === null) return; // return if null msg
-
 		var nocheck = message.toString().split(' ')[0]; // check username with format <>
-
 		// return message on chat
 		if (nocheck.startsWith('<') && nocheck.endsWith(">")) return;
 		
@@ -372,36 +323,21 @@ function createBot() {
 			colorNotf = "0xFD00FF";
 		}
 
-		if (logger.startsWith("[Server]")) {
-			colorNotf = '0xb60000';
-			notfMsg = logger;
+		if(logger == "2y2c đã full") {
+			setTimeout(() => {
+				colorNotf = '0xb60000';
+				notfMsg = logger;
+			}, 3*1000);
 		}
 
-		if (logger.startsWith("Bad commands")) {
-			colorNotf = '0xb60000';
-			notfMsg = logger;
-		}
-
-		if (logger.startsWith("2y2c:")) {
-			colorNotf = '0xb60000';
-			notfMsg = logger;
-		}
-
-		if (logger.startsWith("[Broadcast]")) {
-			colorNotf = "0xb60000";
-			notfMsg = logger;
-		}
-
-		if (logger === "Donate để duy trì server admin đang đói chết con *ĩ *ẹ.") {
-			colorNotf = '0xb60000';
-			notfMsg = logger;
-		}
-
-		if (logger === " diễn đàn của server https://www.reddit.com/r/2y2c/.") {
-			colorNotf = '0xb60000';
-			notfMsg = logger;
-		}
-		if (logger === "server thường back up vào 1h sáng nên tps đsẽ tụt vào khoảng thời gian này.") {
+		if (logger == "Đang vào 2y2c"
+		|| logger.startsWith("[Server]")
+		|| logger.startsWith("Bad commands")
+		|| logger.startsWith("2y2c:")
+		|| logger.startsWith("[Broadcast]")
+		|| logger === "Donate để duy trì server admin đang đói chết con *ĩ *ẹ."
+		|| logger === " diễn đàn của server https://www.reddit.com/r/2y2c/."
+		|| logger === "server thường back up vào 1h sáng nên tps đsẽ tụt vào khoảng thời gian này.") {
 			colorNotf = '0xb60000';
 			notfMsg = logger;
 		}
@@ -418,7 +354,6 @@ function createBot() {
 			disconnectRequest = true;
 			notfMsg = logger;
 			colorNotf = '0xb60000';
-
 		}
 
 		// return error message
@@ -435,6 +370,14 @@ function createBot() {
 			client.channels.cache.get(defaultChannel).send(embedNotf);
 			
 		}
+
+		// value to embed
+		var deathMsg;
+
+		if (logger === '2y2c đã full') return;
+		if (logger === 'Đang vào 2y2c') return;
+		if (logger === undefined) return; // return if msg is undefined
+		if (logger === null) return; // return if null msg
 
 		// kill Message
 		if (logger.includes('chết cháy khi đánh với')) {
@@ -862,6 +805,14 @@ function createBot() {
 			}
 
 		}
+		
+		setTimeout(() => {
+			if(botJoinCount < 3) {
+				disconnectRequest = true;
+				bot.quit("abc");
+			}
+		}, 2*60*1000);
+
 		if(botJoinCount > 3) {
 			botJoinCount = 4;
 		}
@@ -871,7 +822,7 @@ function createBot() {
 
 		if(username === "HomelessBaseBot") {
 			setTimeout(() => {
-				// bot.chat("> HomelessBaseBot đã tham gia vào server!!")
+				bot.chat("> HomelessBaseBot đã tham gia vào server!!")
 			}, 1*1000)
 		}
 
@@ -1267,15 +1218,6 @@ function createBot() {
 				logger = log.replace("<> ", "")
 			}
 		}
-		//checking command
-		// mc_cmd_list.forEach(element => {
-		// 	if(element.command === command) require("./commands/discord/"+element.filepath+'js')
-		// });
-		// console.log(username)
-		// console.log(username.toString())
-		// if(username.toString() == "haiYhaiC") {
-		// 	console.log("complete")
-		// }
 		
 		var bp;
 		if (dev) {
@@ -1288,12 +1230,9 @@ function createBot() {
 		if(logger.startsWith(bp)) {
 			var split = logger.split(' ')[0];
 			var n1 = split.toLowerCase() + logger.substr(split.length, logger.length)
-			newCmd = n1.replace(bp, "");
-			// console.log(n1)
-			// console.log(newCmd)
-			
+			newCmd = n1.replace(bp, "");	
 		} else {
-			newCmd = logger;
+			newCmd = "";
 		}
 
 		if (newCmd === "coords" || newCmd == "coordinate" || newCmd == "xyz") {
@@ -1522,24 +1461,24 @@ function createBot() {
 			} else {
 				var str = logger.replace(".", "");
 				var user = str.split(" ")[1];
-				
-				if(user == undefined) {
-					user = username;
-				}
 
 				var regex = /[a-z]|[A-Z]|[0-9]/i;
 				if(!user.match(regex)) {
 					user = username;
 				}
 
+				if(user == undefined) {
+					user = username;
+				}
 				var ping = bot.players[user].ping;
+				
 				if(ping < 1) {
 					ping = "Không thể kiểm tra lúc này. Thử lại sau vài giây.";
 				} else {
 					ping = bot.players[user].ping + "ms";
 				}
 
-				setTimeout(function () {
+				setTimeout(() => {
 					try {
 						bot.whisper(username, "> " + user + " : " + ping);
 					} catch (e) {
@@ -1800,7 +1739,7 @@ function createBot() {
 
 		if (newCmd === "rules") {
 			setTimeout(function () {
-				bot.whisper(username, `> Server này làm gì có luật hã mạy ??`)
+				bot.whisper(username, `> LUẬT: Tuyệt đối không HACK, CHEAT, lừa đảo, không SPAM, không PHÁ HOẠI. Báo cao ngay với lệnh !report.`)
 			}, 2 * 1000);
 
 		}
@@ -1944,22 +1883,24 @@ function createBot() {
 	 */
 
 	var unknownReason = true;
-
+	var count = 0;
 	bot.on('kicked', (reason, loggedIn) => {
 		console.log(reason, loggedIn);
 		if (reason.text == "You are already connected to this proxy!") {
 			console.log("Bot end for another is active!");
 			process.exit();
 		}
-		// {"text":"","extra":[{"text":"2y2c "},{"text":"đang restart quay lại sau","color":"gold"}]}
-		// var stro = reason.toString().replace(/{"text":"","extra":\[{"text":"2y2c "},{"text":"/ig, "").replace(/","color":"gold"}\]}/ig, "")
-		// console.log(stro)
-		if (reason.includes("đang restart quay lại sau")) { // nhớ xem string là gì
-			isRestarting = true;
-			unknownReason = false;
+
+		if (reason.includes("đang restart quay lại sau")) {
 			// console.log("work")
+			count++;
 		} else {
 			isRestarting = false;
+		}
+
+		if(count >= 2) {
+			isRestarting = true;
+			unknownReason = false;
 		}
 	})
 
@@ -1974,10 +1915,30 @@ function createBot() {
 		client.user.setActivity("");
 		console.log('Bot ended')
 		isEnded = true;
+
+		let uptime = db.get(`uptime`);
+
+		var d = new Date();
+		var timenow = d.getTime();
+
+		var ticks = timenow - uptime;
+		var temp = ticks / 1000;
+		var day = 0, hours = 0, minutes = 0, seconds = 0;
+		day = parseInt(temp / 86400)
+		hours = parseInt(((temp - day * 86400) / 3600))
+		minutes = parseInt(((temp - day * 86400 - hours * 3600)) / 60)
+		seconds = parseInt(temp % 60)
+		if(uptime === null) {
+			day = 0;
+			hours = 0;
+			minutes = 0;
+			seconds = 0;
+		}
+
 		setTimeout(() => {
 			if(restartingMsg) {
 				var reconnect = new Discord.MessageEmbed()
-				.setDescription(`Bot đã ngắt kết nối vì server restart. Bot sẽ vào lại sau 10 phút.\nĐã hoạt động từ ${hour}h ${minutes}m ${seconds}s trước.`)
+				.setDescription(`Bot đã ngắt kết nối vì server restart. Bot sẽ vào lại sau 5 phút.\nĐã hoạt động từ ${hours}h ${minutes}m ${seconds}s trước.`)
 				.setColor("F71319");
 
 				var notf = new Discord.MessageEmbed()
@@ -1991,7 +1952,7 @@ function createBot() {
 					client.channels.cache.get("806881615623880704").send(reconnect);
 				}
 
-				waitUntil(60000, 30, function condition() {
+				waitUntil(30000, 30, function condition() {
 					try {
 						var today = new Date()
 						let day = ("00" + today.getDate()).slice(-2)
@@ -2016,7 +1977,7 @@ function createBot() {
 				return;
 			}
 
-			if(isRestarting) {
+			if(isRestarting && !restartingMsg) {
 				var reconnect = new Discord.MessageEmbed()
 					.setDescription(`⚠️ Server đã crash. Bot sẽ kết nối lại server sau 5 phút! ⚠️`)
 					.setColor("F71319");
@@ -2053,7 +2014,7 @@ function createBot() {
 
 			if(disconnectRequest) {
 				var log = new Discord.MessageEmbed()
-										.setDescription("Bot đã ngắt kết nối đến server. Bot sẽ vào lại sau 1 phút." + `\nĐã hoạt động từ ${hour}h ${minutes}m ${seconds}s trước.`)
+										.setDescription("Bot đã ngắt kết nối đến server. Bot sẽ vào lại sau 1 phút." + `\nĐã hoạt động từ ${hours}h ${minutes}m ${seconds}s trước.`)
 										.setColor("F71319"); // cam
 
 				var notf = new Discord.MessageEmbed()
@@ -2093,7 +2054,7 @@ function createBot() {
 
 			if(unknownReason) {
 				var log = new Discord.MessageEmbed()
-				.setDescription("Bot đã mất kết nối đến server. Bot sẽ vào lại sau 1 phút." + `\nĐã hoạt động từ ${hour}h ${minutes}m ${seconds}s trước.`)
+				.setDescription("Bot đã mất kết nối đến server. Bot sẽ vào lại sau 1 phút." + `\nĐã hoạt động từ ${hours}h ${minutes}m ${seconds}s trước.`)
 				.setColor("F71319"); // cam
 
 				var notf = new Discord.MessageEmbed()
@@ -2549,6 +2510,7 @@ client.on("message", async message => {
 				+ '!ip - ``Check ip của người chơi bất kì đang được kết nối đến server.`` \n'
 				+ '!gamemode - ``Thay đổi chế độ chơi hiện tại.`` \n'
 				+ '!dupe - ``Dupe item của bạn.`` \n'
+				+ '!rules - ``Xem luật của server.`` \n'
 				// + '!order - ``Đặt hàng kit riêng.`` \n'
 				)
 				.setFooter(footer)
@@ -2576,7 +2538,7 @@ client.on("message", async message => {
 								.setTitle('[Help Command]')
 								.addField("*[Discord Command]*", "help*, status, online, queue, prio. ($)", false)
 								.addField("*[Check Command]*", "stats, playtime, joindate, seen. ($)", false)
-								.addField("*[Ingame Command]*", "help, tps, coordinate, kill, ping, queue, prio, stats, joindate, playtime, seen, 2bqueue, buykit, players, runtime, report, kick, ban, ignore, gamemode, dupe. (!)", false)
+								.addField("*[Ingame Command]*", "help, tps, coordinate, kill, ping, queue, prio, stats, joindate, playtime, seen, 2bqueue, buykit, players, runtime, report, kick, ban, ignore, gamemode, dupe, rules. (!)", false)
 								.setFooter(footer)
 								.setTimestamp();
 
