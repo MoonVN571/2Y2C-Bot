@@ -1,9 +1,10 @@
 ﻿const Discord = require("discord.js");
 const client = new Discord.Client();
 
-const token = require('dotenv').config();
+var token = require('dotenv').config();
+
 const config = {
-	token: process.env.token, // Discord token
+	token: process.env.TOKEN, // Discord token
 	ip: process.env.ip // Server IP
 };
 
@@ -25,6 +26,7 @@ const footer = "moonbot 2021";
 var prefix = "$";
 
 var fs = require('fs')
+const Scriptdb = require('script.db');
 
 // Developer mode
 var dev = true;
@@ -103,12 +105,10 @@ function createBot() {
 	var minutess = 0;
 	var hourss = 0;
 	var totalSecondss = 0;
-	var secondss = 0;
 	function setTime2() {
 		totalSecondss += 300;
 		hourss = parseInt(totalSecondss / 3600)
 		minutess = parseInt((totalSecondss - (hourss * 3600)) / 60);
-		secondss = parseInt(totalSecondss % 60)
 	}
 	/*
 	 *
@@ -116,17 +116,27 @@ function createBot() {
 	 *  
 	 * 
 	 */
-	var isMainServer = false;
 	var isOpen = false;
 	var isOpenCount = 0;
+	var logged = 0;
 	bot.on('windowOpen', () => { // slot button mode cb
 		// check fire time and return
+		logged++;
+		if(logged == 2) {
+			logged = 0;
+			return;
+		}
 		isOpen = true;
 		isOpenCount++;
-			bot.clickWindow(4, 0, 0)
-			bot.clickWindow(3, 0, 0)
-			bot.clickWindow(7, 0, 0)
-			bot.clickWindow(1, 0, 0)
+
+		bot.clickWindow(4, 0, 0)
+		delay(1000)
+		bot.clickWindow(3, 0, 0)
+		delay(1000)
+		bot.clickWindow(7, 0, 0)
+		delay(1000)
+		bot.clickWindow(1, 0, 0)
+
 	});
 
 	/*
@@ -136,7 +146,6 @@ function createBot() {
 	 * 
 	 */
 	var disconnectRequest = false;
-	var isEnded = false;
 	var sending = false;
 	var stats = false;
 	bot.once('login', () => {
@@ -144,19 +153,19 @@ function createBot() {
 		totalSeconds = 0;
 		totalSecondss = 0;
 		setInterval(setTime2, 5 * 60 * 1000);
-		// db.delete(`uptime`);
-
-		let ut = db.get(`uptime`);
+		
+		const uptime = new Scriptdb(`./data.json`);
+		let ut = uptime.get('uptime');
 
 		if(ut === null) {
 			var d = new Date();
-			var time = d.getTime();
-			db.set(`uptime`, time);
+			var time = d.getTime();s
+			uptime.set(`uptime`, time);
 		} else {
 			var d = new Date();
 			var time = d.getTime();
-			db.delete(`uptime`)
-			db.set(`uptime`, time);
+			uptime.delete(`uptime`)
+			uptime.set(`uptime`, time);
 		}
 
 		disconnectRequest = false;
@@ -170,13 +179,13 @@ function createBot() {
 		}, 1 * 60 * 1000);
 
 		function antiAFK() {
-			setTimeout(function () {
+			setTimeout(() => {
 				stats = false;
 			}, 10 * 1000);
 		}
 
-		if(!dev) { // | > !buykit để xem thông tin và đặt hàng. | > !order [tên kit] [discord] để đặt hàng kit.
-			var str = "> Mua kit tại discord của bot: !buykit | > Xem các lệnh bot: https://mo0nbot.tk/ | > Xem luật của server: !rules. | > Luyện tập pvp crystal : 2y2cpvp.ga"
+		if(!dev) {
+			var str = "> C| > Mua kit tại discord của bot: !buykit | > Xem các lệnh bot: https://mo0nbot.tk/ | > Xem thêm về luật của server, !rules. | > Luyện tập pvp crystal : 2y2cpvp.ga"
 			var words = str.split(' | ');
 			var random = words[Math.floor(Math.random() * words.length)];
 
@@ -188,7 +197,7 @@ function createBot() {
 			}, 10 * 60 * 1000);
 
 			function autoMsg() {
-				setTimeout(function () {
+				setTimeout(() => {
 					sending = false;
 				}, 1 * 60 * 1000);
 			}
@@ -200,29 +209,17 @@ function createBot() {
 			Object.values(bot.players).forEach(player => addPlayTime(player.username));
 			
 			function addPlayTime(player) {
-				let playtime = db.get(`${player}_playtime2`);
+				let pt = new Scriptdb(`./data/playtime/${player}.json`);
+				let playtime = pt.get('time')
 				// db.set(`${player}_playtime2`, 0);
 				if(dev) {
-					// fs.readFile(`./data/playtime/${player}.txt`, function(err, data) {
-					// 	console.log(data)
-					// })
-					// fs.write(`./data/playtime/${player}.txt`, "10000", function(err) {
-					// 	if(err) {
-					// 		console.log("Creating new files")
-					// 		// fs.writeFile(`./data/playtime/${player}.txt`, "10000", function(err) {
-					// 		// 	if(err) {
-					// 		// 		console.log(err)
-					// 		// 	}
-					// 		//   });
-					// 	}
-					//   });
 				
 				}
 
-				if (playtime === null) { // tao database playtime
-					db.set(`${player}_playtime2`, 10000); // dm cai nay lam kho t vl nha:))
+				if (playtime === undefined) { // tao database playtime
+					pt.set('time', 10000);
 				} else { // tao database va tinh thoi gian
-					db.add(`${player}_playtime2`, 10000);
+					pt.set('time', +playtime + 10000);
 				}
 			}
 		}, 10 * 1000); // dcm
@@ -374,368 +371,181 @@ function createBot() {
 		// value to embed
 		var deathMsg;
 
+		// return essentials message with valid str
+		if(logger.startsWith("[") && logger.includes(" -> me]")) return;
+
+		// return messages
+		if(logger.startsWith("nhắn cho")) return;
+		if(splitLogger2 == "nhắn:") return;
+
 		if (logger === '2y2c đã full') return;
 		if (logger === 'Đang vào 2y2c') return;
 		if (logger === undefined) return; // return if msg is undefined
 		if (logger === null) return; // return if null msg
 
-		// kill Message
-		if (logger.includes('chết cháy khi đánh với')) {
-			var str = logger;
-			var user = str.split(" ")[6];
-			
-			if(user == "Zombie") {
+		if (logger === "Donate để duy trì server admin đang đói chết con *ĩ *ẹ." || logger.startsWith("[Server]")
+				|| logger.startsWith("[Broadcast]")) return;
+
+		if(logger.includes("Wither") || logger.includes("cá") || logger.includes("Zombie") || logger.includes("Magma Cube") || logger.includes("Ghast")
+			|| user == "Enderman" || logger.includes("Wither")) {
 				deathMsg = logger;
-			} else {
-				let data = db.get(`${user}_kills`);
-
-				if (data === null) {
-					db.set(`${user}_kills`, 1)
-				} else {
-					db.add(`${user}_kills`, 1)
-				}
-				deathMsg = logger;
-			}
-			deathMsg = logger;
-		}
-
-		if (logger.includes('bị bắn chết bởi')) {
-			var str = logger;
-			var user = str.split(" ")[5];
-
-			let data = db.get(`${user}_kills`);
-
-			if (data === null) {
-				db.set(`${user}_kills`, 1)
-			} else {
-				db.add(`${user}_kills`, 1)
-			}
-			deathMsg = logger;
-		}
-
-		if (logger.includes('nhảy con mẹ nó vào lava khi bị truy sát bởi')) {
-			var str = logger;
-			var user = str.split(" ")[12];
-			var userSplit = str.split(" ")[13];
-			if(user == "Sì-ke-le-từn" || user == "Wither" || user == "cá" && userSplit == "bạc") {
-				deathMsg = logger;
-			} else {
-				let data = db.get(`${user}_kills`);
-
-				if (data === null) {
-					db.set(`${user}_kills`, 1)
-				} else {
-					db.add(`${user}_kills`, 1)
-				}
-				deathMsg = logger;
-			}
-		}
-
-		if (logger.includes('chết chìm khi cố gắng thoát khỏi')) {
+		} else {
+			if (logger.includes('chết cháy khi đánh với')) {
 				var str = logger;
-				var user = str.split(" ")[8];
-			if(user == "Zombie") { 
-				deathMsg = logger;
-			} else {
-				let data = db.get(`${user}_kills`);
-
-				if (data === null) {
-					db.set(`${user}_kills`, 1)
-				} else {
-					db.add(`${user}_kills`, 1)
-				}
+				var user = str.split(" ")[6];
+				
+				saveKills(user)
 				deathMsg = logger;
 			}
-		}
 
-		if (logger.includes('nổ banh xác bởi')) {
-			var str = logger;
-			var user = str.split(" ")[5];
+			if (logger.includes('bị bắn bởi')) {
+				var str = logger;
+				var user = str.split(" ")[4];
 
-			let data = db.get(`${user}_kills`);
-
-			if (data === null) {
-				db.set(`${user}_kills`, 1)
-			} else {
-				db.add(`${user}_kills`, 1)
-			}
-			deathMsg = logger;
-
-		}
-
-		if (logger.includes('nổ banh xác')) {
-			var str = logger;
-			var user = str.split(" ")[5];
-			var killer = str.split(" ")[0];
-
-			let data = db.get(`${user}_kills`);
-
-			if (data === null) {
-				db.set(`${user}_kills`, 1)
-			} else {
-				db.add(`${user}_kills`, 1)
-			}
-			deathMsg = logger;
-
-		}
-
-		if (logger.includes('đã bị đấm chết con mẹ nó bởi')) {
-			var str = logger;
-			var user = str.split(" ")[9];
-
-			let data = db.get(`${user}_kills`);
-
-			if (data === null) {
-				db.set(`${user}_kills`, 1)
-			} else {
-				db.add(`${user}_kills`, 1)
-			}
-			deathMsg = logger;
-		}
-
-		if (logger.includes('té dập con mẹ nó mặt vì')) {
-			var str = logger;
-			var user = str.split(" ")[8];
-
-			let data = db.get(`${user}_kills`);
-
-			if (data === null) {
-				db.set(`${user}_kills`, 1)
-			} else {
-				db.add(`${user}_kills`, 1)
-			}
-			deathMsg = logger;
-		}
-
-		if (logger.includes('chạy con mẹ nó vào lửa vì')) {
-			var str = logger;
-			var user = str.split(" ")[8];
-			if(user == "PRIMED_TNT(?)") {
-				deathMsg = logger;
-			} else {
-				let data = db.get(`${user}_kills`);
-
-				if (data === null) {
-					db.set(`${user}_kills`, 1)
-				} else {
-					db.add(`${user}_kills`, 1)
-				}
+				saveKills(user)
 				deathMsg = logger;
 			}
-		}
 
-		if (logger.includes('bay con mẹ nó lên trời bởi')) {
-			var str = logger;
-			var user = str.split(" ")[8];
-			if(user === "PRIMED_TNT(?)" || user == "ENDER_CRYSTAL(?)") {
-				deathMsg = logger;
-			} else {
-				let data = db.get(`${user}_kills`);
+			if (logger.includes('đã bị đấm chết con mẹ nó bởi')) { // valid
+				var str = logger;
+				var user = str.split(" ")[9];
 
-				if (data === null) {
-					db.set(`${user}_kills`, 1)
-				} else {
-					db.add(`${user}_kills`, 1)
-				}
+				saveKills(user)
 				deathMsg = logger;
 			}
-		}
+			
+			if (logger.includes('bị phản sát thương khi đánh')) {
+				var str = logger;
+				var user = str.split(" ")[7];
+				
+				saveKills(user)
+				deathMsg = logger;
+				
+			}
+
+			if (logger.includes('bị giết bởi') && !(logger.includes("một đám"))) {
+				var str = logger;
+				var user = str.split(" ")[4];
+
+				saveKills(user)
+				deathMsg = logger;
+				
+			}
+
+			if (logger.includes('khô máu với')) {
+				var str = logger;
+				var user = str.split(" ")[4];
+
+				saveKills(user)
+				deathMsg = logger;
+			}
+
 		
-		if (logger.includes('bị phản sát thương khi đánh')) {
-			var str = logger;
-			var user = str.split(" ")[7];
-			
-			if(user !== undefined) {
-				let data = db.get(`${user}_kills`);
 
-				if (data === null) {
-					db.set(`${user}_kills`, 1)
-				} else {
-					db.add(`${user}_kills`, 1)
-				}
-			}
-			deathMsg = logger;
-			
-		}
-
-		if (logger.includes('bị giết bởi')) {
-			var str = logger;
-			var user = str.split(" ")[4];
-			if(user == "Wither" || user == "cá" || user == "Zombie" || user === "Magma" && logger.includes("Magma Cube") || logger.includes("Ghast")
-			|| user == "Enderman") {
+			if (logger.includes('bị') && logger.includes("đẩy té mẹ ra khỏi game") || logger.includes("đá xuống lava")) {
+				var str = logger;
+				var user = str.split(" ")[2];
+				
+				saveKills(user)
 				deathMsg = logger;
-			} else {
-				let data = db.get(`${user}_kills`);
 
-				if (data === null) {
-					db.set(`${user}_kills`, 1)
-				} else {
-					db.add(`${user}_kills`, 1)
-				}
-				deathMsg = logger;
-			}
-		}
-
-		if (logger.includes('khô máu với')) {
-			var str = logger;
-			var user = str.split(" ")[4];
-			if(user == "Wither") {
-				deathMsg = logger;
-			} else {
-				let data = db.get(`${user}_kills`);
-
-				if (data === null) {
-					db.set(`${user}_kills`, 1)
-				} else {
-					db.add(`${user}_kills`, 1)
-				}
-				deathMsg = logger;
 			}
 
-		}
-
-		if (logger.includes('bị') && logger.includes("đẩy té mẹ ra khỏi game") || logger.includes("đá xuống lava")) {
-			var str = logger;
-			var user = str.split(" ")[3];
-			let data = db.get(`${user}_kills`);
-
-			// khong can check username vi dieu kien cua bị
-			if (data === null) {
-				db.set(`${user}_kills`, 1)
-			} else {
-				db.add(`${user}_kills`, 1)
-			}
-			deathMsg = logger;
-
-		}
-
-		if (logger.includes('bị hội đồng bởi một đám')) {
-			var str = logger;
-			var user = str.split(" ")[7];
-			if(user == "Wither" || logger.includes("Zombie Pigman")) {
-				deathMsg = logger;
-			} else {
+			if (logger.includes('bị hội đồng bởi một đám')) {
+				var str = logger;
+				var user = str.split(" ")[7];
 				var newUser = user;
 				if(user.includes("'s")) {
 					newUser = user.replace("'s", "")
 				}
-				let data = db.get(`${newUser}_kills`);
-
-				if (data === null) {
-					db.set(`${newUser}_kills`, 1)
-				} else {
-					db.add(`${newUser}_kills`, 1)
-				}
+				saveKills(newUser)
 				deathMsg = logger;
+
 			}
 
-		}
-
-		if (logger.includes('bị bởi một đám')) {
-			var str = logger;
-			var user = str.split(" ")[5];
-			if(user == "Wither" || logger.includes("Zombie Pigman")) {
-				deathMsg = logger;
-			} else {
+			if (logger.includes('bị bởi một đám')) {
+				var str = logger;
+				var user = str.split(" ")[5];
 				var newUser = user;
 				if(user.includes("'s")) {
 					newUser = user.replace("'s", "")
 				}
-				let data = db.get(`${newUser}_kills`);
+				saveKills(newUser)
+				deathMsg = logger;
+				
 
-				if (data === null) {
-					db.set(`${newUser}_kills`, 1)
-				} else {
-					db.add(`${newUser}_kills`, 1)
-				}
+			}
+
+			if (logger.includes('giết') && logger.includes("bằng")) {
+				var str = logger;
+				var user = str.split(" ")[2];
+				var killer = str.split(" ")[1];
+
+				saveKills(killer)
+				saveDead(user)
+				deathMsg = logger;
+
+			}
+
+			// listening death message
+			if (logger.includes('Té')
+			|| logger.includes('té')
+			|| logger.includes('trèo')
+			|| logger.includes('chợt')
+			|| logger.includes('đã')
+			|| logger.includes('đéo')
+			|| logger.includes('bị')
+			|| logger.includes('chạy')
+			|| logger.includes('nổ')
+			|| logger.includes('đấm')
+			|| logger.includes('nhảy')
+			|| logger.includes('cháy')
+			|| logger.includes('tự')
+			|| logger.includes('died')
+			|| logger.includes('chết')
+			|| logger.includes('Chết')
+			|| logger.includes('khô')
+			|| logger.includes('đi')
+			|| logger.includes('chạy')
+			|| logger.includes('không')
+			|| logger.includes('thế')
+			|| logger.includes('was')
+			|| logger.includes('tập')
+			|| logger.includes('đập')
+			|| logger.includes('bóp')
+			|| logger.includes('đang')
+			|| logger.includes('cứ')
+			|| logger.includes('tưởng')) {
+				var user = logger.split(" ")[0];
+
+				saveDead(user)
 				deathMsg = logger;
 			}
 
-		}
-
-		if (logger.includes('giết') && logger.includes("bằng")) {
-			var str = logger;
-			var user = str.split(" ")[2];
-			var killer = str.split(" ")[1];
-			if(user == "Wither") {
-				deathMsg = logger;
-			} else {
-				let data = db.get(`${killer}_kills`);
-				let dead = db.get(`${user}_dead`)
-				if (data === null) {
-					db.set(`${killer}_kills`, 1)
+			function saveDead(name) {
+				const kd = new Scriptdb(`./data/kd/${name}.json`);
+				var dead = kd.get('deaths');
+				
+				if(dead == null) {
+					kd.set('deaths', 1);
 				} else {
-					db.add(`${killer}_kills`, 1)
+					kd.set('deaths', +dead + 1);
 				}
-				if (dead === null) {
-					db.set(`${killer}_dead`, 1)
-				} else {
-					db.add(`${killer}_dead`, 1)
-				}
-				deathMsg = logger;
 			}
 
-		}
-
-		// listening death message
-		if (logger.includes('Té')
-		|| logger.includes('té')
-		|| logger.includes('trèo')
-		|| logger.includes('chợt')
-		|| logger.includes('đã')
-		|| logger.includes('đéo')
-		|| logger.includes('bị')
-		|| logger.includes('chạy')
-		|| logger.includes('nổ')
-		|| logger.includes('đấm')
-		|| logger.includes('nhảy')
-		|| logger.includes('cháy')
-		|| logger.includes('tự')
-		|| logger.includes('died')
-		|| logger.includes('chết')
-		|| logger.includes('Chết')
-		|| logger.includes('khô')
-		|| logger.includes('đi')
-		|| logger.includes('chạy')
-		|| logger.includes('không')
-		|| logger.includes('thế')
-		|| logger.includes('was')
-		|| logger.includes('tập')
-		|| logger.includes('đập')
-		|| logger.includes('bóp')
-		|| logger.includes('đang')
-		|| logger.includes('cứ')
-		|| logger.includes('tưởng')) {
-			var user = logger.split(" ")[0];
-			let data = db.get(`${user}_dead`);
-			
-			// !=
-			if (logger === "Donate để duy trì server admin đang đói chết con *ĩ *ẹ." || logger.startsWith("[Server]")
-			|| logger.startsWith("[Broadcast]")) {
-				return;
-			}else {
-				// return essentials message with valid str
-				if(logger.startsWith("[") && logger.includes(" -> me]")) return;
-
-				// return messages
-				if(logger.startsWith("nhắn cho")) return;
-				// var splitLogger2 = logger.split(' ')[1];
-				if(splitLogger2 == "nhắn:") return;
-		
-				// check first join
-				var splitName = logger.split(' ')[0];
-				var splitUsername = logger.split('vào');
-				if (splitUsername === splitName + " đã vào") return;
-
-				if (data === null) {
-					db.set(`${user}_dead`, 1)
+			function saveKills(name) {
+				const kd = new Scriptdb(`./data/kd/${name}.json`);
+				var kill = kd.get('kills');
+				
+				if(kill == null) {
+					kd.set('kills', 1);
 				} else {
-					db.add(`${user}_dead`, 1)
+					kd.set('kills', +kill + 1);
 				}
-				deathMsg = logger;
+
 			}
-			
 		}
+
 
 		// return error message
 		if (deathMsg === undefined) return;
@@ -774,10 +584,10 @@ function createBot() {
 		let min = ("00" + today.getMinutes()).slice(-2)
 		var date = day + '.' + month + '.' + years + ' ' + hours + ':' + min;
 
-		let firstjoin = db.get(`${username}_firstjoin`);
-
-		if (firstjoin === null) {
-			db.set(`${username}_firstjoin`, date)
+		const fj = new Scriptdb(`./data/joindate/${username}.json`);
+		let firstjoin = fj.get('date');
+		if (firstjoin === undefined) {
+			fj.set(`date`, date)
 		}
 
 		if (username === "Ha_My" || username === "PhanThiHaMy") {
@@ -788,6 +598,17 @@ function createBot() {
 		// return spam join message
 		if(username == bot.username) {
 			botJoinCount++;
+		}
+		
+		var d = new Date();
+		var time = d.getTime();
+		let lastseen = new Scriptdb(`./data/seen/${username}.json`);
+		var ls = lastseen.get('seen')
+
+		if (lastseen === undefined) {
+			lastseen.set('seen', time);
+		} else {
+			lastseen.set('seen', time);
 		}
 
 		// console.log(botJoinCount)
@@ -805,9 +626,9 @@ function createBot() {
 			}
 
 		}
-		
+
 		setTimeout(() => {
-			if(botJoinCount < 3) {
+			if(botJoinCount <= 2) {
 				disconnectRequest = true;
 				bot.quit("abc");
 			}
@@ -882,17 +703,6 @@ function createBot() {
 				client.channels.cache.get("807506107840856064").send(embed);
 				// bot.chat(`> ${username} đã thoát khỏi server!`);
 		}
-
-		var d = new Date();
-		var time = d.getTime();
-		let lastseen = db.get(`${username}_lastseen`);
-
-		if (lastseen === null) {
-			db.set(`${username}_lastseen`, time)
-		} else {
-			db.set(`${username}_lastseen`, time)
-		}
-
 		
 		// console.log(botJoinCount)
 		if(isOpenCount < 2) {
@@ -907,7 +717,6 @@ function createBot() {
 				// botJoinCount = 4;
 				return;
 			}
-
 		}
 
 		var embed = new Discord.MessageEmbed()
@@ -1081,34 +890,13 @@ function createBot() {
 	 * 
 	 */
 	bot.on('chat', (username, msg) => {
+		// main chat
 		if(username === "AutoRestart") {
 			var embed = new Discord.MessageEmbed()
 								.setDescription("[AutoRestart] " + msg)
 								.setColor("0xC51515");
 
-			if(embed === undefined) return;
-				client.channels.cache.get(defaultChannel).send(embed);
-
-		}
-
-		if (msg === "Server sẽ Restart sau 15 phút!") {
-			if (dev) return;
-			var embed = new Discord.MessageEmbed()
-			.setDescription("[AutoRestart] " + msg)
-			.setColor("0xC51515");
-
-			client.channels.cache.get('795534684967665695').send("@everyone " + "[AutoRestart] " + msg);
-			
-		}
-
-		if (msg === "Server sẽ Restart sau 5 phút!") {
-			if (dev) return;
-			var embed = new Discord.MessageEmbed()
-							.setDescription("[AutoRestart] " + msg)
-							.setColor("0xC51515");
-
-			client.channels.cache.get('795534684967665695').send("@everyone " + "[AutoRestart] " + msg);
-
+			client.channels.cache.get(defaultChannel).send(embed);
 		}
 
 		if (msg === "Server Restarting!") {
@@ -1237,12 +1025,12 @@ function createBot() {
 
 		if (newCmd === "coords" || newCmd == "coordinate" || newCmd == "xyz") {
 			var posi = bot.entity.position;
-			setTimeout(function () {
+			setTimeout(() => {
 				bot.whisper(username, `> XYZ: ${posi}`);
 			}, 2 * 1000);
 		}
 
-		if (logger.toLowerCase().startsWith(bp + "seen") || logger.toLowerCase().startsWith(bp + "seen")) {
+		if (logger.toLowerCase().startsWith(bp + "seen")) {
 			var args;
 
 			var str = logger.replace(".", "");
@@ -1261,14 +1049,15 @@ function createBot() {
 				args = username;
 			}
 
-			let lastseen = db.get(`${args}_lastseen`);
-			var d = new Date();
+			let ls = new Scriptdb(`./data/seen/${args}.json`);
+			var lastseen = ls.get('seen')
+			d = new Date();
 			var time = d.getTime();
 
-			var ticks = (time - lastseen); // tick de tinh second
+			var ticks = (time - +lastseen); // tick de tinh second
 
 			setTimeout(() => {
-				if (lastseen === null) {
+				if (lastseen === undefined) {
 					bot.whisper(username, `> Chưa từng nhìn thấy ${args}.`);
 					return;
 				}
@@ -1314,10 +1103,11 @@ function createBot() {
 			if (newCmd === "joindate" || newCmd === "jd") {
 				args = username;
 			}
-			let firstjoin = db.get(`${args}_firstjoin`);
+			let fj = new Scriptdb(`./data/joindate/${name}.json`);
+			let firstjoin = fj.get('date')
 
-			setTimeout(function () {
-				if (firstjoin === null) {
+			setTimeout(() => {
+				if (firstjoin === undefined) {
 					bot.whisper(username, `> ${args}: Chưa từng tham gia vào server.`);
 					return;
 				}
@@ -1344,15 +1134,16 @@ function createBot() {
 				args = username;
 			}
 
-			let playtime = db.get(`${args}_playtime2`);
+			let pt = new Scriptdb(`./data/playtime/${args}.json`);
+			let playtime = pt.get('time')
 
-			setTimeout(function () {
-				if (playtime === null) {
+			setTimeout(() => {
+				if (playtime === undefined) {
 					bot.whisper(username, `> ${args}: Chưa từng được tính thời gian.`)
 					return;
 				}
 
-				var correct = playtime / 2;
+				var correct = +playtime;
 				var temp = correct / 1000;
 				var day = 0, hour = 0, minutes = 0;
 				day = parseInt(temp / 86400)
@@ -1403,9 +1194,10 @@ function createBot() {
 			if(!args.match(regex)) {
 				args = username;
 			}
-
-			let die = db.get(`${args}_dead`);
-			let kills = db.get(`${args}_kills`);
+			const d = new Scriptdb(`./data/kd/${name}.json`);
+			const k = new Scriptdb(`./data/kd/${name}.json`);
+			let die = d.get('deaths');
+			let kills = d.get('kills');
 
 			var ratio = kills / die;
 			var ratioFixed = ratio.toFixed(2);
@@ -1422,77 +1214,72 @@ function createBot() {
 				kills = 0;
 			}
 
-			setTimeout(function () {
+			setTimeout(() => {
 				bot.whisper(username, `> ${args}: [K: ${kills} - D: ${die} - Ratio: ${ratioFixed}]`)
 			}, 2 * 1000);
 
 		}
 
 		if (newCmd === "help") {
-			setTimeout(function () { // !coords, !discord, !tps, !kill, !ping, !q, !stats, !jd, !playtime, !seen, !2bqueue, !buykit, !players, !runtime, !order. Tham gia discord xem chi tiết!
+			setTimeout(() => {
 				bot.whisper(username, '> Commands: https://mo0nbot.tk/')
 			}, 2 * 1000);
 		}
 
 		// TPS
 		if (newCmd === "tps") {
-			setTimeout(function () {
+			setTimeout(() => {
 				bot.whisper(username, `> TPS ước tính : ${bot.getTps()}`)
 			}, 2 * 1000);
 		}
 
 		if (newCmd === "discord") {
-			setTimeout(function () {
+			setTimeout(() => {
 				bot.whisper(username, `> Discord bot : https://discord.gg/yrNvvkqp6w`)
 			}, 2 * 1000);
 		}
 
 		if (logger.toLowerCase().startsWith(bp + "ping")) {
-			if (newCmd === "ping") {
-				var ping = bot.players[username].ping;
-				if(ping < 1) {
-					ping = "Không thể kiểm tra lúc này. Thử lại sau vài giây.";
-				} else {
-					ping = "> Ping của bạn : " + bot.players[username].ping + "ms";
-				}
-				setTimeout(() => {
-					bot.whisper(username, ping);
-				}, 2 * 1000);
-			} else {
-				var str = logger.replace(".", "");
-				var user = str.split(" ")[1];
+			var str = logger.replace(".", "");
+			var user = str.split(" ")[1];
 
-				var regex = /[a-z]|[A-Z]|[0-9]/i;
-				if(!user.match(regex)) {
-					user = username;
-				}
-
-				if(user == undefined) {
-					user = username;
-				}
-				var ping = bot.players[user].ping;
-				
-				if(ping < 1) {
-					ping = "Không thể kiểm tra lúc này. Thử lại sau vài giây.";
-				} else {
-					ping = bot.players[user].ping + "ms";
-				}
-
-				setTimeout(() => {
-					try {
-						bot.whisper(username, "> " + user + " : " + ping);
-					} catch (e) {
-						if (!dev) return;
-						console.log("PING OTHER DEBUG ", e)
-					}
-				}, 2 * 1000);
+			if(user == undefined) {
+				user = username;
 			}
+			
+			var regex = /[a-z]|[A-Z]|[0-9]/i;
+			if(!user.match(regex)) {
+				user = username;
+			}
+
+			setTimeout(() => {
+				try {
+					if(ping < 1) {
+						bot.whisper(username, "> " + user + " : Không thể kiểm tra ping người này. Thử lại sau vài giây.");
+					} else {
+						if(user == username) {
+							bot.whisper(username, "> Ping của bạn : " + bot.players[username].ping + "ms.");
+							return;
+						}
+						if(user == bot.username) {
+							bot.whisper(username, "> Bot ping : " + bot.players[user].ping + "ms.");
+							return;
+						}
+						bot.whisper(username, "> " + user + " : " + bot.players[user].ping + "ms.");
+						
+					}
+					
+				} catch (e) {
+					if (!dev) return;
+					console.log("PING OTHER DEBUG ", e)
+				}
+			}, 1 * 1000);
 		}
 
 		// Kill
 		if (newCmd === "kill" || newCmd === 'suicide') {
 			if (dev) return;
-			setTimeout(function () {
+			setTimeout(() => {
 				bot.chat('/kill')
 			}, 2 * 1000);
 		}
@@ -1524,7 +1311,7 @@ function createBot() {
 
 				var prio = players2.toString().replace("2y2c §6Queue Size,§6Ưu Tiên: §l", "");
 
-				setTimeout(function () {
+				setTimeout(() => {
 					if (newCmd === "prioqueue" || newCmd === "prio") {
 						if (prio < 1) {
 							bot.whisper(username, `> Không có bất kì hàng chờ ưu tiên nào.`);
@@ -1567,116 +1354,6 @@ function createBot() {
 			});
 		}
 
-		// !order [tên kit] [discord] để đặt hàng kit, người bán sẽ liên hệ với bạn và cho xem các kit. Ví dụ !order pvpkit blabla#0001
-		/*if(logger.startsWith(bp + "order")) {
-			var name = logger.split(' ')[1];
-			// var discord = logger.split(' ')[2];
-			// console.log(name)
-
-			var discord = logger.split(' ')[2];
-			if(discord !== undefined) {
-				discord = logger.substr(6 + name.length + 2, logger.length)
-			}
-
-			// console.log(discord)
-			setTimeout(() => {
-				// check neu command la !order
-				if(discord === undefined && name === undefined) {
-					bot.whisper(username, "> Bạn phải nhập thông tin để người bán liên hệ.")
-					setTimeout(() => {
-						bot.whisper(username, "Cách sử dụng: !order [kit] [discord]");
-					}, 1*1000)
-					return;
-				}
-
-				if(name === undefined) {
-					bot.whisper(username, "> Bạn phải nhập tên kit bạn đang cần. Bạn cần thêm từ kit ở phía sau và không cách.")
-					setTimeout(() => {
-						bot.whisper(username, "Cách sử dụng: !order [kit] [discord]");
-					}, 1*1000)
-					return;
-				}
-
-				// check neu command la !order a <rỗng>
-				if(discord === undefined && name !== undefined) {
-					bot.whisper(username, "> Bạn phải nhập tên discord để người bán liên hệ.")
-					setTimeout(() => {
-						bot.whisper(username, "Cách sử dụng: !order " + name.toLowerCase() + "kit [discord]");
-					}, 1*1000)
-					return;
-				}
-
-				if(discord !== undefined && name === undefined) {
-					bot.whisper(username, "> Bạn phải nhập tên kit để người bán liên hệ.")
-					setTimeout(() => {
-						bot.whisper(username, "Ví dụ: !order pvpkit " + discord);
-					}, 1*1000)
-					return;
-				}
-
-				if(name !== undefined && discord !== undefined) {
-					if(!(name.toLowerCase().endsWith("kit"))) {
-						bot.whisper(username, "> Kit không đúng định dạng. Bạn phải thêm từ kit ở sau và viết liền với tên kit.")
-						setTimeout(() => {
-							bot.whisper(username, "Ví dụ: Mua kit tên pvp thì : !order pvpkit abc xyz#0001");
-						}, 1*1000)
-						return;
-					}
-
-					if(!(discord.includes("#"))) {
-						bot.whisper(username, "> Tên discord không đúng định dạng. - Ví dụ: !order pvpkit abcxyz#0001")
-						setTimeout(() => {
-							bot.whisper(username, "Ví dụ: !order pvpkit abc xyz#0001");
-						}, 1*1000)
-						return;
-					}
-
-					if(discord.includes("#")) {
-						var split = discord.split('#')[1]; 
-						// console.log(split)
-						// check regex
-						var regex = /[0-9]/g;
-						if(split.length > 4) {
-							bot.whisper(username, "> Tên discord không hợp lý.")
-							setTimeout(() => {
-								bot.whisper(username, "Ví dụ: !order pvpkit abc xyz#0001");
-							}, 1*1000)
-							return;
-						}
-
-						if(!(split.match(regex))) {
-							bot.whisper(username, "> Tên discord không đúng định dạng.")
-							setTimeout(() => {
-								bot.whisper(username, "Ví dụ: !order pvpkit abc xyz#0001");
-							}, 1*1000)
-							return;
-						}
-					}
-
-					bot.whisper(username, "> Bạn đã yêu cầu " + name + " và discord là " + discord + ". Người bán sẽ liên hệ trong thời gian sớm nhất!")
-
-					client.users.fetch('425599739837284362', false).then((user) => {
-						var embed = new Discord.MessageEmbed()
-											.setTitle(`Đơn hàng`)
-											.setDescription("Người mua: **" + username + "**\nDiscord: **" + discord + "**\nLoại kit: **" + name + "**")
-											.setColor(0x008080)
-											.setTimestamp();
-
-						user.send(embed);
-					});
-					client.users.fetch('422249808611508225', false).then((user) => {
-						var embed = new Discord.MessageEmbed()
-											.setTitle(`Đơn hàng`)
-											.setDescription("Người mua: **" + username + "**\nDiscord: **" + discord + "**\nLoại kit: **" + name + "**")
-											.setColor(0x008080)
-											.setTimestamp();
-
-						user.send(embed);
-					});
-				}
-			}, 1*1000)
-		} */
-		
 		if(newCmd === "buykit") {
 			var invite;
 				var o = false;
@@ -1687,7 +1364,7 @@ function createBot() {
 					async function createInvite(message) { 
 						invite = await message.channel.createInvite(
 						{
-						maxAge: 10 * 60 * 1000, // maximum time for the invite, in milliseconds
+						maxAge: 24 * 60 * 60 * 1000, // maximum time for the invite, in milliseconds
 						maxUses: 1 // maximum times it can be used
 						},
 						`Requested with command by ${message.author.tag}`
@@ -1698,7 +1375,7 @@ function createBot() {
 					}	
 				});
 			setTimeout(() => {
-				bot.whisper(username, invite ? "Đã tạo lời mời discord là: https://discord.gg/" + invite + ". Link sẽ hết hạn sau 10 phút!" : "Không thể tạo lời mời!");
+				bot.whisper(username, invite ? "Đã tạo lời mời discord là: https://discord.gg/" + invite + ". Link sẽ hết hạn sau 1 lần dùng." : "Không thể tạo lời mời!");
 				setTimeout(() => { 
 				o = false;
 				}, 5*1000);
@@ -1714,13 +1391,13 @@ function createBot() {
 		if(newCmd === "players") {
 			var name = Object.values(bot.players).map(p => p.username);
 			// console.log(name.length)
-			setTimeout(function () {
+			setTimeout(() => {
 				bot.whisper(username, "> Có " + name.length + " player đang online!");
 			}, 2 * 1000);
 		}
 
 		if(newCmd === "runtime") {
-			setTimeout(function () {
+			setTimeout(() => {
 				bot.whisper(username, "> Bot đã hoạt động từ " + hour + "h " + minutes + "m " + seconds + "s trước.");
 			}, 2 * 1000);
 		}
@@ -1728,7 +1405,7 @@ function createBot() {
 		if (logger.startsWith(bp + "report")) {
 			var args = logger.split(' ')[1];
 
-			setTimeout(function () {
+			setTimeout(() => {
 				if(args === undefined) {
 					bot.whisper(username, '> Bạn phải nhập tên để báo cáo người chơi!')
 					return;
@@ -1738,7 +1415,7 @@ function createBot() {
 		}
 
 		if (newCmd === "rules") {
-			setTimeout(function () {
+			setTimeout(() => {
 				bot.whisper(username, `> LUẬT: Tuyệt đối không HACK, CHEAT, lừa đảo, không SPAM, không PHÁ HOẠI. Báo cao ngay với lệnh !report.`)
 			}, 2 * 1000);
 
@@ -1828,20 +1505,6 @@ function createBot() {
 			}
 		}
 
-		// // if(newCmd === "bestping") {
-		// 	var name = bot.players.username;
-		// 	if(name == undefined) return; 
-		// 	var ping = bot.players[name].ping;
-			
-		// 	var lowestPing;
-		// 	if(ping > 0) {
-				
-		// 		lowestPing = Math.min(ping)
-		// 		console.log(name + " " + lowestPing)
-			
-		// }
-			// bot.whisper(username, "")
-		// }
 		// check > msg
 		if (logger.startsWith(">")) {
 			color = "2EA711";
@@ -1864,15 +1527,12 @@ function createBot() {
 		var chat = new Discord.MessageEmbed()
 			.setDescription(`**<${newUsername}>** ${newLogger}`)
 			.setColor(color);
-		try {
-			client.channels.cache.get(defaultChannel).send(chat);
-			color = "0x979797";
-			msg = false;
-		} catch (e) {
-			if (!dev) return
-			console.log("CHAT MESSAGE ERROR MAIN", e)
-		}
-
+		
+		if(chat == undefined) return;
+		
+		client.channels.cache.get(defaultChannel).send(chat);
+		color = "0x979797";
+		
 	});
 
 	/*
@@ -1898,6 +1558,10 @@ function createBot() {
 			isRestarting = false;
 		}
 
+		if(reason.includes("thulaitrong60s")) {
+
+		}
+
 		if(count >= 2) {
 			isRestarting = true;
 			unknownReason = false;
@@ -1914,9 +1578,10 @@ function createBot() {
 	bot.on('end', () => {
 		client.user.setActivity("");
 		console.log('Bot ended')
-		isEnded = true;
 
-		let uptime = db.get(`uptime`);
+		
+		const u = new Scriptdb(`./data.json`);
+		let uptime = u.get('uptime');
 
 		var d = new Date();
 		var timenow = d.getTime();
@@ -1928,7 +1593,7 @@ function createBot() {
 		hours = parseInt(((temp - day * 86400) / 3600))
 		minutes = parseInt(((temp - day * 86400 - hours * 3600)) / 60)
 		seconds = parseInt(temp % 60)
-		if(uptime === null) {
+		if(uptime === undefined) {
 			day = 0;
 			hours = 0;
 			minutes = 0;
@@ -1945,14 +1610,14 @@ function createBot() {
 										.setDescription("🏮 Bot đã ngắt kết nối đến server. 🏮")
 										.setColor("F71319"); // cam
 
-					client.channels.cache.get(defaultChannel).send(notf);
+				client.channels.cache.get(defaultChannel).send(notf);
 				if(dev) {
 					client.channels.cache.get("807045720699830273").send(reconnect);
 				} else {
 					client.channels.cache.get("806881615623880704").send(reconnect);
 				}
 
-				waitUntil(30000, 30, function condition() {
+				waitUntil(300000, 30, function condition() {
 					try {
 						var today = new Date()
 						let day = ("00" + today.getDate()).slice(-2)
@@ -2218,8 +1883,8 @@ function createBot() {
 		}
 	});
 
-}
 
+}
 
 /*
 *
@@ -2247,32 +1912,6 @@ client.on("message", async message => {
 		return;
 	}
 
-	if(command === "resetdata") {
-		if(message.author.id === "425599739837284362") {
-			let data = db.get(`${args[0]}`);
-			if(data === null) {
-				var embed = new Discord.MessageEmbed()
-								.setDescription(`Data **${args[0]}** không tồn tại.`)
-								.setColor("0xC51515");
-			
-			message.channel.send(embed).then(msg => { msg.delete({ timeout: 10000 }) })
-			} else {
-				db.set(`${args[0]}`, 0);
-				var embed = new Discord.MessageEmbed()
-									.setDescription(`Đã reset data **${args[0]}**`)
-									.setColor("0xC51515");
-				
-				message.channel.send(embed).then(msg => { msg.delete({ timeout: 10000 }) })
-			}
-		} else {
-			var embed = new Discord.MessageEmbed()
-								.setDescription("Bạn không được phép sử dụng!")
-								.setColor("0xC51515");
-			
-			message.channel.send(embed).then(msg => { msg.delete({ timeout: 10000 }) })
-		}
-	}
-
 	if (command === "stats" || command === "kd") {
 		var e = new Discord.MessageEmbed()
 			.setDescription('Bạn cần nhập tên để xem thông tin. - `' + prefix + 'kd <name>`')
@@ -2280,8 +1919,11 @@ client.on("message", async message => {
 
 		if (!args[0]) return message.channel.send(e)
 
-		let kills = db.get(`${args[0]}_kills`);
-		let deads = db.get(`${args[0]}_dead`);
+
+		const d = new Scriptdb(`./data/kd/${args[0]}.json`);
+		const k = new Scriptdb(`./data/kd/${args[0]}.json`);
+		let deads = d.get('deaths');
+		let kills = k.get('kills');
 
 		if (kills === null) {
 			kills = 0;
@@ -2322,20 +1964,20 @@ client.on("message", async message => {
 
 		if (!args[0]) return message.channel.send(e)
 
-		let playtime = db.get(`${args[0]}_playtime2`);
-
+		let pt = new Scriptdb(`./data/playtime/${args[0]}.json`);
+		let playtime = pt.get('time')
+		
 		setTimeout(() => {
-			if (playtime === null || playtime === undefined) {
-				playtime = "Chưa từng được tính thời gian.";
+			if (playtime === undefined) {
 				var nodata = new Discord.MessageEmbed()
-					.setDescription(`${args[0]}: ` + playtime)
+					.setDescription(`${args[0]}: Chưa từng được tính thời gian.`)
 					.setColor('0xC51515')
 
 				message.channel.send(nodata);
 				return;
 			}
 
-			var correct = playtime / 2;
+			var correct = +playtime;
 			var temp = correct / 1000;
 			var day = 0, hour = 0, minutes = 0;
 			day = parseInt(temp / 86400)
@@ -2375,7 +2017,8 @@ client.on("message", async message => {
 		}, 1 * 1000);
 	}
 	if (command === "seen") {
-		let lastseen = db.get(`${args[0]}_lastseen`);
+		let ls = new Scriptdb(`./data/seen/${args[0]}.json`);
+		let lastseen = ls.get('seen')
 
 		var e = new Discord.MessageEmbed()
 			.setDescription('Bạn cần nhập tên để xem thông tin. - `' + prefix + 'seen <name>`')
@@ -2386,10 +2029,10 @@ client.on("message", async message => {
 		var d = new Date();
 		var time = d.getTime();
 
-		var ticks = time - lastseen;
+		var ticks = time - +lastseen;
 
 		setTimeout(() => {
-			if (lastseen === null) {
+			if (lastseen === undefined) {
 				var nodata = new Discord.MessageEmbed()
 					.setDescription(`Chưa từng nhìn thấy ${args[0]}.`)
 					.setColor('0xC51515')
@@ -2424,7 +2067,8 @@ client.on("message", async message => {
 	}
 
 	if (command === "joindate" || command === "jd") {
-		let firstjoin = db.get(`${args[0]}_firstjoin`);
+		let fj = new Scriptdb(`./data/joindate/${args}.json`)
+		let firstjoin = fj.get('date')
 
 		var e = new Discord.MessageEmbed()
 			.setDescription('Bạn cần nhập tên để xem thông tin. - `' + prefix + 'jd <name>`')

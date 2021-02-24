@@ -97,24 +97,28 @@ dist
 # FuseBox cache
 .fusebox/
 
-# DynamoDB Local files
-.dynamodb/
-
 # TernJS port file
 .tern-port
-node_modules
+
+# Other
 json.sqlite
 json.sqlite-journal
 login.bat
 test.js
 testpacket.js
-tp2.js
-tp.js
-testpacket.js
 2y2cpvp.js
 config.json
-data/
+data/kd
+data/seen
+data/playtime
+data/joindate
+data.json
 ip.txt
 test.js
 package-lock.json
 fixeslogin.js
+json.geojson
+tests.js
+sync.js
+fixeslogin.js
+package-lock.json
