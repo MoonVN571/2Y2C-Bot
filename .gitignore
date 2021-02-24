@@ -116,3 +116,5 @@ config.json
 data/
 ip.txt
 test.js
+package-lock.json
+fixeslogin.js
