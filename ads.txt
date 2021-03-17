@@ -1,0 +1,8 @@
+> Mua kit tại Moon SHOP : !buykit
+> Bot Commands: https://mo0nbot.tk/
+> Xem thêm về luật của server, !rules.
+> Server pvp : 2y2cpvp.ga
+> Gõ !playtime để xem thời gian chơi của bạn.
+> Gõ !seen <tên> Xem lần cuối người chơi online.
+> Gõ !jd <tên> Xem ngày người chơi lần đầu vào server.
+> Gõ !kd Xem số K/D của bạn.
