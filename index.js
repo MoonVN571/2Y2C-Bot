@@ -23,10 +23,8 @@ var fs = require('fs')
 const Scriptdb = require('script.db');
 
 var newAPI = require('./api');
-
 var  api = new newAPI()
 
-// Developer mode
 var dev = true;
 
 if (dev) {
@@ -61,7 +59,6 @@ if (dev) {
  *  CHAT_ON_DSICORD: Link chat discord to server
  *  COMMAND_DISCORD: Discord bot commands
  */
-
 
 /*
  *
@@ -173,14 +170,9 @@ function createBot() {
 		}
 
 		setInterval(() => {
-			// let msg = new Scriptdb(`./ads.txt`);
 			fs.readFile("ads.txt", 'utf8', function (err, data) {
 				if (err) throw err;
 				const lines = data.split('\n');
-				
-				// let data = msg.split("\n");
-				// var str = "> Mua kit tại Moon SHOP : !buykit | > Bot Commands: https://mo0nbot.tk/ | > Xem thêm về luật của server, !rules. | > Server pvp : 2y2cpvp.ga | > Gõ !playtime để xem thời gian chơi của bạn. | > Gõ !seen <tên> Xem lần cuối người chơi online. | > Gõ !jd <tên> Xem ngày người chơi lần đầu vào server. | > Gõ !kd Xem số K/D của bạn."
-				// var words = str.split('');
 				var random = lines[Math.floor(Math.random() * lines.length)];
 
 				if (sending) return;
@@ -195,7 +187,7 @@ function createBot() {
 
 		// Playtime
 		setInterval(() => {
-			if (lobby) return; // Object, map : search gg
+			if (lobby) return;
 			Object.values(bot.players).forEach(player => addPlayTime(player.username));
 			
 			function addPlayTime(player) {
@@ -205,7 +197,7 @@ function createBot() {
 				if (playtime === undefined) {
 					pt.set('time', 10000);
 				} else {
-					pt.set('time', +playtime + 10000);
+					pt.set('time', playtime + 10000);
 				}
 			}
 		}, 10 * 1000); // dcm
@@ -458,7 +450,6 @@ function createBot() {
 				}
 				saveKills(newUser)
 				deathMsg = logger;
-
 			}
 
 			if (logger.includes('bị bởi một đám')) {
@@ -470,8 +461,6 @@ function createBot() {
 				}
 				saveKills(newUser)
 				deathMsg = logger;
-				
-
 			}
 
 			if (logger.includes('giết') && logger.includes("bằng")) {
@@ -482,7 +471,6 @@ function createBot() {
 				saveKills(killer)
 				saveDead(user)
 				deathMsg = logger;
-
 			}
 
 			// listening death message
@@ -542,7 +530,6 @@ function createBot() {
 				}
 			}
 		}
-
 
 		// return error message
 		if (deathMsg === undefined) return;
@@ -1142,10 +1129,11 @@ function createBot() {
 		}
 
 		if(cmd == "playtime" || cmd == "pt") {
-			if(!args[0]) {
+			if(args[0]) {
+				if(!args[0].match(regex)) return;
+			} else {
 				args[0] = username;
 			}
-			if(!args[0].match(regex)) return;
 
 			let pt = new Scriptdb(`./data/playtime/${args[0]}.json`);
 			let playtime = pt.get('time')
@@ -1160,10 +1148,12 @@ function createBot() {
 		}
 
 		if (cmd == "kd" || cmd == "stats") {
-			if(!args[0]) {
+			if(args[0]) {
+				if(!args[0].toString().match(regex)) return;
+			} else {
 				args[0] = username;
 			}
-			if(!args[0].match(regex)) return;
+			
 
 			const kd = new Scriptdb(`./data/kd/${args[0]}.json`);
 			let die = kd.get('deaths');
@@ -1238,21 +1228,22 @@ function createBot() {
 		}
 
 		if (cmd == "ping") {
-			var user = username;
-			if(args[0]) { user = args[0] }
-			
-			if(!args[0].match(regex)) return;
+			if(args[0]) {
+				if(!args[0].match(regex)) return;
+			} else {
+				args[0] = username;
+			}
 			
 			setTimeout(() => {
 				try {
-					var ping = bot.players[user].ping;
+					var ping = bot.players[args[0]].ping;
 					if(ping == 0) {
 						bot.whisper(username, "> Server chưa ping người chơi này..");
 					} else {
 						if(user == username) {
-							bot.whisper(username, "> Ping của bạn : " + bot.players[username].ping + "ms.");
+							bot.whisper(username, "> Ping của bạn : " + bot.players[args[0]].ping + "ms.");
 						} else {
-							bot.whisper(username, "> " + user + " : " + bot.players[user].ping + "ms.");
+							bot.whisper(username, "> " + args[0] + " : " + bot.players[args[0]].ping + "ms.");
 						}
 					}
 				} catch (e) {
