@@ -101,26 +101,6 @@ dist
 .tern-port
 
 # Other
-json.sqlite
-json.sqlite-journal
-login.bat
-test.js
-testpacket.js
-2y2cpvp.js
-config.json
-data/
-data.json
-test.js
 package-lock.json
-tests.js
-sync.js
-fixeslogin.js
-package-lock.json
-commands/
-events/
 khac/
-func/
-util/
-commands.js
-start.js
-
+*.json

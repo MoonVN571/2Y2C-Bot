@@ -9,6 +9,7 @@
     "dotenv": "^8.2.0",
     "homebase-parser": "^1.1.0",
     "mineflayer": "^2.40.1",
+    "mineflayer-pathfinder": "^1.6.1",
     "mineflayer-tps": "^1.0.1",
     "script.db": "^3.0.0",
     "superagent": "^6.1.0",

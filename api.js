@@ -81,7 +81,7 @@ function API() { // goi cai nay la function sau do import
     }
 
     this.playtimeCalcE = (time) => {
-        var correct = time / 3;
+        var correct = time;
         var temp = correct / 1000;
         var day = 0, hour = 0, minutes = 0;
             day = parseInt(temp / 86400)
@@ -134,10 +134,10 @@ function API() { // goi cai nay la function sau do import
         return `${hours}h ${minutes}m ${seconds}s`; 
     }
 
-    var queue = "None";
-    var prio = "None";
-    var online = "Unknown";
-    var status = "Null";
+    var queue = "0";
+    var prio = "0";
+    var online = "undefined";
+    var status = "null";
 
     this.getQueue = () => {
         mc.ping({ "host": "2y2c.org" }, (err, result) => {
