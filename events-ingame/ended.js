@@ -9,6 +9,20 @@ module.exports = (bot, client) => {
 
     totalSecondss = 0;
 
+    const uptime = new bot.Scriptdb(`./data.json`);
+    let ut = uptime.get('uptime');
+
+    if(ut === undefined) {
+        var d = new Date();
+        var time = d.getTime();
+        uptime.set(`uptime`, time);
+    } else {
+        var d = new Date();
+        var time = d.getTime();
+        uptime.delete(`uptime`)
+        uptime.set(`uptime`, time);
+    }
+
     setTimeout(() => {
         if(!bot.lobby) { // se set cai nay sang false neu o trong sv chinh
             n = false;

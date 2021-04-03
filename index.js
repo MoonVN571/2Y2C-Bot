@@ -183,7 +183,7 @@ function createBot() {
 	bot.on('spawn', () => {
 		if(debug) {
 			setTimeout(() => {
-			console.log(lobby)
+			console.log("lobby: " +lobby)
 			}, 20 * 1000)
 		}
 	})
@@ -311,16 +311,19 @@ function createBot() {
 			|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
 
 		if(cmdName == "reload") {
-			// if(username !== "MoonVN" || username !== "MoonZ" || username !== "MoonOnTop") return bot.whisper(username, "> Không thể sử dụng lệnh này.")
-			if(!args[0]) return bot.whisper(username, "> Please type name of commands.")
+			if(username == "MoonVN" || username == "MoonZ" || username == "MoonOnTop") {
+				if(!args[0]) return bot.whisper(username, "> Please type name of commands.")
 
-			const cmd = require(`./ingame-commands/${args[0]}.js`);
+				const cmd = require(`./ingame-commands/${args[0]}.js`);
 
-			if(!cmd) return bot.whisper(username, "> Command not found.")
-			client.commands.delete(args[0])
-			client.commands.set(args[0], cmd);
-			
-			bot.whisper(username, "> reload success " + args[0])
+				if(!cmd) return bot.whisper(username, "> Command not found.")
+				client.commands.delete(args[0])
+				client.commands.set(args[0], cmd);
+				
+				bot.whisper(username, "> reload success " + args[0])
+			} else {
+				bot.whisper(username, "> Không thể sử dụng lệnh này.")
+			}
 			return;
 		}
 

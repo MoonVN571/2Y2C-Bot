@@ -4,6 +4,9 @@ module.exports = {
     aliases: ['messages'],
     
     async execute(client, message, args) {
+		var abc = require("../api")
+		var api = new abc();
+		
         if (!args[0]) return message.channel.send(client.userNotFound);
 
 		let quotes = new client.Scriptdb(`./data/quotes/${args[0]}.json`)
@@ -24,21 +27,21 @@ module.exports = {
 		var time3 = times.split(" | ")[times.split(" | ").length - 4]
 		var time4 = times.split(" | ")[times.split(" | ").length - 5]
 		
-		var data = `***${client.api.ageCalc(time0)} trước***: ${msg0}\n***${client.api.ageCalc(time0)} trước***: ${msg1}\n***${client.api.ageCalc(time2)} trước***: ${msg2}\n***${client.api.ageCalc(time3)} trước***: ${msg3}\n***${client.api.ageCalc(time4)} trước***: ${msg4}\n`;
+		var data = `***${api.ageCalc(time0)} trước***: ${msg0}\n***${api.ageCalc(time0)} trước***: ${msg1}\n***${api.ageCalc(time2)} trước***: ${msg2}\n***${api.ageCalc(time3)} trước***: ${msg3}\n***${api.ageCalc(time4)} trước***: ${msg4}\n`;
 		if(time0 == undefined || msg0 == undefined) {
-			data = `***${client.api.ageCalc(time0)} trước***: ${msg0}\n***${client.api.ageCalc(time0)} trước***: ${msg1}\n***${client.api.ageCalc(time2)} trước***: ${msg2}\n***${client.api.ageCalc(time3)} trước***: ${msg3}\n***${client.api.ageCalc(time4)} trước***: ${msg4}\n`
+			data = `***${api.ageCalc(time0)} trước***: ${msg0}\n***${api.ageCalc(time0)} trước***: ${msg1}\n***${api.ageCalc(time2)} trước***: ${msg2}\n***${api.ageCalc(time3)} trước***: ${msg3}\n***${api.ageCalc(time4)} trước***: ${msg4}\n`
 		}
 		if(time1 == undefined || msg1 == undefined) {
-			data = `***${client.api.ageCalc(time0)} trước***: ${msg1}\n***${client.api.ageCalc(time2)} trước***: ${msg2}\n***${client.api.ageCalc(time3)} trước***: ${msg3}\n***${client.api.ageCalc(time4)} trước***: ${msg4}\n`
+			data = `***${api.ageCalc(time0)} trước***: ${msg1}\n***${api.ageCalc(time2)} trước***: ${msg2}\n***${api.ageCalc(time3)} trước***: ${msg3}\n***${api.ageCalc(time4)} trước***: ${msg4}\n`
 		}
 		if(time2 == undefined || msg2 == undefined) {
-			data = `***${client.api.ageCalc(time2)} trước***: ${msg2}\n***${client.api.ageCalc(time3)} trước***: ${msg3}\n***${client.api.ageCalc(time4)} trước***: ${msg4}\n`
+			data = `***${api.ageCalc(time2)} trước***: ${msg2}\n***${api.ageCalc(time3)} trước***: ${msg3}\n***${api.ageCalc(time4)} trước***: ${msg4}\n`
 		}
 		if(time3 == undefined || msg3 == undefined) {
-			data = `***${client.api.ageCalc(time3)} trước***: ${msg3} \n***${client.api.ageCalc(time4)} trước***: ${msg4}\n`
+			data = `***${api.ageCalc(time3)} trước***: ${msg3} \n***${api.ageCalc(time4)} trước***: ${msg4}\n`
 		}
 		if(time4 == undefined || msg4 == undefined) {
-			data = `***${client.api.ageCalc(time4)} trước***: ${msg4}\n`
+			data = `***${api.ageCalc(time4)} trước***: ${msg4}\n`
 		}
 		if (messages === undefined || times == undefined) return message.channel.send(client.userNotFound);
 

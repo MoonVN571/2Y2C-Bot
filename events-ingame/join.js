@@ -10,6 +10,7 @@ module.exports = (bot, client, p) => {
     // console.log(bot.countPlayers)
     setTimeout(() => {
         if(bot.countPlayers <= 3) {
+            if(bot.closeCount > 0) return;
             bot.disconnectRequest = true;
             bot.quit()
         }

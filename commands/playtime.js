@@ -4,14 +4,17 @@ module.exports = {
     aliases: ['pt', 'playtime'],
     
     async execute(client, message, args) {
+		var abc = require("../api")
+		var api = new abc();
+        
         if (!args[0]) return message.channel.send(client.userNotFound);
 
-		let pt = new Scriptdb(`./data/playtime/${args[0]}.json`);
+		let pt = new client.Scriptdb(`./data/playtime/${args[0]}.json`);
 		let playtime = pt.get('time')
 		
         if (playtime === undefined) return message.channel.send(userNotFound);
 
-        var string = client.api.playtimeCalc(playtime);
+        var string = api.playtimeCalc(playtime);
 
         var embed = new client.Discord.MessageEmbed()
                         .setDescription(`${args[0]}: ${string}`)

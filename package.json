@@ -1,19 +1,17 @@
 {
   "name": "2y2c-bot",
-  "version": "1.0.0",
-  "description": "Simple 2Y2C Minecraft bot by Moonz",
+  "version": "1.0",
+  "description": "Released bot today",
   "main": "index.js",
   "dependencies": {
     "delay": "^4.4.0",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
-    "homebase-parser": "^1.1.0",
     "mineflayer": "^2.40.1",
     "mineflayer-pathfinder": "^1.6.1",
     "mineflayer-tps": "^1.0.1",
     "script.db": "^3.0.0",
     "superagent": "^6.1.0",
-    "txt-reader": "^1.4.5",
     "wait-until": "0.0.2"
   },
   "devDependencies": {

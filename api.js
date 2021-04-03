@@ -81,7 +81,7 @@ function API() { // goi cai nay la function sau do import
     }
 
     this.playtimeCalcE = (time) => {
-        var correct = time;
+        var correct = time / 3;
         var temp = correct / 1000;
         var day = 0, hour = 0, minutes = 0;
             day = parseInt(temp / 86400)
