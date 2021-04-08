@@ -26,7 +26,11 @@ require('dotenv').config();
 
 const config = {
 	token: process.env.TOKEN,
-	ip: process.env.ip
+	ip: process.env.IP,
+	pin1: process.env.PIN1,
+	pin2: process.env.PIN2,
+	pin3: process.env.PIN3,
+	pin4: process.env.PIN4
 };
 
 var dev = true;
@@ -39,13 +43,6 @@ if (dev) {
 console.log('Debug Mode: ' + debug)
 console.log('Developer Mode: ' + dev)
 
-const cmds = fs.readdirSync(`./ingame-commands`).filter(file => file.endsWith('.js'));
-
-// console.log('---------- LOADING INGAME COMMANDS ----------')
-// cmds.forEach(cmd => {
-// 	console.log(`${cmd} loaded.`)
-// });
-
 var defaultChannel;
 var devuser = "mo0nbot";
 
@@ -57,7 +54,7 @@ if (dev) {
 	devuser = "mo0nbot";
 }
 
-var oneInterval = false; // 1 times interval bot 
+var oneInterval = false;
 
 /*
  *				READY
@@ -67,14 +64,10 @@ client.on('ready', () => {
 	console.log('Bot online!');
 
 	client.user.setActivity("RESTARTING", { type: 'PLAYING' });
-
-	// const eventIngame = fs.readdirSync(`./events-ingame`).filter(file => file.endsWith('.js'));
-
-	// console.log('---------- LOADING EVENTS INGAME COMMANDS ----------')
-	// eventIngame.forEach(events => {
-	// 	console.log(`${events} loaded.`)
-	// })
-	createBot()
+	
+    console.log(`Ready to serve in ${client.channels.cache.size} channels on ${client.guilds.cache.size} servers, for a total of ${client.users.cache.size} users.`);
+	
+	createBot();
 });
 
 var minutess = 0;
@@ -93,22 +86,9 @@ function createBot() {
 		version: "1.16.5"
 	});
 
-	var color = "0x979797";
-
-	var lobby = true;
-
     bot.loadPlugin(tpsPlugin)
 	bot.loadPlugin(pathfinder)
 
-	var disconnectRequest = false;
-	var joined = false;
-
-	var checkJoined = false;
-	bot.checkJoined = checkJoined;
-
-	/*
-	 *						STATS_AND_LOG_ALL
-	 */
 	const DeathftNotifyEvent = require(`./events-ingame/death-notify.js`);
 	const joinedEvent = require(`./events-ingame/join.js`);
 	const leftEvent = require(`./events-ingame/left.js`);
@@ -122,51 +102,71 @@ function createBot() {
 	const kickedEvent = require('./events-ingame/kicked.js');
 	const endedEvent = require('./events-ingame/ended.js');
 
-	bot.debug = debug;
-	
-	bot.dev = dev;
+	var color = "0x979797";
+	var lobby = true;
+
+	var disconnectRequest = false;
+	var joined = false;
+
+	var checkJoined = false;
+
+	var restarts15m = false;
+	var restarts5m = false;
+
+	// bot end with restart
+	var isRestarting = false;
+	var restartingMsg = false;
+	var unknownReason = true;
+
 	bot.client = client;
+
+	bot.debug = debug;	
+	bot.dev = dev;
+
+	// modules
 	bot.Scriptdb = Scriptdb;
-	bot.defaultChannel = defaultChannel;
 	bot.Discord = Discord;
-	bot.color = color;
-	bot.api = api;
 	bot.fs = fs;
 	bot.waitUntil = waitUntil;
+	
+	// mot so data
 	bot.prefix = prefix;
+	bot.config = config;
+	bot.color = color;
+	bot.api = api;
+	bot.defaultChannel = defaultChannel;
+	bot.checkJoined = checkJoined; // kiem tra khi joined
 
-	bot.cmds = cmds;
-
+	// check bot is in lobby
 	bot.lobby = lobby;
 
-	bot.minutess = minutess;
+	// uptime bot on topic
 	bot.hourss = hourss;
+	bot.minutess = minutess;
 	bot.totalSecondss = totalSecondss;
 
 	bot.joined = joined;
 	bot.oneInterval = oneInterval;
 
 	// Join
-	var countPlayers = 0;	
+	var countPlayers = 0;
 	bot.countPlayers = countPlayers;
-
-	var closeCount = 0;
-	bot.closeCount = closeCount;
 	
 	bot.Movements = Movements;
 	bot.GoalNear = GoalNear;
+
+	bot.restarts15m = restarts15m;
+	bot.restarts5m = restarts5m;
+
+	bot.isRestarting = isRestarting;
+	bot.restartingMsg = restartingMsg;
+
+	bot.unknownReason = unknownReason;
 
 	bot.on('windowOpen', verifyEvent.bind(null, bot));
 
 	bot.on('connect', JoinedServerEvent.bind(null, bot, client))
 	bot.once('login', playtimeEvent.bind(null, bot))
-
-	bot.on('windowClose', (window) => {
-		if(!debug) return;
-		console.log(window.title)
-		closeCount++;
-		console.log(closeCount)
-	})
 
 	bot.on('spawn', () => {
 		if(debug) {
@@ -176,10 +176,7 @@ function createBot() {
 		}
 	})
 
-	/*
-	 *					CHAT_BOX_SERVERS
-	 */
-	 bot.on('message', (msg) => {
+	bot.on('message', (msg) => {
 		if (!(msg.toString().startsWith("<"))) return;
 		var nocheck = msg.toString().split(' ')[0];
 		var username1 = nocheck.replace(/</ig, "");
@@ -239,7 +236,6 @@ function createBot() {
 						.setColor(color);
 		
 		if(chat !== undefined) {
-			// if(!dev) {
 			setTimeout(() => {
 				var guild = client.guilds.cache.map(guild => guild.id);
 				setInterval(() => {
@@ -249,8 +245,6 @@ function createBot() {
 						const checkdata = data.get('livechat');
 
 						if(checkdata == undefined || guild == undefined) return;
-
-						// console.log(guild+ ": " + checkdata);
 						
 						try {
 							if(chat !== undefined) {
@@ -260,24 +254,11 @@ function createBot() {
 					}
 				}, 100);
 			}, 100)
-				setTimeout(() => {
-					color = "0x797979";
-					client.channels.cache.get(defaultChannel).send(chat);
-				}, 100);
-			// }
 
-			/*
-			fs.readFile("channels.txt", 'utf8', function (err, data) {
-				if (err) throw err;
-				const lines = data.split(/\r?\n/);
-				setInterval(() => {
-					if (lines[0]) {
-						const line = lines.pop()
-						if(line == "") return
-						client.channels.cache.get(line).send(chat);
-					}
-				}, 200)
-			}); */
+			setTimeout(() => {
+				color = "0x797979";
+				client.channels.cache.get(defaultChannel).send(chat);
+			}, 100);
 		}
 	
 		saveMsgsData(username, logger);
@@ -308,7 +289,7 @@ function createBot() {
 		client.commands = new Discord.Collection();
 	
 		const cmds = require('fs').readdirSync(`./ingame-commands/`).filter(file => file.endsWith('.js'));
-		// for(const file of cmds){
+
 		for(const file of cmds){
 			const cmd = require(`./ingame-commands/${file}`);
 			
@@ -355,75 +336,27 @@ function createBot() {
 		}, 1* 1000);
 	 });
 
-	/*
-	 * 			STATS
-	 */
 	bot.on("message", DeathftNotifyEvent.bind(null, bot, client));
 
-	/*
-	 *				PLAYERs_JOIN
-	 */
-	
 	bot.on("playerJoined", joinedEvent.bind(null, bot, client));
 
-	/*
-	 *				PLAYERs_LEFT
-	 */
 	bot.on("playerLeft", leftEvent.bind(null, bot, client));
 
-	/*
-	 *					MAIN_SERVERS_TAB_STATUS
-	 */
-	 bot._client.on("playerlist_header", mainEvent.bind(null, bot, client));
+	bot._client.on("playerlist_header", mainEvent.bind(null, bot, client));
 
-
-	/*
-	 *				QUEUE_SERVERS_TAB
-	 */
 	bot._client.on("playerlist_header", queueEvent.bind(null, bot, client));
 
-	/**
-	 * 					RESTART_NOTIFY
-	 */
-	 var restarts15m = false;
-	 var restarts5m = false;
-	 bot.restarts15m = restarts15m;
-	 bot.restarts5m = restarts5m;
 	bot.on("message", restartEvent.bind(null, bot, client));
 
-	/*
-	 *
-	 *					MAIN_SERVERS
-	 *  
-	 *  
-	 */
 	bot._client.on("playerlist_header", ServerStatusEvent.bind(null, bot, client));
 	
-	// bot end with restart
-	var isRestarting = false;
-	var restartingMsg = false;
-	bot.isRestarting = isRestarting;
-	bot.restartingMsg = restartingMsg;
 	bot.on("chat", restartEvent.bind(null, bot, client));
 
-	/*
-	 *				DISCONNECT_SERVERS
-	 */
-	var unknownReason = true;
-	bot.unknownReason = unknownReason;
 	bot.on('kicked', kickedEvent.bind(null, bot, client));
 
-	/*
-	 *					END_CONNECT_TO_SERVERS
-	 */
 	bot.on('end', endedEvent.bind(null, bot, client));
 
-	/*
-	 *
-	 *					CHAT_ON_DSICORD
-	 *  
-	 * 
-	 */
+
 	client.on('message', msg => {
 		const args = msg.content.slice("/".length).trim().split(/ +/g);
 		const command = args.shift().toLowerCase();
@@ -586,11 +519,6 @@ for (const file of cmdss) {
 
 	client.commandss.set(cmd.name, cmd);
 }
-
-// console.log('---------- LOADING DISCORD COMMANDS ----------')
-// cmdss.forEach(cmd => {
-// 	console.log(`${cmd} loaded.`)
-// })
 
 client.on("message", async message => {
 	if(message.author.bot|| !message.content.startsWith(prefix) || message.author == client.user) return;

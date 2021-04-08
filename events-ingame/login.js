@@ -13,8 +13,6 @@ module.exports = (bot, client) => {
     if(check) return;
     check = true;
 
-	client.user.setActivity("LOGGING", { type: 'PLAYING' });
-
     setTimeout(() => { check = false; }, 2 * 60 * 1000)
         
     setInterval(setTime2, 5 * 60 * 1000);
