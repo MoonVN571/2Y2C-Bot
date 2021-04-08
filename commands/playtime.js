@@ -11,7 +11,7 @@ module.exports = {
 
 		let pt = new client.Scriptdb(`./data/playtime/${args[0]}.json`);
 		let playtime = pt.get('time')
-		
+		        
         if (playtime === undefined) return message.channel.send(userNotFound);
 
         var string = api.playtimeCalc(playtime);

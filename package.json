@@ -1,10 +1,9 @@
 {
   "name": "2y2c-bot",
-  "version": "1.0",
+  "version": "1.0.1",
   "description": "Released bot today",
   "main": "index.js",
   "dependencies": {
-    "delay": "^4.4.0",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "mineflayer": "^2.40.1",
@@ -14,9 +13,7 @@
     "superagent": "^6.1.0",
     "wait-until": "0.0.2"
   },
-  "devDependencies": {
-    "ticks-to-date": "^1.0.3"
-  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

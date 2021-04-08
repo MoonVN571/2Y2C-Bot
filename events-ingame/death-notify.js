@@ -69,6 +69,7 @@ module.exports = (bot, client, message) => {
 	}
 
 	if(logger == "2y2c đã full") {
+		bot.checkJoined = true;
 		setTimeout(() => {
 		var fully = new bot.Discord.MessageEmbed()
 					.setDescription("2y2c đã full")
@@ -82,10 +83,10 @@ module.exports = (bot, client, message) => {
 	|| logger == "đang vào 2y2c..."
 	|| logger.startsWith("[Server]")
 	|| logger.startsWith("[SERVER]")
-	|| logger.startsWith("Bad commands")
+	|| logger.startsWith("Bad command")
 	|| logger.startsWith("[Broadcast]")
 	|| logger === "Donate để duy trì server admin đang đói chết con *ĩ *ẹ."
-	// || logger === " diễn đàn của server https://www.reddit.com/r/2y2c/."
+	|| logger === " diễn đàn của server https://www.reddit.com/r/2y2c/."
 	|| logger === "server thường back up vào 1h sáng nên tps đsẽ tụt vào khoảng thời gian này."
 	|| logger == "The main server is down. We will be back soon!"
 	|| logger == "Vote cho server tại https://minecraft-mp.com/server-s271071."
@@ -128,11 +129,25 @@ module.exports = (bot, client, message) => {
 		if(embedNotf !== undefined) {
 			if(!bot.dev) {
 				setTimeout(() => {
-					client.channels.cache.get("816695017858531368").send(embedNotf);
-				}, 1*100);
-			}
+					var guild = client.guilds.cache.map(guild => guild.id);
+					setInterval(() => {
+						if (guild[0]) {
+							const line = guild.pop()
+							const data = new bot.Scriptdb(`./data/guilds/setup-${line}.json`);
+							const checkdata = data.get('livechat');
 
-			client.channels.cache.get(bot.defaultChannel).send(embedNotf);
+							if(checkdata == undefined || guild == undefined) return;
+
+							try {
+								client.channels.cache.get(checkdata).send(embedNotf);
+							} catch(e) {  }
+						}
+					}, 200);
+				}, 100)
+			}
+			setTimeout(() => {
+				client.channels.cache.get(bot.defaultChannel).send(embedNotf);
+			}, 400)
 		}
 	}
 	
@@ -321,8 +336,21 @@ module.exports = (bot, client, message) => {
 	if(embedDeath == undefined) return;
 	if(!bot.dev) {
 		setTimeout(() => {
-			bot.client.channels.cache.get("816695017858531368").send(embedDeath);
-		}, 1*100);
+			var guild = client.guilds.cache.map(guild => guild.id);
+			setInterval(() => {
+				if (guild[0]) {
+					const line = guild.pop()
+					const data = new bot.Scriptdb(`./data/guilds/setup-${line}.json`);
+					const checkdata = data.get('livechat');
+					
+                    if(guild == undefined || checkdata == undefined) return;
+
+					try {
+						client.channels.cache.get(checkdata).send(embedDeath);
+					} catch(e) {  }
+				}
+			}, 200);
+		}, 100)
 	}
-	bot.client.channels.cache.get(bot.defaultChannel).send(embedDeath);
+	client.channels.cache.get(bot.defaultChannel).send(embedDeath);
 }

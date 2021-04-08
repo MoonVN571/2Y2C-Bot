@@ -1,4 +1,8 @@
+var n = false;
 module.exports = (bot) => {
+    if(n) return;
+    n = true;
+    setTimeout(() => { n = false; }, 1 * 60 * 1000)
     bot.clickWindow(4, 0, 0, null)
     bot.clickWindow(3, 0, 0, null) 
     bot.clickWindow(7, 0, 0, null)

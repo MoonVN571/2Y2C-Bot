@@ -5,9 +5,17 @@ module.exports = {
     
     async execute(client, message, args) {
         var prefix = client.prefix;
-        
+        var footer = client.footer;
+
         var noargs = new client.Discord.MessageEmbed()
-                            .setDescription('Bạn cần nhập loại lệnh. `' + prefix + "help <loại>`\n**Loại:** discord, ingame-command, check và all.\nLoại all là xem tất cả lệnh, còn lại là xem chi tiết")
+                            // .setDescription('Xem thông tin chi tiết các lệnh: `' + prefix + "help <loại>`\n\n**Loại:** discord, ingame-command, check và all.\nLoại all là xem tất cả lệnh, còn lại là xem chi tiết")
+                            .setDescription( 
+                            "*Sử dụng " + prefix + "help **<LOẠI LỆNH>***" +
+                            "\n\n**Các loại lệnh:**" + 
+                            "\n``discord`` - Xem các lệnh bot về thông số server." +
+                            "\n``check`` - Xem các lệnh để kiểm tra thông tin của người chơi." +
+                            "\n``ingame-command`` - Xem các lệnh của bot ( trong game) " +
+                            "\n``all`` - Xem tất cả các lệnh. ( không chi tiết )")
                             .setColor(0x000DFF);
 
         if (!args[0]) return message.channel.send(noargs);
@@ -17,10 +25,10 @@ module.exports = {
                 .setTitle("*[Discord Command]*")
                 .setColor(0x000DFF)
                 .setDescription(prefix + 'status - ``Xem trạng thái của server hàng chờ, ưu tiên, trực tuyến.``\n' + 
-                                prefix + 'online - ``Xem thông số server.`` \n' +
                                 prefix + 'queue - ``Xem thông số server.`` \n' +
                                 prefix + 'prio - ``Xem thông số server.``\n' +
-                                prefix + 'uptime - ``Xem thông số server.``')
+                                prefix + 'uptime - ``Xem thông số server.``' +
+                                prefix + 'setup - Cài đặt livechat.')
                 .setFooter(footer)
                 .setTimestamp();
 
@@ -29,10 +37,10 @@ module.exports = {
 
         if (args[0] === "ingame-command") {
             var ingamecmd = new client.Discord.MessageEmbed()
-                .setTitle("*[Discord Command]*")
                 .setColor(0x000DFF)
-                .setDescription('!help - ``Xem các lệnh có sẵn.`` \n' +
-                '!tps - ``Xem tps hiện tại của server.`` \n'
+                .setDescription("***Các lệnh bot:***\n" 
+                + '!help - ``Xem các lệnh có sẵn.`` \n' 
+                + '!tps - ``Xem tps hiện tại của server.`` \n'
                 + '!coordinate - ``Xem toạ độ bot hiện tại.`` \n' 
                 + '!kill - ``Thực hiện lệnh /kill cho bot.`` \n' 
                 + '!ping - ``Xem ping của bạn, nhập tên để xem ping người khác.`` \n'
@@ -56,9 +64,8 @@ module.exports = {
         }
         if (args[0] === "check") {
             var check = new client.Discord.MessageEmbed()
-                .setTitle("*[Check Command]*")
                 .setColor(0x000DFF)
-                .setDescription(
+                .setDescription("***Các lệnh xem chỉ số:***\n" +
                 prefix + 'kd - ``Xem chỉ số K/D.``'
                 + prefix + 'jd - ``Xem ngày người chơi lần đầu tham gia server.`` \n'
                 + prefix + 'pt - ``Xem thời người chơi đã chơi.`` \n'
@@ -75,7 +82,7 @@ module.exports = {
                                 .setTitle('[Help Command]')
                                 .addField("*[Discord Command]*", "help*, status, online, queue, prio. ($)", false)
                                 .addField("*[Check Command]*", "stats, playtime, joindate, seen, uptime. ($)", false)
-                                .addField("*[Ingame Command]*", "help, tps, coordinate, kill, ping, queue, prio, stats, joindate, playtime, seen, 2bqueue, buykit, players, runtime, report, rules. (!)", false)
+                                .addField("*[Ingame Command]*", "help, tps, coordinate, kill, ping, queue, prio, stats, joindate, playtime, seen, 2bqueue, buykit, runtime, report, rules. (!)", false)
                                 .setFooter(footer)
                                 .setTimestamp();
 

@@ -4,6 +4,7 @@ module.exports = {
     aliases: ['follow'],
     
     async execute(bot, username, args) {
+		if(!bot.dev) return;
         bot.whisper(username, "> following")
 		const mcData = require('minecraft-data')('1.16.5')
 	  

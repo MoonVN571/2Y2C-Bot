@@ -17,7 +17,10 @@ var newAPI = require('./api.js');
 var api = new newAPI();
 
 const footer = "moonbot 2021";
+client.footer = footer;
+
 var prefix = "$";
+client.prefix = prefix;
 
 require('dotenv').config();
 
@@ -38,10 +41,10 @@ console.log('Developer Mode: ' + dev)
 
 const cmds = fs.readdirSync(`./ingame-commands`).filter(file => file.endsWith('.js'));
 
-console.log('---------- LOADING INGAME COMMANDS ----------')
-cmds.forEach(cmd => {
-	console.log(`${cmd} loaded.`)
-});
+// console.log('---------- LOADING INGAME COMMANDS ----------')
+// cmds.forEach(cmd => {
+// 	console.log(`${cmd} loaded.`)
+// });
 
 var defaultChannel;
 var devuser = "mo0nbot";
@@ -55,24 +58,6 @@ if (dev) {
 }
 
 var oneInterval = false; // 1 times interval bot 
-var oneNotf = false; // thong bao bot reconnect failed 
-
-/* TYPE ALL:
- *  READY: Fire on ready
- *  START_BOT: Call function bot
- *  WINDOW_OPEN: Authencate to the server
- *  LOGIN: Start some functions
- *  STATS_AND_LOG_ALL: Stats user and log all to discord in specific
- *  PLAYERs_JOIN: Count something
- *  PLAYERs_LEFT: Count something
- *  QUEUE_SERVERS_TAB: Log position and set status
- *  MAIN_SERVERS_TAB_STATUS: Set topic channel 
- *  CHAT_BOX_SERVERS: Command and chat log to specific channel
- *  DISCONNECT_SERVERS: Kicked reason
- *  END_CONNECT_TO_SERVERS: End connect to server and reconnect
- *  CHAT_ON_DSICORD: Link chat discord to server
- *  COMMAND_DISCORD: Discord bot commands
- */
 
 /*
  *				READY
@@ -81,12 +66,14 @@ client.on('ready', () => {
 	console.log('---------- STARTING BOT ----------')
 	console.log('Bot online!');
 
-	const eventIngame = fs.readdirSync(`./events-ingame`).filter(file => file.endsWith('.js'));
+	client.user.setActivity("RESTARTING", { type: 'PLAYING' });
 
-	console.log('---------- LOADING EVENTS INGAME COMMANDS ----------')
-	eventIngame.forEach(events => {
-		console.log(`${events} loaded.`)
-	})
+	// const eventIngame = fs.readdirSync(`./events-ingame`).filter(file => file.endsWith('.js'));
+
+	// console.log('---------- LOADING EVENTS INGAME COMMANDS ----------')
+	// eventIngame.forEach(events => {
+	// 	console.log(`${events} loaded.`)
+	// })
 	createBot()
 });
 
@@ -115,6 +102,9 @@ function createBot() {
 
 	var disconnectRequest = false;
 	var joined = false;
+
+	var checkJoined = false;
+	bot.checkJoined = checkJoined;
 
 	/*
 	 *						STATS_AND_LOG_ALL
@@ -162,8 +152,6 @@ function createBot() {
 
 	var closeCount = 0;
 	bot.closeCount = closeCount;
-
-	bot.oneNotf = oneNotf;
 	
 	bot.Movements = Movements;
 	bot.GoalNear = GoalNear;
@@ -251,25 +239,45 @@ function createBot() {
 						.setColor(color);
 		
 		if(chat !== undefined) {
-			// var guild = client.guilds.cache.map(guild => guild.id);
-			if(!dev) {
+			// if(!dev) {
+			setTimeout(() => {
+				var guild = client.guilds.cache.map(guild => guild.id);
+				setInterval(() => {
+					if (guild[0]) {
+						const line = guild.pop()
+						const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
+						const checkdata = data.get('livechat');
+
+						if(checkdata == undefined || guild == undefined) return;
+
+						// console.log(guild+ ": " + checkdata);
+						
+						try {
+							if(chat !== undefined) {
+								client.channels.cache.get(checkdata).send(chat)
+							}
+						} catch(e) {  }
+					}
+				}, 100);
+			}, 100)
 				setTimeout(() => {
-					// const data = new Scriptdb(`./data/guilds/setup-${guild[2]}.json`);
-					// const checkdata = data.get('livechat')
-					// if(checkdata == undefined) {
-					// 	guild.shift()
-					// }
-	
-					// if(checkdata !== undefined) {
-						// setTimeout(() => {
-						client.channels.cache.get("816695017858531368").send(chat);
-						// client.channels.cache.get(checkdata).send(chat);
-						// }, 3 * 1000 )
-					// }
-				}, 1*100);
-			}
-			client.channels.cache.get(defaultChannel).send(chat);
-			color = "0x797979";
+					color = "0x797979";
+					client.channels.cache.get(defaultChannel).send(chat);
+				}, 100);
+			// }
+
+			/*
+			fs.readFile("channels.txt", 'utf8', function (err, data) {
+				if (err) throw err;
+				const lines = data.split(/\r?\n/);
+				setInterval(() => {
+					if (lines[0]) {
+						const line = lines.pop()
+						if(line == "") return
+						client.channels.cache.get(line).send(chat);
+					}
+				}, 200)
+			}); */
 		}
 	
 		saveMsgsData(username, logger);
@@ -301,11 +309,11 @@ function createBot() {
 	
 		const cmds = require('fs').readdirSync(`./ingame-commands/`).filter(file => file.endsWith('.js'));
 		// for(const file of cmds){
-			for(const file of cmds){
-				const cmd = require(`./ingame-commands/${file}`);
-				
-				client.commands.set(cmd.name, cmd);
-			}
+		for(const file of cmds){
+			const cmd = require(`./ingame-commands/${file}`);
+			
+			client.commands.set(cmd.name, cmd);
+		}
 	
 		const cmd = client.commands.get(cmdName)
 			|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
@@ -381,7 +389,7 @@ function createBot() {
 	 var restarts5m = false;
 	 bot.restarts15m = restarts15m;
 	 bot.restarts5m = restarts5m;
-	bot.on("chat", restartEvent.bind(null, bot, client));
+	bot.on("message", restartEvent.bind(null, bot, client));
 
 	/*
 	 *
@@ -519,26 +527,24 @@ function createBot() {
 			
 			if(!content) return;
 			
-			if(command === "w") {
+			if(command === "w" || command == "whisper") {
 				if((msg.content.startsWith("/"))) {
-					var correctContent = content.substr(2, content.length + 1);
-					var str = correctContent;
-					var chat = str.charAt(0).toUpperCase() + str.substr(3, str.length);
+					var chat = content.charAt(0).toUpperCase() + content.substr(args[0].length + 1 + args[1].length + 1, str.length);
 
+					var chatt =chat.charAt(0).toUpperCase(); 
 					setTimeout(() => {
-						bot.chat(`/r [${msg.author.tag}] ${chat}`);
+						bot.chat(`/r [${msg.author.tag}] ${chatt}`);
 					}, 1*1000);
 				}
 			}
 
 			if(command === "r") {
 				if((msg.content.startsWith("/"))) {
-					var correctContent = content.substr(2, content.length + 1);
-					var str = correctContent;
-					var chat = str.charAt(0).toUpperCase() + str.substr(3, str.length);
+					var chat = content.substr(args[0].length + 1 + args[1].length + 1, str.length);
 
+					var chatt =chat.charAt(0).toUpperCase(); 
 					setTimeout(() => {
-						bot.chat(`/r [${msg.author.tag}] ${chat}`);
+						bot.chat(`/r [${msg.author.tag}] ${chatt}`);
 					}, 1*1000);
 				}
 			}
@@ -548,25 +554,14 @@ function createBot() {
 			
 			if(msg.content.startsWith("/")) return;
 			if(msg.author.bot) return;
-				
-			var u = msg.mentions.members.first();
-			var log = chat.replace("<@!", "")
-			var str = log.split(">")[0].split(" ")[1]; // get id
-	
-			var user = client.users.cache.find(user => user.id === str)
 
-			var chatNew = chat;
-			var chatNewNew = chatNew;
-			if(u) {
-				chatNewNew  = chatNew.replace("<@!", "").replace(">", user.tag).replace(str, "")
-			}
-
-			if(!chat.endsWith(".")) {
-				chatNewNew = chatNewNew + ".";
+			var chatnew = chat;
+			if(!chatnew.endsWith(".")) {
+				chatNew = chatNew + ".";
 			}
 
 			setTimeout(() => {
-				bot.chat(`> 『 ${msg.author.tag} 』  ${chatNewNew}`);
+				bot.chat(`> 『 ${msg.author.tag} 』  ${chatnew}`);
 			}, 1 * 1000);
 
 			const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");
@@ -592,13 +587,13 @@ for (const file of cmdss) {
 	client.commandss.set(cmd.name, cmd);
 }
 
-console.log('---------- LOADING DISCORD COMMANDS ----------')
-cmdss.forEach(cmd => {
-	console.log(`${cmd} loaded.`)
-})
+// console.log('---------- LOADING DISCORD COMMANDS ----------')
+// cmdss.forEach(cmd => {
+// 	console.log(`${cmd} loaded.`)
+// })
 
 client.on("message", async message => {
-    if(message.author.bot|| !message.content.startsWith(prefix) || message.author == client.user) return;
+	if(message.author.bot|| !message.content.startsWith(prefix) || message.author == client.user) return;
 
     const args = message.content.slice(prefix.length).split(/ +/);
     const cmdName = args.shift().toLowerCase();
@@ -606,7 +601,41 @@ client.on("message", async message => {
     const cmd = client.commandss.get(cmdName)
         || client.commandss.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
 
-    if(!cmd) return console.log(`\`${cmd}\` is not a valid command.`);
+	if(cmdName == "reload") {
+		var noPerm = new Discord.MessageEmbed()
+							.setDescription('Bạn phải là developer để sử dụng lệnh này.')
+							.setColor('0xC51515');
+
+		if(message.author.id !== "425599739837284362")
+			return message.channel.send(noPerm).then(msg => {
+				msg.delete({ timeout: 10000 });
+			});
+
+		const cmd = require(`./commands/${args[0]}.js`);
+
+		var noData = new Discord.MessageEmbed()
+								.setDescription('Bạn cần cung cấp thông tin.')
+								.setColor('0xC51515'); 
+		
+		if (!args[0]) return message.channel.send(noData);
+
+		var noCmd = new Discord.MessageEmbed()
+								.setDescription('Không tìm thấy lệnh này.')
+								.setColor('0xC51515');
+
+		if(!cmd) return message.channel.send(noCmd); 
+
+		client.commandss.delete(args[0])
+		client.commandss.set(args[0], cmd)
+
+		var successful = new Discord.MessageEmbed()
+							.setDescription(`Đã tải lại command ${args[0]}.`)
+							.setColor(0x2EA711);
+
+		message.channel.send(successful)
+	}
+
+    if(!cmd) return;
 	
 	client.userNotFound = new Discord.MessageEmbed()
 					.setDescription('Không tìm thấy người chơi.')
@@ -614,6 +643,7 @@ client.on("message", async message => {
 	
 	client.Discord = Discord;
 	client.Scriptdb = Scriptdb;
+	client.fs = require('fs');
 	client.api = api;
 	client.footer = footer;
 
@@ -622,50 +652,6 @@ client.on("message", async message => {
     }catch(err) {
         console.log(err);
     }
-
-	// const args = message.content.slice(prefix.length).trim().split(/ +/g);
-	// const command = args.shift().toLowerCase();
-
-	// if (!message.content.startsWith(prefix) || message.author == client.user) return;
-	// client.guilds.cache.map(guild => guild.id)
-
-	// if(message.channel.id !== )
-	// if (message.channel.id !== "795147809850130514" && message.author.id !== "425599739837284362") return;
-
-	/*
-	if(command === "setup") {
-		if(!dev) return;
-
-		if(!args[0]) return message.channel.send("Cách dùng: " + prefix + "setup chat <tag hoặc nhập id kênh>");
-		
-		if(!args[1]) return message.channel.send("Cách dùng: " + prefix + "setup <chat hoặc commands> <tag hoặc nhập id kênh>");
-
-		if(args[0] === "chat") {
-			// if(!args[2]) return message.channel.send("Cách dùng: " + prefix + "setup chat <tag hoặc nhập id kênh>");
-			var channel;
-			channel = message.content.replace(/\D/g,'');
-			if(channel === "") {
-				// message.channel.send("Bạn đã setup channel: " + args[2])
-				channel = args[2];
-			}
-
-			var guild = client.guilds.cache.map(guild => guild.id);
-			const data = new Scriptdb(`./data/guilds/setup-${guild}.json`);
-			const checkdata = data.get('livechat')
-			
-			if(checkdata == undefined) {
-				data.set('livechat', +channel); // nó sẽ ra 2 loại, 1 là id, 2 là tên channel đã setup
-				if(channel !== "NaN") {
-					message.channel.send("Bạn đã setup chat tại channel: " + channel.toString())
-				} else {
-					message.channel.send("Bạn đã setup chat tại channel: " + channel)
-				}
-			} else {
-				return message.channel.send("Đã setup ròi. Cách xoá: " + prefix + "setup delete <chat hoặc stats, đã setup> <tag hoặc nhập kênh>")
-			}
-			
-		}
-	} */
 });
 
 client.login(config.token).catch(err => console.log(err));

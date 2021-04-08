@@ -40,9 +40,26 @@ module.exports = (bot, client, data) => {
                             .setColor("0xFFCE00");
             
         if(embed == undefined) return;
-        client.channels.cache.get(bot.defaultChannel).send(embed).then(() => {
-            if(bot.dev) return;
-            client.channels.cache.get("816695017858531368").send(embed)
-        });
+        client.channels.cache.get(bot.defaultChannel).send(embed)
+
+        setTimeout(() => {
+            var guild = client.guilds.cache.map(guild => guild.id);
+            setInterval(() => {
+                if (guild[0]) {
+                    const line = guild.pop()
+                    const data = new bot.Scriptdb(`./data/guilds/setup-${line}.json`);
+                    const checkdata = data.get('livechat');
+
+                    if(guild == undefined || checkdata == undefined) return;
+                    
+                    try {
+                        if(chat !== undefined) {
+                            if(bot.dev) return;
+                            client.channels.cache.get(checkdata).send(embed);
+                        }
+                    } catch(e) {  }
+                }
+            }, 1000);
+        }, 100)
     }, 20 * 1000);
 }

@@ -50,9 +50,22 @@ module.exports = (bot, client, data) => {
     dataa.set('tab-content', ss8 + " | " + Date.now());
 
     if(topics !== undefined) {
-        client.channels.cache.get(bot.defaultChannel).setTopic(topics).then(() => {
-            if(bot.dev) return;
-            client.channels.cache.get("816695017858531368").setTopic(topics)
-        });
+        client.channels.cache.get(bot.defaultChannel).setTopic(topics)
+        setTimeout(() => {
+			var guild = client.guilds.cache.map(guild => guild.id);
+			setInterval(() => {
+				if (guild[0]) {
+					const line = guild.pop()
+					const data = new bot.Scriptdb(`./data/guilds/setup-${line}.json`);
+					const checkdata = data.get('livechat');
+
+                    if(guild == undefined || checkdata == undefined) return;
+                    
+					try {
+                        client.channels.cache.get(checkdata).setTopic(topics)
+					} catch(e) {  }
+				}
+			}, 200);
+		}, 100)
     }
 }

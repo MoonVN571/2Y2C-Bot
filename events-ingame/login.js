@@ -13,12 +13,14 @@ module.exports = (bot, client) => {
     if(check) return;
     check = true;
 
-    setTimeout(() => { check = false; }, 60 * 1000)
-    
-   setInterval(setTime2, 5 * 60 * 1000);
+	client.user.setActivity("LOGGING", { type: 'PLAYING' });
 
-//    setInterval(() => { console.log(bot.hourss + " : " + bot.minutess)}, 3 * 1000)
-    
+    setTimeout(() => { check = false; }, 2 * 60 * 1000)
+        
+    setInterval(setTime2, 5 * 60 * 1000);
+
+    //    setInterval(() => { console.log(bot.hourss + " : " + bot.minutess)}, 3 * 1000)
+        
     const uptime = new bot.Scriptdb(`./data.json`);
     let ut = uptime.get('uptime');
 
@@ -78,9 +80,25 @@ module.exports = (bot, client) => {
         client.channels.cache.get(bot.defaultChannel).send(joinedd);
         client.channels.cache.get("807045720699830273").send(queuejoined);
     } else {
-        client.channels.cache.get(bot.defaultChannel).send(joinedd).then(() => {
-            client.channels.cache.get("816695017858531368").send(joinedd)
-        });
+        client.channels.cache.get(bot.defaultChannel).send(joinedd);
+        
+        setTimeout(() => {
+            var guild = client.guilds.cache.map(guild => guild.id);
+            setInterval(() => {
+                if (guild[0]) {
+                    const line = guild.pop()
+                    const data = new bot.Scriptdb(`./data/guilds/setup-${line}.json`);
+                    const checkdata = data.get('livechat');
+
+                    if(checkdata == undefined || guild == undefined) return;
+
+                    try {
+                        client.channels.cache.get(checkdata).send(joinedd);
+                    } catch(e) {  }
+                }
+            }, 200);
+        }, 100)
+
         client.channels.cache.get("806881615623880704").send(queuejoined)
     }
 }
