@@ -26,9 +26,15 @@ module.exports = (bot, client, data) => {
         // replace all space to none
         var ss5 = ss4.replace("    ", " ")
         var ss6 = ss5.replace("    ", " ")
-        var tps = ss6.split(" ")[1];
+        var data = ss6.split(" ")[1];
         if (tps === undefined || tps === "§6Donate" || tps === "§6bạn") {
             tps = 0;
+        }
+
+        var tps = data;
+
+        if(tps.startsWith("*")) {
+            tps = data.replace("*", "")
         }
 
         var status = "TPS: " + tps + " - Chờ: " + bot.api.getQueue() + " - Ưu Tiên: " + bot.api.getPrio();

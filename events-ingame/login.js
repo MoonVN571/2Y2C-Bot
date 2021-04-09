@@ -13,8 +13,8 @@ module.exports = (bot, client) => {
     if(check) return;
     check = true;
 
-    setTimeout(() => { check = false; }, 2 * 60 * 1000)
-        
+    setTimeout(() => { check = false; }, 1 * 60 * 1000)
+
     setInterval(setTime2, 5 * 60 * 1000);
 
     //    setInterval(() => { console.log(bot.hourss + " : " + bot.minutess)}, 3 * 1000)

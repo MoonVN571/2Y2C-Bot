@@ -248,6 +248,7 @@ function createBot() {
 						
 						try {
 							if(chat !== undefined) {
+								if(dev) return;
 								client.channels.cache.get(checkdata).send(chat)
 							}
 						} catch(e) {  }
@@ -304,6 +305,8 @@ function createBot() {
 				if(!args[0]) return bot.whisper(username, "> Please type name of commands.")
 
 				const cmd = require(`./ingame-commands/${args[0]}.js`);
+
+				delete require.cache[require.resolve(`./ingame-commands/${args[0]}.js`)];
 
 				if(!cmd) return bot.whisper(username, "> Command not found.")
 				client.commands.delete(args[0])
@@ -539,22 +542,11 @@ client.on("message", async message => {
 				msg.delete({ timeout: 10000 });
 			});
 
-		const cmd = require(`./commands/${args[0]}.js`);
+			delete require.cache[require.resolve(`./commands/${args[0]}.js`)];
 
-		var noData = new Discord.MessageEmbed()
-								.setDescription('Bạn cần cung cấp thông tin.')
-								.setColor('0xC51515'); 
+		const cmd = require(`./commands/${args[0]}`);
+		client.commandss.set(cmd.name, cmd);
 		
-		if (!args[0]) return message.channel.send(noData);
-
-		var noCmd = new Discord.MessageEmbed()
-								.setDescription('Không tìm thấy lệnh này.')
-								.setColor('0xC51515');
-
-		if(!cmd) return message.channel.send(noCmd); 
-
-		client.commandss.delete(args[0])
-		client.commandss.set(args[0], cmd)
 
 		var successful = new Discord.MessageEmbed()
 							.setDescription(`Đã tải lại command ${args[0]}.`)

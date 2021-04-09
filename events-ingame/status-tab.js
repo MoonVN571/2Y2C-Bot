@@ -44,10 +44,16 @@ module.exports = (bot, client, data) => {
         format = "vài giây ";
     }
 
-    var topics = ss8 + " - Tham gia server từ " + format + "trước.";
+    var status = ss8;
+
+    if(ss8.startsWith(" *")) {
+        status = ss8.replace(" *", "")
+    }
+
+    var topics = status + " - Tham gia server từ " + format + "trước.";
     const dataa = new bot.Scriptdb(`./data.json`);
 
-    dataa.set('tab-content', ss8 + " | " + Date.now());
+    dataa.set('tab-content', status + " | " + Date.now());
 
     if(topics !== undefined) {
         client.channels.cache.get(bot.defaultChannel).setTopic(topics)

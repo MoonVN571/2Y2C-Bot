@@ -8,42 +8,12 @@ module.exports = {
 
         var prefix = client.prefix;
         var Scriptdb = client.Scriptdb;
-            
-        /*
-        if(!args[0]) return message.channel.send("Cách dùng: " + prefix + "setup chat <tag hoặc nhập id kênh>");
-		
-		if(!args[1]) return message.channel.send("Cách dùng: " + prefix + "setup <chat hoặc commands> <tag hoặc nhập id kênh>");
-
-		if(args[0] === "chat") {
-			var channel;
-			channel = message.content.replace(/\D/g,'');
-			if(channel === "") {
-				channel = args[2];
-			}
-
-			// var guild = client.guilds.cache.map(guild => guild.id);
-			// const data = new Scriptdb(`./data/guilds/setup-${guild}.json`);
-
-            client.fs.readFile('channels.txt', 'utf8', function(err, data) {
-                if(data == null) return;
-                if(!data.includes(channel)) {
-                    client.fs.appendFile('channels.txt', channel, function(err) { console.log(err) }) 
-
-                    if(channel !== "NaN") {
-                        message.channel.send("Bạn đã setup chat tại channel: " + channel.toString())
-                    } else {
-                        message.channel.send("Bạn đã setup chat tại channel: " + channel)
-                    }
-                } else {
-                    return message.channel.send("Đã setup ròi. Cách xoá: " + prefix + "setup delete <chat hoặc stats, đã setup> <tag hoặc nhập kênh>")
-                }
-            })
-        } */
+        
         if(!args[0]) return message.channel.send("Cách dùng: " + prefix + "setup chat <tag hoặc nhập id kênh>");
         
-        if(!args[1]) return message.channel.send("Cách dùng: " + prefix + "setup <chat hoặc stats> <tag hoặc nhập id kênh>");
-
         if(args[0] === "chat") {
+            if(!args[1]) return message.channel.send("Cách dùng: " + prefix + "setup <chat hoặc stats> <tag hoặc nhập id kênh>");
+
             var channel;
             channel = message.content.replace(/\D/g,'');
             if(channel === "") {
@@ -55,7 +25,7 @@ module.exports = {
             const checkdata = data.get('livechat')
             
             if(checkdata == undefined) {
-                data.set('livechat', channel); // nó sẽ ra 2 loại, 1 là id, 2 là tên channel đã setup
+                data.set('livechat', channel);
                 if(channel !== "NaN") {
                     message.channel.send("Bạn đã setup chat tại channel: " + channel.toString())
                 } else {
@@ -68,6 +38,29 @@ module.exports = {
                     message.channel.send("Đã setup ròi. Cách xoá: " + prefix + "setup delete <chat hoặc stats> <tag hoặc nhập id kênh>")
                 }
             }
+        }
+
+        if(args[0] == 'restart') {
+            if(!bot.dev) return;
+            if(!args[1]) return message.channel.send("Cách dùng: " + prefix + "setup restart <tag hoặc nhập id kênh> <tên role>");
+            if(!args[2] && args[1]) return message.channel.send("Cách dùng: " + prefix + "setup restart " + args[1] + " <tên role>");
+
+            var channel;
+            channel = args[1].replace(/\D/g,'');
+            if(channel === "") {
+                channel = args[1];
+            }
+            const getMention = require('discord-mentions');
+
+            var guild = message.guild.id;
+            const data = new Scriptdb(`./data/guilds/setup-${guild}.json`);
+            data.set('restart-channels', channel);
+            console.log(args[2])
+            data.set('restart-roles', args[2].split("<@&")[1].split(">")[0]);
+
+            message.channel.send("Đã setup kênh thông báo restart: " + channel + " và role: " + args[2])   
+            // let role = message.guild.roles.cache.get(data.get('restart-roles'));
+            message.channel.send("<@&" +getMention("<@&" + data.get('restart-roles') + ">").role + ">") 
         }
 
         if(args[0] == 'stats') {
