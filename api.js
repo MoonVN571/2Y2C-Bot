@@ -1,7 +1,7 @@
 const mc = require("minecraft-protocol");
 require('dotenv');
 
-function API() { // goi cai nay la function sau do import
+function API() {
     this.ageCalc = (time) => {
         var d = new Date()
         var temp = (d.getTime() - time) / 1000;
@@ -11,7 +11,7 @@ function API() { // goi cai nay la function sau do import
         year = parseInt(month / 12)
         hour = parseInt(((temp - day * 86400) / 3600))
         minutes = parseInt(((temp - day * 86400 - hour * 3600)) / 60)
-
+    
         var age;
         if(month > 0) {
             age = `${month} tháng`
@@ -21,6 +21,10 @@ function API() { // goi cai nay la function sau do import
         } else {
             if (day > 0) {
                 age = `${day} ngày`;
+                var weekFormat = parseInt(day / 7)
+                if(weekFormat >= 1) {
+                    age = `${weekFormat} tuần`
+                }
             } else if (day == 0) {
                 age = `${hour} giờ`;
                 if (hour == 0) {
@@ -30,22 +34,8 @@ function API() { // goi cai nay la function sau do import
                     }
                 }
             }
-
-            var weekFormat = parseInt(day / 7)
-            if(day > 7) {
-                age = `${weekFormat} tuần`
-            }
-            var monthFormat = parseInt(day / 30)
-            if(day > 30) {
-                age = `${monthFormat} tháng`;
-            }
-
-            var yearFormat = parseInt(monthFormat / 12)
-            if(time == 12) {
-                age = `${yearFormat} năm`
-            }
         }
-        return age
+        return age;
     }
 
     this.playtimeCalc = (time) => {

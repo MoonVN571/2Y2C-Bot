@@ -13,7 +13,7 @@ module.exports = (bot, client) => {
     if(check) return;
     check = true;
 
-    setTimeout(() => { check = false; }, 1 * 60 * 1000)
+    setTimeout(() => { check = false; }, 1 * 60 * 1000 + 30 * 1000)
 
     setInterval(setTime2, 5 * 60 * 1000);
 
@@ -35,7 +35,8 @@ module.exports = (bot, client) => {
         uptime.set(`uptime`, time);
     }
 
-    disconnectRequest = false;
+    bot.disconnectRequest = false;
+    
     setInterval(() => {
         if(bot.lobby) return;
         if (stats) return;

@@ -54,7 +54,7 @@ module.exports = (bot, client) => {
                 }
             }
 
-            bot.waitUntil(60000, 300, function condition() {
+            bot.waitUntil(10000, 50, function condition() {
                 try {
                     console.log("Recoonecting to the server.");
                     start.createBot()

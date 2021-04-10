@@ -22,16 +22,17 @@ module.exports = (bot, client, p) => {
         if(newUsername == undefined) {
             newUsername = username;
         }
-        bot.fs.readFile("special-join.txt", 'utf8', (err, data) => {
+        bot.fs.readFileSync("special-join.txt",  (err, data) => {
             if (err) throw err;
-            if(data.toString().split('\r\n').toString().includes(username)) {
+            if(data.indexOf(username) !== -1) {
+                console.log("ye")
                 if(bot.dev) return;
                 var embed = new bot.Discord.MessageEmbed()
                                         .setDescription(newUsername + " left")
                                         .setColor('0xb60000')
 
                 if(bot.dev) return;
-                client.channels.cache.get("807506107840856064").send(embed); // special channel
+                client.channels.cache.get("807506107840856064").send(embed);
             }
         });
     }

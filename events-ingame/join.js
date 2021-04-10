@@ -9,11 +9,9 @@ module.exports = (bot, client, p) => {
 
     // console.log(bot.countPlayers)
     setTimeout(() => {
-        if(bot.countPlayers <= 3) {
-            if(bot.closeCount > 0) return;
-            bot.disconnectRequest = true;
-            bot.quit()
-        }
+        if(bot.isCommand) return;
+        bot.disconnectRequest = true;
+        bot.quit()
     }, 3 * 60 * 1000)
     
     var today = new Date()
@@ -52,6 +50,26 @@ module.exports = (bot, client, p) => {
         newUsername = username;
     }
 
+    check(username);
+    function check(username) {
+        var newUsername = username.replace(/_/ig, "\\_");;
+        if(newUsername == undefined) {
+            newUsername = username;
+        }
+        
+        bot.fs.readFile("special-join.txt", 'utf8', (err, data) => {
+            if (err) throw err;
+            if(data.indexOf(username) !== -1) {
+                if(bot.dev) return;
+                var embed = new bot.Discord.MessageEmbed()
+                    .setDescription(newUsername + " joined")
+                    .setColor('0xb60000')
+
+                client.channels.cache.get("807506107840856064").send(embed);
+            }
+        });
+    }
+    
     if(username == "MoonZ" || username == "LinhLinh" || username == "bachbach") {
         var embed = new bot.Discord.MessageEmbed()
             .setDescription("[STAFF] " + newUsername + " joined")
@@ -59,25 +77,6 @@ module.exports = (bot, client, p) => {
 
         if(bot.dev) return;
         client.channels.cache.get("826280327998996480").send(embed);
-    }
-
-    check(username, newUsername);
-    function check(username, newUsername) {
-        if(newUsername == undefined) {
-            newUsername = username;
-        }
-        bot.fs.readFile("special-join.txt", 'utf8', (err, data) => {
-            if (err) throw err;
-            if((data.toString().split('\r\n').toString() + ",").includes((username) +",")) {
-                
-                if(bot.dev) return;
-                var embed = new bot.Discord.MessageEmbed()
-                    .setDescription(newUsername + " joined")
-                    .setColor('0xb60000')
-
-                client.channels.cache.get("807506107840856064").send(embed); // special channel
-            }
-        });
     }
     
     var embed = new bot.Discord.MessageEmbed()

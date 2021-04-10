@@ -83,7 +83,7 @@ function createBot() {
 		host: config.ip,
 		port: 25565,
 		username: devuser,
-		version: "1.16.5"
+		version: "1.16.4"
 	});
 
     bot.loadPlugin(tpsPlugin)
@@ -118,7 +118,11 @@ function createBot() {
 	var restartingMsg = false;
 	var unknownReason = true;
 
+	var isCommand = false;
+
 	bot.client = client;
+
+	bot.isCommand = isCommand;
 
 	bot.debug = debug;	
 	bot.dev = dev;
@@ -349,7 +353,7 @@ function createBot() {
 
 	bot._client.on("playerlist_header", queueEvent.bind(null, bot, client));
 
-	bot.on("message", restartEvent.bind(null, bot, client));
+	bot.on("chat", restartEvent.bind(null, bot, client));
 
 	bot._client.on("playerlist_header", ServerStatusEvent.bind(null, bot, client));
 	

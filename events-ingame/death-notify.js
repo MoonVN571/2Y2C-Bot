@@ -70,13 +70,34 @@ module.exports = (bot, client, message) => {
 
 	if(logger == "2y2c đã full") {
 		bot.checkJoined = true;
-		setTimeout(() => {
 		var fully = new bot.Discord.MessageEmbed()
 					.setDescription("2y2c đã full")
 					.setColor(0xb60000);
 
 		client.channels.cache.get(bot.defaultChannel).send(fully);
-		}, 300);
+		
+		setTimeout(() => {
+			var guild = client.guilds.cache.map(guild => guild.id);
+			setInterval(() => {
+				if (guild[0]) {
+					const line = guild.pop()
+					const data = new bot.Scriptdb(`./data/guilds/setup-${line}.json`);
+					const checkdata = data.get('livechat');
+	
+					if(guild == undefined || checkdata == undefined) return;
+	
+					try {
+						if(embed !== undefined) {
+							client.channels.cache.get(checkdata).send(fully);
+						}
+					} catch(e) {  }
+				}
+			}, 200);
+		}, 100)
+	}
+
+	if(logger.startsWith("Bad command")) {
+		bot.isCommand = true;
 	}
 
 	if (logger == "Đang vào 2y2c"
