@@ -4,14 +4,14 @@ const client = new Discord.Client();
 const superagent = require("superagent") // queue 2b2t
 var waitUntil = require('wait-until') // wait method
 var mineflayer = require('mineflayer') // bot minecraft
-var tpsPlugin = require('mineflayer-tps')(mineflayer) // mineflayer plugins
+var tpsPlugin = require('mineflayer-tps')(mineflayer) // mineflayer plugin
 
 const pathfinder = require('mineflayer-pathfinder').pathfinder
 const Movements = require('mineflayer-pathfinder').Movements
 
 const {  GoalNear } = require('mineflayer-pathfinder').goals
 
-var fs = require('fs')
+var fs = require('fs');
 const Scriptdb = require('script.db');
 var newAPI = require('./api.js');
 var api = new newAPI();

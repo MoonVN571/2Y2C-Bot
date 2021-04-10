@@ -103,4 +103,5 @@ dist
 # Other
 package-lock.json
 khac/
+test/
 *.json
