@@ -10,6 +10,8 @@ module.exports = {
         let quotes = new bot.Scriptdb(`./data/quotes/${args[0]}.json`);
         var messages = quotes.get("messages");
 
+        if(messages == undefined) return bot.whisper(username, "> Không tìm thấy người chơi.")
+
         let arrayMsgs = messages.split(" | ");
 
         var random = Math.floor(Math.random() * arrayMsgs.length);

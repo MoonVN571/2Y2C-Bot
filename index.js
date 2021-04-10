@@ -105,24 +105,23 @@ function createBot() {
 	var color = "0x979797";
 	var lobby = true;
 
+	var unknownReason = false
 	var disconnectRequest = false;
 	var joined = false;
 
 	var checkJoined = false;
 
-	var restarts15m = false;
-	var restarts5m = false;
-
 	// bot end with restart
 	var isRestarting = false;
-	var restartingMsg = false;
-	var unknownReason = true;
 
 	var isCommand = false;
 
+	var restartingMsg = false;
 	bot.client = client;
 
 	bot.isCommand = isCommand;
+
+	bot.restartingMsg = restartingMsg;
 
 	bot.debug = debug;	
 	bot.dev = dev;
@@ -158,9 +157,6 @@ function createBot() {
 	
 	bot.Movements = Movements;
 	bot.GoalNear = GoalNear;
-
-	bot.restarts15m = restarts15m;
-	bot.restarts5m = restarts5m;
 
 	bot.isRestarting = isRestarting;
 	bot.restartingMsg = restartingMsg;

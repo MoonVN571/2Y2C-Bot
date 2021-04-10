@@ -8,7 +8,6 @@ module.exports = {
         var footer = client.footer;
 
         var noargs = new client.Discord.MessageEmbed()
-                            // .setDescription('Xem thông tin chi tiết các lệnh: `' + prefix + "help <loại>`\n\n**Loại:** discord, ingame-command, check và all.\nLoại all là xem tất cả lệnh, còn lại là xem chi tiết")
                             .setDescription( 
                             "*Sử dụng " + prefix + "help **<LOẠI LỆNH>***" +
                             "\n\n**Các loại lệnh:**" + 
@@ -16,7 +15,7 @@ module.exports = {
                             "\n``check`` - Xem các lệnh để kiểm tra thông tin của người chơi." +
                             "\n``ingame-command`` - Xem các lệnh của bot ( trong game ) " +
                             "\n``all`` - Xem tất cả các lệnh. ( không chi tiết )")
-                            .addField("\u200b", '\n\nBạn có thể thêm bot cho discord [tại đây](https://discord.com/api/oauth2/authorize?client_id=768448728125407242&permissions=8&scope=bot)')
+                            .addField("\u200b", '\n\nBạn có thể thêm bot cho discord [tại đây](https://discord.com/api/oauth2/authorize?client_id=768448728125407242&permissions=8&scope=bot).')
                             .setColor(0x000DFF);
 
         if (!args[0]) return message.channel.send(noargs);
@@ -31,7 +30,7 @@ module.exports = {
                                 prefix + 'uptime - ``Xem thông số server.``\n' +
                                 prefix + 'setup - ``Cài đặt bot cho livechat.``' +
                                 prefix + 'invite - ``Mời bot vào servers của bạn.`')
-                .addField("\u200b", '\n\nBạn có thể thêm bot cho discord [tại đây](https://discord.com/api/oauth2/authorize?client_id=768448728125407242&permissions=8&scope=bot)')
+                .addField("\u200b", '\n\nBạn có thể thêm bot cho discord [tại đây](https://discord.com/api/oauth2/authorize?client_id=768448728125407242&permissions=8&scope=bot).')
                 .setFooter(footer)
                 .setTimestamp();
 
@@ -43,24 +42,29 @@ module.exports = {
                 .setColor(0x000DFF)
                 .setDescription("***Các lệnh bot:***\n" 
                 + '!help - ``Xem các lệnh có sẵn.`` \n' 
-                + '!tps - ``Xem tps hiện tại của server.`` \n'
-                + '!coordinate - ``Xem toạ độ bot hiện tại.`` \n' 
+                + '!tps - ``Xem tps server.`` \n'
+                + '!coords - ``Xem toạ độ bot.`` \n' 
                 + '!kill - ``Thực hiện lệnh /kill cho bot.`` \n' 
                 + '!ping - ``Xem ping của bạn, nhập tên để xem ping người khác.`` \n'
-                + '!prio - ``Xem hàng chờ ưu tiên hiện tại.`` \n'
-                + '!que - ``Xem hàng chờ và hàng chờ ưu tiên.`` \n'
-                + '!stats - ``Xem chỉ số K/D. ( Dead tính từ 13/1, Kil tính từ 15/1 )`` \n'
+                + '!prio - ``Xem hàng chờ ưu tiên.`` \n'
+                + '!queue - ``Xem hàng chờ và hàng chờ ưu tiên.`` \n'
+                + '!stats - ``Xem chỉ số K/D. ( Death tính từ 13/1, Kil tính từ 15/1 )`` \n'
                 + '!joindate - ``Xem ngày người chơi lần đầu tham gia server. ( Tính từ 28/1 )`` \n'
-                + '!pt - ``Xem thời gian bạn đã chơi. ( Bắt đầu từ ngày 1/2 )`` \n'
+                + '!playtime - ``Xem thời gian bạn đã chơi. ( Bắt đầu từ ngày 1/2 )`` \n'
                 + '!seen - ``Xem lần hoạt động gần nhất của người chơi. ( Tính từ 2/2 )`` \n'
                 + '!2bqueue - ``Xem hàng chờ hiện tại của 2b2t.`` \n'
-                + '!buykit - ``Nhận link discord để mua kit.`` \n'
-                + '!players - ``Xem người chơi online.`` \n'
+                + '!buykit - ``Shop kit.`` \n'
                 + '!runtime - ``Xem thời gian bot đã ở trong server.`` \n'
                 + '!report - ``Báo cáo người chơi cho admin server.`` \n'
                 + '!rules - ``Xem luật của server.`` \n'
+                + '!firstwords - ``Xem tin nhắn đầu tiên.`` \n'
+                + '!lastwords - ``Xem tin nhắn mới nhất.`` \n'
+                + '!follow - ``Cho bot đi theo bạn.`` \n'
+                + '!avoid - ``Tránh.`` \n'
+                + '!come - ``Di chuyển tới vị trí của bạn.`` \n'
+                + '!stop - ``Dừng bot.`` \n'
                 )
-                .addField("\u200b", '\n\nBạn có thể thêm bot cho discord [tại đây](https://discord.com/api/oauth2/authorize?client_id=768448728125407242&permissions=8&scope=bot)')
+                .addField("\u200b", '\n\nBạn có thể thêm bot cho discord [tại đây](https://discord.com/api/oauth2/authorize?client_id=768448728125407242&permissions=8&scope=bot).')
                 .setFooter(footer)
                 .setTimestamp();
 
@@ -71,8 +75,8 @@ module.exports = {
                 .setColor(0x000DFF)
                 .setDescription("***Các lệnh xem chỉ số:***\n" +
                 prefix + 'kd - ``Xem chỉ số K/D.``'
-                + prefix + 'jd - ``Xem ngày người chơi lần đầu tham gia server.`` \n'
-                + prefix + 'pt - ``Xem thời người chơi đã chơi.`` \n'
+                + prefix + 'joindate - ``Xem ngày người chơi lần đầu tham gia server.`` \n'
+                + prefix + 'playtime - ``Xem thời người chơi đã chơi.`` \n'
                 + prefix + 'seen - ``Xem lần hoạt động gần nhất của người chơi.`` \n')
                 .setFooter(footer)
                 .setTimestamp();
@@ -83,11 +87,10 @@ module.exports = {
         if (args[0] == "all") {
             var embed = new client.Discord.MessageEmbed()
                                 .setColor(0x000DFF)
-                                .setTitle('[Help Command]')
-                                .addField("*[Discord Command]*", "help*, status, online, queue, prio. ($)", false)
-                                .addField("*[Check Command]*", "stats, playtime, joindate, seen, uptime. ($)", false)
-                                .addField("*[Ingame Command]*", "help, tps, coordinate, kill, ping, queue, prio, stats, joindate, playtime, seen, 2bqueue, buykit, runtime, report, rules. (!)", false)
-                                .addField("\u200b", '\n\nBạn có thể thêm bot cho discord [tại đây](https://discord.com/api/oauth2/authorize?client_id=768448728125407242&permissions=8&scope=bot)')
+                                .addField("*Discord Commands*", "help*, status, invite. ($)", false)
+                                .addField("*Check Commands*", "stats, playtime, joindate, seen, uptime. ($)", false)
+                                .addField("*Ingame Command*", "help, tps, coordinate, kill, ping, queue, prio, stats, joindate, playtime, seen, 2bqueue, buykit, runtime, report, rules, avoid, come, follow, stop, firstwords, lastwords. (!)", false)
+                                .addField("\u200b", '\n\nBạn có thể thêm bot cho discord [tại đây](https://discord.com/api/oauth2/authorize?client_id=768448728125407242&permissions=8&scope=bot).')
                                 .setFooter(footer)
                                 .setTimestamp();
 

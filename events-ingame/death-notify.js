@@ -87,9 +87,7 @@ module.exports = (bot, client, message) => {
 					if(guild == undefined || checkdata == undefined) return;
 	
 					try {
-						if(embed !== undefined) {
-							client.channels.cache.get(checkdata).send(fully);
-						}
+						client.channels.cache.get(checkdata).send(fully);
 					} catch(e) {  }
 				}
 			}, 200);
@@ -103,7 +101,7 @@ module.exports = (bot, client, message) => {
 	if (logger == "Đang vào 2y2c"
 	|| logger == "đang vào 2y2c..."
 	|| logger.startsWith("[Server]")
-	|| logger.startsWith("[SERVER]")
+	|| logger.startsWith("[AutoRestart]")
 	|| logger.startsWith("Bad command")
 	|| logger.startsWith("[Broadcast]")
 	|| logger === "Donate để duy trì server admin đang đói chết con *ĩ *ẹ."
