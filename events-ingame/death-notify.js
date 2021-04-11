@@ -44,7 +44,7 @@ module.exports = (bot, client, message) => {
 		colorNotf = "0xFD00FF";
 	}
 
-	if (logger.startsWith("nhắn cho")) { // check bot send message			
+	if (logger.startsWith("nhắn cho")) {  // check bot send message			
 		var type = logger.split(" ")[2]; // []
 		var log; // logger
 
@@ -74,7 +74,6 @@ module.exports = (bot, client, message) => {
 					.setDescription("2y2c đã full")
 					.setColor(0xb60000);
 
-		client.channels.cache.get(bot.defaultChannel).send(fully);
 		
 		setTimeout(() => {
 			var guild = client.guilds.cache.map(guild => guild.id);
@@ -87,11 +86,14 @@ module.exports = (bot, client, message) => {
 					if(guild == undefined || checkdata == undefined) return;
 	
 					try {
+						if(bot.dev) return;
 						client.channels.cache.get(checkdata).send(fully);
 					} catch(e) {  }
 				}
 			}, 200);
-		}, 100)
+
+			client.channels.cache.get(bot.defaultChannel).send(fully);
+		}, 1000)
 	}
 
 	if(logger.startsWith("Bad command")) {
@@ -115,24 +117,24 @@ module.exports = (bot, client, message) => {
 		notfMsg = logger;
 	}
 
-	if(logger == "The main server is down. We will be back soon!") {
-		disconnectRequest = true;
-		bot.quit();
-	}
+	// if(logger == "The main server is down. We will be back soon!") {
+	// 	disconnectRequest = true;
+	// 	bot.quit();
+	// }
 
-	if(logger.startsWith("Kicked whilst connecting to")) {
-		bot.quit("re")
-		disconnectRequest = true;
-		notfMsg = logger;
-		colorNotf = '0xb60000';
-	}
+	// if(logger.startsWith("Kicked whilst connecting to")) {
+	// 	bot.quit("re")
+	// 	disconnectRequest = true;
+	// 	notfMsg = logger;
+	// 	colorNotf = '0xb60000';
+	// }
 
-	if(logger === "Exception Connecting:ReadTimeoutException : null") {
-		bot.quit("re")
-		disconnectRequest = true;
-		notfMsg = logger;
-		colorNotf = '0xb60000';
-	}
+	// if(logger === "Exception Connecting:ReadTimeoutException : null") {
+	// 	bot.quit("re")
+	// 	disconnectRequest = true;
+	// 	notfMsg = logger;
+	// 	colorNotf = '0xb60000';
+	// }
 
 	if(bot.debug) { console.log(notfMsg) }
 	if(notfMsg !== undefined) {

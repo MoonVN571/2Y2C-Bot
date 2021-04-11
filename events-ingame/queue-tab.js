@@ -15,6 +15,8 @@ module.exports = (bot, client, data) => {
         check = false; 
 
         var header = data.header;
+        if(header.includes("2YOUNG")) return;
+
         var s1 = header.toString().replace(/\\n/ig, " ");
         var s2 = s1.replace(/ 2y2c  2y2c §bđã full /ig, "");
         var s3 = s2.replace(/§b|§l|§6/ig, "");
@@ -34,7 +36,7 @@ module.exports = (bot, client, data) => {
         if(status === undefined) return;
             client.user.setActivity(status, { type: 'PLAYING' });
     
-
+        if(s7 == null || s7 == "" || s7.includes("2YOUNG")) return;
         var embed = new bot.Discord.MessageEmbed()
                             .setDescription(s7)
                             .setColor("0xFFCE00");
@@ -53,13 +55,10 @@ module.exports = (bot, client, data) => {
                     if(guild == undefined || checkdata == undefined) return;
                     
                     try {
-                        if(chat !== undefined) {
-                            if(bot.dev) return;
-                            client.channels.cache.get(checkdata).send(embed);
-                        }
+                        client.channels.cache.get(checkdata).send(embed);
                     } catch(e) {  }
                 }
             }, 1000);
         }, 100)
-    }, 20 * 1000);
+    }, 10 * 1000);
 }

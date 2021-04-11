@@ -8,16 +8,7 @@ module.exports = (bot, client) => {
         bot.minutess = parseInt((bot.totalSecondss - (bot.hourss * 3600)) / 60);
     }
 
-    bot.oneNotf = false;
-
-    if(check) return;
-    check = true;
-
-    setTimeout(() => { check = false; }, 1 * 60 * 1000 + 30 * 1000)
-
     setInterval(setTime2, 5 * 60 * 1000);
-
-    //    setInterval(() => { console.log(bot.hourss + " : " + bot.minutess)}, 3 * 1000)
         
     const uptime = new bot.Scriptdb(`./data.json`);
     let ut = uptime.get('uptime');
@@ -50,6 +41,11 @@ module.exports = (bot, client) => {
     }, 1 * 60 * 1000);
 
 
+    if(check) return;
+    check = true;
+
+    setTimeout(() => { check = false; }, 1 * 60 * 1000 + 30 * 1000)
+
     setInterval(() => {
         bot.fs.readFile("ads.txt", 'utf8', function (err, data) {
             if (err) throw err;
@@ -75,29 +71,32 @@ module.exports = (bot, client) => {
                         .setDescription(`☘️ Bot đã tham gia vào server. ☘️`)
                         .setColor(0x15ff00);
 
-    if(bot.dev) {
-        client.channels.cache.get(bot.defaultChannel).send(joinedd);
-        client.channels.cache.get("807045720699830273").send(queuejoined);
-    } else {
-        client.channels.cache.get(bot.defaultChannel).send(joinedd);
-        
-        setTimeout(() => {
-            var guild = client.guilds.cache.map(guild => guild.id);
-            setInterval(() => {
-                if (guild[0]) {
-                    const line = guild.pop()
-                    const data = new bot.Scriptdb(`./data/guilds/setup-${line}.json`);
-                    const checkdata = data.get('livechat');
+    bot.once('spawn', () => {
+        bot.joined = true;
+        if(bot.dev) {
+            client.channels.cache.get(bot.defaultChannel).send(joinedd);
+            client.channels.cache.get("807045720699830273").send(queuejoined);
+        } else {
+            client.channels.cache.get(bot.defaultChannel).send(joinedd);
+            
+            setTimeout(() => {
+                var guild = client.guilds.cache.map(guild => guild.id);
+                setInterval(() => {
+                    if (guild[0]) {
+                        const line = guild.pop()
+                        const data = new bot.Scriptdb(`./data/guilds/setup-${line}.json`);
+                        const checkdata = data.get('livechat');
 
-                    if(checkdata == undefined || guild == undefined) return;
+                        if(checkdata == undefined || guild == undefined) return;
 
-                    try {
-                        client.channels.cache.get(checkdata).send(joinedd);
-                    } catch(e) {  }
-                }
-            }, 200);
-        }, 100)
+                        try {
+                            client.channels.cache.get(checkdata).send(joinedd);
+                        } catch(e) {  }
+                    }
+                }, 200);
+            }, 100)
 
-        client.channels.cache.get("806881615623880704").send(queuejoined)
-    }
+            client.channels.cache.get("806881615623880704").send(queuejoined)
+        }
+    })
 }

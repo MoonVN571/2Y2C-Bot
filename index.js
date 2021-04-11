@@ -109,8 +109,6 @@ function createBot() {
 	var disconnectRequest = false;
 	var joined = false;
 
-	var checkJoined = false;
-
 	// bot end with restart
 	var isRestarting = false;
 
@@ -138,7 +136,6 @@ function createBot() {
 	bot.color = color;
 	bot.api = api;
 	bot.defaultChannel = defaultChannel;
-	bot.checkJoined = checkJoined; // kiem tra khi joined
 
 	// check bot is in lobby
 	bot.lobby = lobby;
@@ -225,7 +222,7 @@ function createBot() {
 	
 		var bp;
 		if (dev) {
-			bp = "dev!";
+			bp = "!!";
 		} else {
 			bp = "!";
 		}
@@ -300,24 +297,6 @@ function createBot() {
 		const cmd = client.commands.get(cmdName)
 			|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
 
-		if(cmdName == "reload") {
-			if(username == "MoonVN" || username == "MoonZ" || username == "MoonOnTop") {
-				if(!args[0]) return bot.whisper(username, "> Please type name of commands.")
-
-				const cmd = require(`./ingame-commands/${args[0]}.js`);
-
-				delete require.cache[require.resolve(`./ingame-commands/${args[0]}.js`)];
-
-				if(!cmd) return bot.whisper(username, "> Command not found.")
-				client.commands.delete(args[0])
-				client.commands.set(args[0], cmd);
-				
-				bot.whisper(username, "> reload success " + args[0])
-			} else {
-				bot.whisper(username, "> Không thể sử dụng lệnh này.")
-			}
-			return;
-		}
 
 		if(!cmd) {
 			if(!debug) return;
@@ -417,9 +396,6 @@ function createBot() {
 				var str = chat.split(">")[0].split("<@!")[1]; 
 		
 				var user = client.users.cache.find(user => user.id === str)
-				if(dev) {
-					console.log(user)
-				}
 				
 				var chatNew = chat;
 				var chatNewNew = chatNew;
@@ -438,7 +414,7 @@ function createBot() {
 				}
 
 				setTimeout(() => {
-					bot.chat(`『 dev: ${msg.author.tag} 』  ${chatNewNew}`);
+					bot.chat(`『 DEV: ${msg.author.tag} 』 ${chatNewNew}`);
 				}, 1 * 1000);
 
 				const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");

@@ -5,6 +5,6 @@ module.exports = (bot, client, username, msg) => {
     if(username !== "AutoRestart") return;
 
     if (message === "Server Restarting!") {
-        client.channels.cache.get('803597345275117589').send("[AutoRestart] Server Restarting!");
+        client.channels.cache.get('795534684967665695').send("[AutoRestart] Server Restarting!");
     }
 }

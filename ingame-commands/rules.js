@@ -4,6 +4,6 @@ module.exports = {
     aliases: ['rules', 'rule'],
     
     async execute(bot, username, args) {
-        bot.whisper(username, `> LUẬT: Tuyệt đối không HACK, CHEAT, LỪA ĐẢO, SPAM, PHÁ HOẠI. Báo cáo ngay với lệnh !report.`)
+        bot.whisper(username, `> LUẬT: Tuyệt đối không HACK, CHEAT, LỪA ĐẢO, SPAM, PHÁ HOẠI, DUPE dưới mọi hình thức. Báo cáo ngay với lệnh !report.`)
     }
 }

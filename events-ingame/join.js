@@ -59,7 +59,7 @@ module.exports = (bot, client, p) => {
         
         bot.fs.readFile("special-join.txt", 'utf8', (err, data) => {
             if (err) throw err;
-            if(data.indexOf(username) !== -1) {
+            if(data.includes(username)) {
                 if(bot.dev) return;
                 var embed = new bot.Discord.MessageEmbed()
                     .setDescription(newUsername + " joined")

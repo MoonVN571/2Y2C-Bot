@@ -24,7 +24,7 @@ module.exports = (bot, client, p) => {
         }
         bot.fs.readFileSync("special-join.txt",  (err, data) => {
             if (err) throw err;
-            if(data.indexOf(username) !== -1) {
+            if(data.includes(username)) {
                 console.log("ye")
                 if(bot.dev) return;
                 var embed = new bot.Discord.MessageEmbed()
