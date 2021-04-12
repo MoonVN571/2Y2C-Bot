@@ -1,5 +1,7 @@
 const start = require('../index.js');
 
+var n = false;
+
 module.exports = (bot, client) => {
     client.user.setActivity("");
 
@@ -29,11 +31,17 @@ module.exports = (bot, client) => {
 
             if(bot.dev) {
                 if(bot.joined) {
-                    client.channels.cache.get("807045720699830273").send(reconnect);
+                    if(!n) {
+                        n = true;
+                        client.channels.cache.get("807045720699830273").send(reconnect);
+                    }
                 }
             } else {
                 if(bot.joined) {
-                    client.channels.cache.get("806881615623880704").send(reconnect);
+                    if(!n) {
+                        n = true;
+                        client.channels.cache.get("806881615623880704").send(reconnect);
+                    }
                 }
             }
 
