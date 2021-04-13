@@ -1,5 +1,4 @@
 const mc = require("minecraft-protocol");
-require('dotenv');
 
 function API() {
     this.ageCalc = (time) => {
@@ -36,6 +35,27 @@ function API() {
             }
         }
         return age;
+    }
+
+    this.calcTime = (hours, minutes) => {
+        var formatMinutes;
+        if(minutess == 0) {
+            formatMinutes = "";
+        } else {
+            formatMinutes = minutes + " phút ";
+        }
+
+        var format;
+        if(hours == 0) {
+            format =  formatMinutes;
+        } else {
+            format = hours + " giờ " + formatMinutes;
+        }
+
+        if(minutes == 0 && hours == 0) {
+            format = "vài giây ";
+        }
+        return format;
     }
 
     this.playtimeCalc = (time) => {

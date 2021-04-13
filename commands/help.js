@@ -1,3 +1,5 @@
+var Discord = require('discord.js');
+
 module.exports = {
     name: "help",
     description: "help command.",
@@ -7,7 +9,7 @@ module.exports = {
         var prefix = client.prefix;
         var footer = client.footer;
 
-        var noargs = new client.Discord.MessageEmbed()
+        var noargs = new Discord.MessageEmbed()
                             .setDescription( 
                             "*Sử dụng " + prefix + "help **<LOẠI LỆNH>***" +
                             "\n\n**Các loại lệnh:**" + 
@@ -21,7 +23,7 @@ module.exports = {
         if (!args[0]) return message.channel.send(noargs);
 
         if (args[0] == "discord") {
-            var helpdiscord = new client.Discord.MessageEmbed()
+            var helpdiscord = new Discord.MessageEmbed()
                 .setTitle("*[Discord Command]*")
                 .setColor(0x000DFF)
                 .setDescription(prefix + 'status - ``Xem trạng thái của server hàng chờ, ưu tiên, trực tuyến.``\n' + 
@@ -38,7 +40,7 @@ module.exports = {
         }
 
         if (args[0] === "ingame-command") {
-            var ingamecmd = new client.Discord.MessageEmbed()
+            var ingamecmd = new Discord.MessageEmbed()
                 .setColor(0x000DFF)
                 .setDescription("***Các lệnh bot:***\n" 
                 + '!help - ``Xem các lệnh có sẵn.`` \n' 
@@ -71,7 +73,7 @@ module.exports = {
             message.channel.send(ingamecmd);
         }
         if (args[0] === "check") {
-            var check = new client.Discord.MessageEmbed()
+            var check = new Discord.MessageEmbed()
                 .setColor(0x000DFF)
                 .setDescription("***Các lệnh xem chỉ số:***\n" +
                 prefix + 'kd - ``Xem chỉ số K/D.``'
@@ -85,7 +87,7 @@ module.exports = {
         }
 
         if (args[0] == "all") {
-            var embed = new client.Discord.MessageEmbed()
+            var embed = new Discord.MessageEmbed()
                                 .setColor(0x000DFF)
                                 .addField("*Discord Commands*", "help*, status, invite. ($)", false)
                                 .addField("*Check Commands*", "stats, playtime, joindate, seen, uptime. ($)", false)

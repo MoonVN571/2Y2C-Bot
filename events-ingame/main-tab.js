@@ -1,5 +1,8 @@
 var check = false;
 
+var a = require('../api');
+var api = new a();
+
 module.exports = (bot, client, data) => {
     if(check) return;
     check = true;
@@ -8,8 +11,6 @@ module.exports = (bot, client, data) => {
         bot.lobby = false;
     }
     
-    if(bot.debug) { console.log("Set server data") }
-
     setTimeout(() => {
         check = false;
     }, 3 * 60 * 1000);
@@ -37,7 +38,7 @@ module.exports = (bot, client, data) => {
             tps = data.replace("*", "")
         }
 
-        var status = "TPS: " + tps + " - Chờ: " + bot.api.getQueue() + " - Ưu Tiên: " + bot.api.getPrio();
+        var status = "TPS: " + tps + " - Chờ: " + api.getQueue() + " - Ưu Tiên: " + api.getPrio();
         // var status = "TPS: " + tps;
         if(status.startsWith("§6Donate")) return;
         client.user.setActivity(status, { type: 'PLAYING' });

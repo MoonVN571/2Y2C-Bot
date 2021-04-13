@@ -1,20 +1,23 @@
 var newAPI = require('../api.js');
 var api = new newAPI();
 
+var Discord = require('discord.js');
+var Scriptdb = require("script.db");
+
 module.exports = {
     name: "status",
     description: "status command.",
     aliases: ['uptime', 'tps', 'q', 'queue', 'que', 'prio', 'prioqueue', 'normalqueue'],
 
     async execute(client, message, args) {
-        var dataa = new client.Scriptdb(`./data.json`).get('tab-content').toString();
+        var dataa = new Scriptdb(`./data.json`).get('tab-content').toString();
 		var uptime = dataa.split(' - ')[3].split(" | ")[0].split("restart từ")[1].split("trước")[0];
 		var tps = dataa.split(' ')[1];
 		var players = dataa.split(' ')[4];
 		var ping = dataa.split(" - ")[2].split(" ping")[0];
 		var timepassed  = dataa.split(" | ")[1];
 
-		var embed = new client.Discord.MessageEmbed()
+		var embed = new Discord.MessageEmbed()
                 .setAuthor('2Y2C VIETNAM','https://cdn.discordapp.com/attachments/795842485133246514/821669964673974282/communityIcon_14otnpwidot51.png')
                 .addFields(
                     {

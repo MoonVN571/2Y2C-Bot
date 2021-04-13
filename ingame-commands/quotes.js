@@ -1,3 +1,5 @@
+var Scriptdb = require("script.db");
+
 module.exports = {
     name: "quotes",
     description: "quotes command.",
@@ -7,7 +9,7 @@ module.exports = {
         if(!args[0]) return;
         if(!args[0].match(bot.regex)) return;
 
-        let quotes = new bot.Scriptdb(`./data/quotes/${args[0]}.json`);
+        let quotes = new Scriptdb(`./data/quotes/${args[0]}.json`);
         var messages = quotes.get("messages");
 
         if(messages == undefined) return bot.whisper(username, "> Không tìm thấy người chơi.")

@@ -1,3 +1,5 @@
+var Scriptdb = require('script.db');
+
 module.exports = {
     name: "delete",
     description: "delete command.",
@@ -20,7 +22,7 @@ module.exports = {
 			}
 
             var guild = message.guild.id;
-            const data = new client.Scriptdb(`./data/guilds/setup-${guild}.json`);
+            const data = new Scriptdb(`./data/guilds/setup-${guild}.json`);
             
             if(data == null) return message.channel.send("Không tìm thấy kênh đã setup.");
             if(newdata == data) return message.channel.send("Không tìm thấy kênh.");

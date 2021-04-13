@@ -1,12 +1,15 @@
+var Discord = require('discord.js');
+var Scriptdb = require("script.db");
+
 module.exports = (bot, client, message) => { 
-	
 	var newcolor = 'DB2D2D';
 	var logger = message.toString();
 
-	var nocheck = message.toString().split(' ')[0]; // check username with format <>
-	// return message on chat
+	var nocheck = message.toString().split(' ')[0];
+
 	if (nocheck.startsWith('<') && nocheck.endsWith(">")) return;
-	var loggg = new bot.Discord.MessageEmbed()
+
+	var loggg = new Discord.MessageEmbed()
 					.setDescription(logger);
 					
 	if(!bot.dev) {
@@ -14,8 +17,6 @@ module.exports = (bot, client, message) => {
 	} else {
 		client.channels.cache.get("802456011252039680").send(loggg);	
 	}
-
-	if(bot.debug) { console.log(logger) }
 
 	var notfMsg;
 	var colorNotf;
@@ -44,9 +45,9 @@ module.exports = (bot, client, message) => {
 		colorNotf = "0xFD00FF";
 	}
 
-	if (logger.startsWith("nhắn cho")) {  // check bot send message			
-		var type = logger.split(" ")[2]; // []
-		var log; // logger
+	if (logger.startsWith("nhắn cho")) {
+		var type = logger.split(" ")[2];
+		var log;
 
 		if(type.startsWith("[Donator]")) {
 			log = "nhắn cho " + type.replace(/\[Donator\]/ig, "") + " " + logger.substr(8 + type.length + 2, logger.length + 2);
@@ -70,17 +71,16 @@ module.exports = (bot, client, message) => {
 
 	if(logger == "2y2c đã full") {
 		bot.checkJoined = true;
-		var fully = new bot.Discord.MessageEmbed()
+		var fully = new Discord.MessageEmbed()
 					.setDescription("2y2c đã full")
 					.setColor(0xb60000);
-
 		
 		setTimeout(() => {
 			var guild = client.guilds.cache.map(guild => guild.id);
 			setInterval(() => {
 				if (guild[0]) {
 					const line = guild.pop()
-					const data = new bot.Scriptdb(`./data/guilds/setup-${line}.json`);
+					const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
 					const checkdata = data.get('livechat');
 	
 					if(guild == undefined || checkdata == undefined) return;
@@ -94,10 +94,6 @@ module.exports = (bot, client, message) => {
 
 			client.channels.cache.get(bot.defaultChannel).send(fully);
 		}, 1000)
-	}
-
-	if(logger.startsWith("Bad command")) {
-		bot.isCommand = true;
 	}
 
 	if (logger == "Đang vào 2y2c"
@@ -117,33 +113,13 @@ module.exports = (bot, client, message) => {
 		notfMsg = logger;
 	}
 
-	// if(logger == "The main server is down. We will be back soon!") {
-	// 	disconnectRequest = true;
-	// 	bot.quit();
-	// }
-
-	// if(logger.startsWith("Kicked whilst connecting to")) {
-	// 	bot.quit("re")
-	// 	disconnectRequest = true;
-	// 	notfMsg = logger;
-	// 	colorNotf = '0xb60000';
-	// }
-
-	// if(logger === "Exception Connecting:ReadTimeoutException : null") {
-	// 	bot.quit("re")
-	// 	disconnectRequest = true;
-	// 	notfMsg = logger;
-	// 	colorNotf = '0xb60000';
-	// }
-
-	if(bot.debug) { console.log(notfMsg) }
 	if(notfMsg !== undefined) {
 		var strn = notfMsg.replace(/\*/ig, "\\*")
 		var str = strn.replace(/`/ig, "\\`")
 		const s = str.replace("||", "\\||");
 		var notf = s.replace(/_/ig, "\\_")
 
-		var embedNotf = new bot.Discord.MessageEmbed()
+		var embedNotf = new Discord.MessageEmbed()
 							.setDescription(notf)
 							.setColor(colorNotf);
 
@@ -154,17 +130,17 @@ module.exports = (bot, client, message) => {
 					setInterval(() => {
 						if (guild[0]) {
 							const line = guild.pop()
-							const data = new bot.Scriptdb(`./data/guilds/setup-${line}.json`);
+							const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
 							const checkdata = data.get('livechat');
 
 							if(checkdata == undefined || guild == undefined) return;
 
 							try {
 								client.channels.cache.get(checkdata).send(embedNotf);
-							} catch(e) {  }
+							} catch(e) {}
 						}
 					}, 200);
-				}, 100)
+				}, 100);
 			}
 			setTimeout(() => {
 				client.channels.cache.get(bot.defaultChannel).send(embedNotf);
@@ -203,14 +179,6 @@ module.exports = (bot, client, message) => {
 	if (logger.includes('bị bắn bởi')) {
 		var str = logger;
 		var user = str.split(" ")[4];
-
-		saveKills(user)
-		deathMsg = logger;
-	}
-
-	if (logger.includes('đã bị đấm chết con mẹ nó bởi')) { // valid
-		var str = logger;
-		var user = str.split(" ")[9];
 
 		saveKills(user)
 		deathMsg = logger;
@@ -268,8 +236,6 @@ module.exports = (bot, client, message) => {
 		}
 		saveKills(newUser)
 		deathMsg = logger;
-		
-
 	}
 
 	if (logger.includes('giết') && logger.includes("bằng")) {
@@ -317,7 +283,7 @@ module.exports = (bot, client, message) => {
 	}
 
 	function saveDead(name) {
-		const kd = new bot.Scriptdb(`./data/kd/${name}.json`);
+		const kd = new Scriptdb(`./data/kd/${name}.json`);
 		var dead = kd.get('deaths');
 		
 		if(dead == undefined) {
@@ -328,7 +294,7 @@ module.exports = (bot, client, message) => {
 	}
 
 	function saveKills(name) {
-		const kd = new bot.Scriptdb(`./data/kd/${name}.json`);
+		const kd = new Scriptdb(`./data/kd/${name}.json`);
 		var kill = kd.get('kills');
 
 		if(name == "Piglin" || name == "Zombie"  || name == "Zombified" || name == "Cave" || name == "Drowned") return;
@@ -350,7 +316,7 @@ module.exports = (bot, client, message) => {
 		newDeathMsg = deathMsg;
 	}
 
-	var embedDeath = new bot.Discord.MessageEmbed()
+	var embedDeath = new Discord.MessageEmbed()
 							.setDescription(newDeathMsg)
 							.setColor(newcolor);
 
@@ -361,14 +327,14 @@ module.exports = (bot, client, message) => {
 			setInterval(() => {
 				if (guild[0]) {
 					const line = guild.pop()
-					const data = new bot.Scriptdb(`./data/guilds/setup-${line}.json`);
+					const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
 					const checkdata = data.get('livechat');
 					
                     if(guild == undefined || checkdata == undefined) return;
 
 					try {
 						client.channels.cache.get(checkdata).send(embedDeath);
-					} catch(e) {  }
+					} catch(e) {}
 				}
 			}, 200);
 		}, 100)

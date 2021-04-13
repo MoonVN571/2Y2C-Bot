@@ -10,12 +10,12 @@ module.exports = {
             args[0] = username;
         }
 
-        let pt = new bot.Scriptdb(`./data/playtime/${args[0]}.json`);
+        let pt = new Scriptdb(`./data/playtime/${args[0]}.json`);
         let playtime = pt.get('time')
 
         if (playtime === undefined) return bot.whisper(username, `> Không tìm thấy người chơi.`);
         
-        var string = bot.api.playtimeCalc(playtime);
+        var string = api.playtimeCalc(playtime);
 
         bot.whisper(username, `> ${args[0]}: ${string}.`);
     }

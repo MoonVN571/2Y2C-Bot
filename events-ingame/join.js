@@ -1,18 +1,17 @@
+var Discord = require('discord.js');
+var Scriptdb = require('script.db');
+var fs=  require('fs');
+
 module.exports = (bot, client, p) => {
     bot.countPlayers++;
     var username = p.username;
     var newUsername = username.replace(/_/ig, "\\_");
 
-    if(bot.debug) {
-        console.log(username + " joined")
-    }
-
-    // console.log(bot.countPlayers)
     setTimeout(() => {
-        if(bot.isCommand) return;
+        if(bot.botJoined) return;
         bot.disconnectRequest = true;
-        bot.quit()
-    }, 3 * 60 * 1000)
+        bot.quit();
+    }, 3 * 60 * 1000);
     
     var today = new Date()
     let day = ("00" + today.getDate()).slice(-2)
@@ -22,7 +21,7 @@ module.exports = (bot, client, p) => {
     let min = ("00" + today.getMinutes()).slice(-2)
     var date = day + '.' + month + '.' + years + ' ' + hours + ':' + min;
 
-    let fj = new bot.Scriptdb(`./data/joindate/${username}.json`);
+    let fj = new Scriptdb(`./data/joindate/${username}.json`);
     let firstjoin = fj.get('date');
     if (firstjoin === undefined) {
         fj.set(`date`, date)
@@ -35,7 +34,7 @@ module.exports = (bot, client, p) => {
     
     var d = new Date();
     var time = d.getTime();
-    let lastseen = new bot.Scriptdb(`./data/seen/${username}.json`);
+    let lastseen = new Scriptdb(`./data/seen/${username}.json`);
     var ls = lastseen.get('seen')
 
     if (ls === undefined) {
@@ -57,13 +56,13 @@ module.exports = (bot, client, p) => {
             newUsername = username;
         }
         
-        bot.fs.readFile("special-join.txt", 'utf8', (err, data) => {
+        fs.readFile("special-join.txt", 'utf8', (err, data) => {
             if (err) throw err;
             if(data.includes(username)) {
                 if(bot.dev) return;
-                var embed = new bot.Discord.MessageEmbed()
+                var embed = new Discord.MessageEmbed()
                     .setDescription(newUsername + " joined")
-                    .setColor('0xb60000')
+                    .setColor('0xb60000');
 
                 client.channels.cache.get("807506107840856064").send(embed);
             }
@@ -71,7 +70,7 @@ module.exports = (bot, client, p) => {
     }
     
     if(username == "MoonZ" || username == "LinhLinh" || username == "bachbach") {
-        var embed = new bot.Discord.MessageEmbed()
+        var embed = new Discord.MessageEmbed()
             .setDescription("[STAFF] " + newUsername + " joined")
             .setColor('0xb60000')
 
@@ -79,7 +78,7 @@ module.exports = (bot, client, p) => {
         client.channels.cache.get("826280327998996480").send(embed);
     }
     
-    var embed = new bot.Discord.MessageEmbed()
+    var embed = new Discord.MessageEmbed()
                         .setDescription(newUsername + " joined")
                         .setColor('0xb60000');	
 
@@ -91,7 +90,7 @@ module.exports = (bot, client, p) => {
         setInterval(() => {
             if (guild[0]) {
                 const line = guild.pop()
-                const data = new bot.Scriptdb(`./data/guilds/setup-${line}.json`);
+                const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
                 const checkdata = data.get('livechat');
 
                 if(guild == undefined || checkdata == undefined) return;
@@ -100,7 +99,7 @@ module.exports = (bot, client, p) => {
                     if(embed !== undefined) {
                         client.channels.cache.get(checkdata).send(embed);
                     }
-                } catch(e) {  }
+                } catch(e) {}
             }
         }, 200);
     }, 100)

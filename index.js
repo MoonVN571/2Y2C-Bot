@@ -1,20 +1,15 @@
 ﻿const Discord = require("discord.js");
 const client = new Discord.Client();
 
-const superagent = require("superagent") // queue 2b2t
-var waitUntil = require('wait-until') // wait method
+var Scriptdb = require("script.db")
 var mineflayer = require('mineflayer') // bot minecraft
 var tpsPlugin = require('mineflayer-tps')(mineflayer) // mineflayer plugin
 
+var fs = require('fs');
+
 const pathfinder = require('mineflayer-pathfinder').pathfinder
 const Movements = require('mineflayer-pathfinder').Movements
-
 const {  GoalNear } = require('mineflayer-pathfinder').goals
-
-var fs = require('fs');
-const Scriptdb = require('script.db');
-var newAPI = require('./api.js');
-var api = new newAPI();
 
 const footer = "moonbot 2021";
 client.footer = footer;
@@ -34,13 +29,12 @@ const config = {
 };
 
 var dev = true;
-var debug = false;
+var debug = true;
 
 if (dev) {
 	prefix = "dev$";
 }
 
-console.log('Debug Mode: ' + debug)
 console.log('Developer Mode: ' + dev)
 
 var defaultChannel;
@@ -70,10 +64,6 @@ client.on('ready', () => {
 	createBot();
 });
 
-var minutess = 0;
-var hourss = 0;
-var totalSecondss = 0;
-
 /*
  *				START_BOT
  */
@@ -86,8 +76,8 @@ function createBot() {
 		version: "1.16.4"
 	});
 
-    bot.loadPlugin(tpsPlugin)
-	bot.loadPlugin(pathfinder)
+    bot.loadPlugin(tpsPlugin);
+	bot.loadPlugin(pathfinder);
 
 	const DeathftNotifyEvent = require(`./events-ingame/death-notify.js`);
 	const joinedEvent = require(`./events-ingame/join.js`);
@@ -105,73 +95,27 @@ function createBot() {
 	var color = "0x979797";
 	var lobby = true;
 
-	var unknownReason = false
-	var disconnectRequest = false;
+	// New
 	var joined = false;
+	var restartingMsg = false; // Tin nhắn restart, cho status bot
 
-	// bot end with restart
-	var isRestarting = false;
-
-	var isCommand = false;
-
-	var restartingMsg = false;
-	bot.client = client;
-
-	bot.isCommand = isCommand;
-
+	// Import
 	bot.restartingMsg = restartingMsg;
-
-	bot.debug = debug;	
-	bot.dev = dev;
-
-	// modules
-	bot.Scriptdb = Scriptdb;
-	bot.Discord = Discord;
-	bot.fs = fs;
-	bot.waitUntil = waitUntil;
-	
-	// mot so data
-	bot.prefix = prefix;
-	bot.config = config;
-	bot.color = color;
-	bot.api = api;
-	bot.defaultChannel = defaultChannel;
-
-	// check bot is in lobby
+	bot.defaultChannel = defaultChannel; // Kenh mat dinh cua chat
+	bot.dev = dev; // developer mode
 	bot.lobby = lobby;
-
-	// uptime bot on topic
-	bot.hourss = hourss;
-	bot.minutess = minutess;
-	bot.totalSecondss = totalSecondss;
-
+	bot.oneInterval = oneInterval; // 1 lần duy nhất
 	bot.joined = joined;
-	bot.oneInterval = oneInterval;
 
-	// Join
-	var countPlayers = 0;
-	bot.countPlayers = countPlayers;
-	
-	bot.Movements = Movements;
-	bot.GoalNear = GoalNear;
+	// var unknownReason = false
+	// var disconnectRequest = false;
 
-	bot.isRestarting = isRestarting;
-	bot.restartingMsg = restartingMsg;
-
-	bot.unknownReason = unknownReason;
+	bot.client = client;
 
 	bot.on('windowOpen', verifyEvent.bind(null, bot));
 
-	bot.on('connect', JoinedServerEvent.bind(null, bot, client))
+	bot.on('login', JoinedServerEvent.bind(null, bot, client))
 	bot.once('login', playtimeEvent.bind(null, bot))
-
-	bot.on('spawn', () => {
-		if(debug) {
-			setTimeout(() => {
-			console.log("lobby: " +lobby)
-			}, 20 * 1000)
-		}
-	})
 
 	bot.on('message', (msg) => {
 		if (!(msg.toString().startsWith("<"))) return;
@@ -268,15 +212,9 @@ function createBot() {
 			if(msgs == undefined) {
 				messages.set("messages", logger)
 				messages.set("times", Date.now())
-
-				if(!debug) return;
-				console.log(username + " saved: " + logger + " " + Date.now())
 			} else {
 				messages.set("messages", logger + " | " + msgs)
 				messages.set("times", times + " | " + Date.now())
-
-				if(!debug) return;
-				console.log(logger + " " + Date.now())
 			}
 		}
 
@@ -304,10 +242,6 @@ function createBot() {
 		}
 	
 		bot.regex = /[a-z]|[A-Z]|[0-9]/i;
-		bot.Scriptdb = require('script.db');
-		bot.api = api;
-		bot.superagent = superagent;
-		bot.disconnectRequest = disconnectRequest;
 	
 		setTimeout(() => {
 			try {
@@ -316,28 +250,19 @@ function createBot() {
 				console.log(err);
 			}
 		}, 1* 1000);
-	 });
+	});
 
 	bot.on("message", DeathftNotifyEvent.bind(null, bot, client));
-
 	bot.on("playerJoined", joinedEvent.bind(null, bot, client));
-
 	bot.on("playerLeft", leftEvent.bind(null, bot, client));
-
+	bot.on("chat", restartEvent.bind(null, bot, client));
+	bot.on("chat", restartEvent.bind(null, bot, client));
+	bot._client.on("playerlist_header", ServerStatusEvent.bind(null, bot, client));
 	bot._client.on("playerlist_header", mainEvent.bind(null, bot, client));
-
 	bot._client.on("playerlist_header", queueEvent.bind(null, bot, client));
 
-	bot.on("chat", restartEvent.bind(null, bot, client));
-
-	bot._client.on("playerlist_header", ServerStatusEvent.bind(null, bot, client));
-	
-	bot.on("chat", restartEvent.bind(null, bot, client));
-
 	bot.on('kicked', kickedEvent.bind(null, bot, client));
-
 	bot.on('end', endedEvent.bind(null, bot, client));
-
 
 	client.on('message', msg => {
 		const args = msg.content.slice("/".length).trim().split(/ +/g);
@@ -485,10 +410,7 @@ function createBot() {
 module.exports = { createBot };
 
 /*
-*
 *				COMMAND_DISCORD
-*  
-* 
 */
 client.commandss = new Discord.Collection();
 
@@ -537,10 +459,6 @@ client.on("message", async message => {
 					.setDescription('Không tìm thấy người chơi.')
 					.setColor('0xC51515');
 	
-	client.Discord = Discord;
-	client.Scriptdb = Scriptdb;
-	client.fs = require('fs');
-	client.api = api;
 	client.footer = footer;
 
     try{

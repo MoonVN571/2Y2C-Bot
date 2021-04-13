@@ -1,3 +1,6 @@
+var Scriptdb = require('script.db');
+var Discord = require('discord.js');
+
 module.exports = {
     name: "joindate",
     description: "joindate command.",
@@ -6,13 +9,13 @@ module.exports = {
     async execute(client, message, args) {
         if (!args[0]) return message.channel.send(client.userNotFound);
 
-		let fj = new client.Scriptdb(`./data/joindate/${args}.json`);
+		let fj = new Scriptdb(`./data/joindate/${args}.json`);
 		let firstjoin = fj.get('date');
 
 		if (firstjoin === undefined) return message.channel.send(client.userNotFound);
 
-        var embed = new client.Discord.MessageEmbed()
-                        .setDescription(`Lần đầu thấy ${args[0]} vào ${firstjoin}`)
+        var embed = new Discord.MessageEmbed()
+                        .setDescription(`${args[0]}: ${firstjoin}`)
                         .setColor(0x2EA711);
 
         message.channel.send(embed);

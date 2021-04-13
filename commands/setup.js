@@ -1,3 +1,5 @@
+var Scriptdb = require("script.db");
+
 module.exports = {
     name: "setup",
     description: "setup command.",
@@ -7,7 +9,6 @@ module.exports = {
         if (!message.member.hasPermission('ADMINISRTATOR')) return message.channel.send("Không có quyền để dùng lệnh này.")
 
         var prefix = client.prefix;
-        var Scriptdb = client.Scriptdb;
         
         if(!args[0]) return message.channel.send("Cách dùng: " + prefix + "setup chat <tag hoặc nhập id kênh>");
         

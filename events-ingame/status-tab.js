@@ -1,5 +1,7 @@
 var check = false;
 
+var Scriptdb = require('script.db');
+
 module.exports = (bot, client, data) => {
     var header = data.header;
     if(header.toString().includes("2YOUNG")) {
@@ -13,8 +15,6 @@ module.exports = (bot, client, data) => {
 
     if(bot.lobby) return;
 
-    if(bot.debug) { console.log("Check server data") }
-
     var footer = data.footer;
     var ss1 = footer.replace(/\\n/ig, " ");
     var ss2 = ss1.replace(/-/ig, "");
@@ -24,25 +24,7 @@ module.exports = (bot, client, data) => {
     var ss5 = ss4.replace('    ', " - ")
     var ss6 = ss5.replace('    ', " - ")
     var ss7 = ss6.replace('    ', " - ")
-    var ss8 = ss7.split('§7')[0];
-    
-    var formatMinutes;
-    if(bot.minutess == 0) {
-        formatMinutes = "";
-    } else {
-        formatMinutes = bot.minutess + " phút ";
-    }
-
-    var format;
-    if(bot.hourss == 0) {
-        format =  formatMinutes;
-    } else {
-        format = bot.hourss + " giờ " + formatMinutes;
-    }
-
-    if(bot.minutess == 0 && bot.hourss == 0) {
-        format = "vài giây ";
-    }
+    var ss8 = ss7.split('§7')[0]
 
     var status = ss8;
 
@@ -50,11 +32,11 @@ module.exports = (bot, client, data) => {
         status = ss8.replace(" *", "")
     }
 
-    var topics = status + " - Tham gia server từ " + format + "trước.";
-    const dataa = new bot.Scriptdb(`./data.json`);
+    const dataa = new Scriptdb(`./data.json`);
 
     dataa.set('tab-content', status + " | " + Date.now());
 
+    /*
     if(topics !== undefined) {
         client.channels.cache.get(bot.defaultChannel).setTopic(topics)
         setTimeout(() => {
@@ -73,5 +55,5 @@ module.exports = (bot, client, data) => {
 				}
 			}, 200);
 		}, 100)
-    }
+    } */
 }

@@ -1,3 +1,5 @@
+var Scriptdb = require("script.db");
+
 module.exports = {
     name: "stats",
     description: "stats command.",
@@ -10,7 +12,7 @@ module.exports = {
             args[0] = username;
         }
         
-        const kd = new bot.Scriptdb(`./data/kd/${args[0]}.json`);
+        const kd = new Scriptdb(`./data/kd/${args[0]}.json`);
         let die = kd.get('deaths');
         let kills = kd.get('kills');
 

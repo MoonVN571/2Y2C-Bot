@@ -1,3 +1,6 @@
+var a = require("../api")
+var api = new a();
+
 module.exports = {
     name: "normalqueue",
     description: "normalqueue command.",
@@ -6,6 +9,6 @@ module.exports = {
     async execute(bot, username, args) {
         if (bot.api.getQueue() == 0) return bot.whisper(username, `> Không có bất kì hàng chờ nào.`);
 
-        bot.whisper(username, `> Hàng chờ: ${bot.api.getQueue()}`);
+        bot.whisper(username, `> Hàng chờ: ${api.getQueue()}`);
     }
 }

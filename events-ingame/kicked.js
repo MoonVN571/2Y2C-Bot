@@ -5,6 +5,8 @@ module.exports = (bot, client, reason, loggedIn) => {
         process.exit();
     }
 
+    if(reason == undefined) return;
+
     if (reason.includes("đang restart quay lại sau")) {
         bot.isRestarting = true;
         bot.unknownReason = false;
@@ -19,7 +21,7 @@ module.exports = (bot, client, reason, loggedIn) => {
     
     if(bot.dev) {
         console.log(r)
-    }	
+    }
 
     if(bot.dev) return;
     

@@ -1,9 +1,10 @@
 var check = false;
 
+var Discord = require('discord.js');
+
 module.exports = (bot, client, data) => {
     if(check) return;
     check = true;
-    if(bot.debug) { console.log("Check current queue") }
 
     setTimeout(() => {
         check = false;
@@ -37,7 +38,7 @@ module.exports = (bot, client, data) => {
             client.user.setActivity(status, { type: 'PLAYING' });
     
         if(s7 == null || s7 == "" || s7.includes("2YOUNG")) return;
-        var embed = new bot.Discord.MessageEmbed()
+        var embed = new Discord.MessageEmbed()
                             .setDescription(s7)
                             .setColor("0xFFCE00");
             

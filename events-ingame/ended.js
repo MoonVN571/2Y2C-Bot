@@ -1,15 +1,22 @@
 const start = require('../index.js');
 
+var Discord = require('discord.js');
+var Scriptdb = require('script.db');
+var waitUntil = require('wait-until');
+
 var n = false;
+
+var xyz = require('../api');
+var api = new xyz();
 
 module.exports = (bot, client) => {
     client.user.setActivity("");
 
-	console.log('---------- BOT ENDED ----------')
+	console.log('---------- BOT ENDED ----------');
 
     totalSecondss = 0;
 
-    const uptime = new bot.Scriptdb(`./data.json`);
+    const uptime = new Scriptdb(`./data.json`);
     let ut = uptime.get('uptime');
 
     if(ut === undefined) {
@@ -24,124 +31,49 @@ module.exports = (bot, client) => {
     }
 
     setTimeout(() => {
-        if(bot.isRestarting) {
-            var reconnect = new bot.Discord.MessageEmbed()
-                                .setDescription(`⚠️ Server đang restart. Bot sẽ kết nối lại đến khi đã vào được server! ⚠️`)
-                                .setColor("F71319");
+        var log = new Discord.MessageEmbed()
+                        .setDescription("Bot đã mất kết nối đến server. Kết nối lại sau 1 phút." + `\nĐã hoạt động từ ${api.uptimeCalc()} trước.`)
+                        .setColor("F71319");
 
-            if(bot.dev) {
-                if(bot.joined) {
-                    if(!n) {
-                        n = true;
-                        client.channels.cache.get("807045720699830273").send(reconnect);
-                    }
-                }
-            } else {
-                if(bot.joined) {
-                    if(!n) {
-                        n = true;
-                        client.channels.cache.get("806881615623880704").send(reconnect);
-                    }
-                }
-            }
-
-            bot.waitUntil(10000, 50, function condition() {
-                try {
-                    console.log("Recoonecting to the server.");
-                    start.createBot()
-
-                    return true;
-                } catch (error) {
-                    console.log("Error: " + error);
-                    return false;
-                }
-            }, function done(result) {
-                console.log("Completed: " + result);
-            });
-            return;
-        } 
-
-        if(bot.disconnectRequest) {
-            var log = new bot.Discord.MessageEmbed()
-                                    .setDescription("Bot đã ngắt kết nối đến server. Kết nối lại sau 1 phút." + `\nĐã hoạt động từ ${bot.api.uptimeCalc()} trước.`)
-                                    .setColor("F71319"); // cam
-
-            var notf = new bot.Discord.MessageEmbed()
-                                    .setDescription("🏮 Bot đã ngắt kết nối đến server. 🏮")
-                                    .setColor("F71319"); // cam
-
-            client.channels.cache.get(bot.defaultChannel).send(notf);
-            
-            if(bot.dev) {
-                if(bot.joined){
-                    client.channels.cache.get("807045720699830273").send(log);
-                }
-            } else {
-                if(bot.joined){
-                    client.channels.cache.get("806881615623880704").send(log);
-                    
-                    setTimeout(() => {
-                        var guild = client.guilds.cache.map(guild => guild.id);
-                            setInterval(() => {
-                                if (guild[0]) {
-                                    const line = guild.pop()
-                                    const data = new bot.Scriptdb(`./data/guilds/setup-${line}.json`);
-                                    const checkdata = data.get('livechat');
-                
-                                    if(checkdata == undefined || guild == undefined) return;
-                
-                                    try {
-                                        client.channels.cache.get(checkdata).send(notf);
-                                    } catch(e) {  }
-                                }
-                            }, 200);
-                    }, 1*100);
-                }
-            } 
-
-            bot.waitUntil(60000, 30, function condition() {
-                try {
-                    console.log("Recoonecting to the server.");
-                    start.createBot()
-                    
-                    return true;
-                } catch (error) {
-                    console.log("Error: " + error);
-                    return false;
-                }
-            }, function done(result) {
-                console.log("Completed: " + result);
-            })
-            return;
-        }
-            
-        var log = new bot.Discord.MessageEmbed()
-                        .setDescription("Bot đã mất kết nối đến server. Kết nối lại sau 1 phút." + `\nĐã hoạt động từ ${bot.api.uptimeCalc()} trước.`)
-                        .setColor("F71319"); // cam
-
-        var notf = new bot.Discord.MessageEmbed()
+        var notf = new Discord.MessageEmbed()
                                 .setDescription("🏮 Bot đã mất kết nối đến server. 🏮")
-                                .setColor("F71319"); // cam
+                                .setColor("F71319");
         
-        setTimeout(() => {
-            client.channels.cache.get(bot.defaultChannel).send(notf);
+                                
+        if(bot.botJoined) {
             setTimeout(() => {
-                if(bot.dev) return;
-                client.channels.cache.get("816695017858531368").send(notf);
-            }, 1*100);
-        }, 3*1000);
+                client.channels.cache.get(bot.defaultChannel).send(notf);
+            
+                setTimeout(() => {
+                    var guild = client.guilds.cache.map(guild => guild.id);
+                        setInterval(() => {
+                            if (guild[0]) {
+                                const line = guild.pop()
+                                const data = new bot.Scriptdb(`./data/guilds/setup-${line}.json`);
+                                const checkdata = data.get('livechat');
 
-        if(bot.dev) {
-            client.channels.cache.get("807045720699830273").send(log);
-        } else {
-            client.channels.cache.get("806881615623880704").send(log);
+                                if(checkdata == undefined || guild == undefined) return;
+
+                                try {
+                                    client.channels.cache.get(checkdata).send(notf);
+                                } catch(e) {}
+                            }
+                        }, 200);
+                }, 1*100);
+
+            }, 3*1000);
+
+            if(bot.dev) {
+                client.channels.cache.get("807045720699830273").send(log);
+            } else {
+                client.channels.cache.get("806881615623880704").send(log);
+            }
         }
-        
-        bot.waitUntil(60000, 30, function condition() {
+
+        waitUntil(60 * 1000, 50, function condition() {
             try {
                 console.log("Recoonecting to the server.");
                 start.createBot()
-                
                 return true;
             } catch (error) {
                 console.log("Error: " + error);
@@ -150,5 +82,134 @@ module.exports = (bot, client) => {
         }, function done(result) {
             console.log("Completed: " + result);
         });
-    }, 3*1000)
+        return;
+    }, 2 * 1000);
+    // setTimeout(() => {
+    //     if(bot.isRestarting) {
+    //         var reconnect = new Discord.MessageEmbed()
+    //                             .setDescription(`⚠️ Server đang restart. Bot sẽ kết nối lại đến khi đã vào được server! ⚠️`)
+    //                             .setColor("F71319");
+
+    //         if(bot.dev) {
+    //             if(bot.joined) {
+    //                 if(!n) {
+    //                     n = true;
+    //                     client.channels.cache.get("807045720699830273").send(reconnect);
+    //                 }
+    //             }
+    //         } else {
+    //             if(bot.joined) {
+    //                 if(!n) {
+    //                     n = true;
+    //                     client.channels.cache.get("806881615623880704").send(reconnect);
+    //                 }
+    //             }
+    //         }
+
+    //         bot.waitUntil(10000, 50, function condition() {
+    //             try {
+    //                 console.log("Recoonecting to the server.");
+    //                 start.createBot()
+
+    //                 return true;
+    //             } catch (error) {
+    //                 console.log("Error: " + error);
+    //                 return false;
+    //             }
+    //         }, function done(result) {
+    //             console.log("Completed: " + result);
+    //         });
+    //         return;
+    //     } 
+
+    //     if(bot.disconnectRequest) {
+    //         var log = new Discord.MessageEmbed()
+    //                                 .setDescription("Bot đã ngắt kết nối đến server. Kết nối lại sau 1 phút." + `\nĐã hoạt động từ ${bot.api.uptimeCalc()} trước.`)
+    //                                 .setColor("F71319"); // cam
+
+    //         var notf = new Discord.MessageEmbed()
+    //                                 .setDescription("🏮 Bot đã ngắt kết nối đến server. 🏮")
+    //                                 .setColor("F71319"); // cam
+
+    //         client.channels.cache.get(bot.defaultChannel).send(notf);
+            
+    //         if(bot.dev) {
+    //             if(bot.joined){
+    //                 client.channels.cache.get("807045720699830273").send(log);
+    //             }
+    //         } else {
+    //             if(bot.joined){
+    //                 client.channels.cache.get("806881615623880704").send(log);
+                    
+    //                 setTimeout(() => {
+    //                     var guild = client.guilds.cache.map(guild => guild.id);
+    //                         setInterval(() => {
+    //                             if (guild[0]) {
+    //                                 const line = guild.pop()
+    //                                 const data = new bot.Scriptdb(`./data/guilds/setup-${line}.json`);
+    //                                 const checkdata = data.get('livechat');
+                
+    //                                 if(checkdata == undefined || guild == undefined) return;
+                
+    //                                 try {
+    //                                     client.channels.cache.get(checkdata).send(notf);
+    //                                 } catch(e) {  }
+    //                             }
+    //                         }, 200);
+    //                 }, 1*100);
+    //             }
+    //         } 
+
+    //         bot.waitUntil(60000, 30, function condition() {
+    //             try {
+    //                 console.log("Recoonecting to the server.");
+    //                 start.createBot()
+                    
+    //                 return true;
+    //             } catch (error) {
+    //                 console.log("Error: " + error);
+    //                 return false;
+    //             }
+    //         }, function done(result) {
+    //             console.log("Completed: " + result);
+    //         })
+    //         return;
+    //     }
+            
+    //     var log = new bot.Discord.MessageEmbed()
+    //                     .setDescription("Bot đã mất kết nối đến server. Kết nối lại sau 1 phút." + `\nĐã hoạt động từ ${api.uptimeCalc()} trước.`)
+    //                     .setColor("F71319");
+
+    //     var notf = new bot.Discord.MessageEmbed()
+    //                             .setDescription("🏮 Bot đã mất kết nối đến server. 🏮")
+    //                             .setColor("F71319");
+        
+    //     setTimeout(() => {
+    //         client.channels.cache.get(bot.defaultChannel).send(notf);
+    //         setTimeout(() => {
+    //             if(bot.dev) return;
+    //             client.channels.cache.get("816695017858531368").send(notf);
+    //         }, 1*100);
+    //     }, 3*1000);
+
+    //     if(bot.dev) {
+    //         client.channels.cache.get("807045720699830273").send(log);
+    //     } else {
+    //         client.channels.cache.get("806881615623880704").send(log);
+    //     }
+        
+    //     bot.waitUntil(60000, 30, function condition() {
+    //         try {
+    //             console.log("Recoonecting to the server.");
+    //             start.createBot()
+                
+    //             return true;
+    //         } catch (error) {
+    //             console.log("Error: " + error);
+    //             return false;
+    //         }
+    //     }, function done(result) {
+    //         console.log("Completed: " + result);
+    //     });
+    // }, 3*1000)
 }
