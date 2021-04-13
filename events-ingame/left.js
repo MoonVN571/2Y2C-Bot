@@ -63,9 +63,7 @@ module.exports = (bot, client, p) => {
                 if(guild == undefined || checkdata == undefined) return;
 
                 try {
-                    if(embed !== undefined) {
-                        client.channels.cache.get(checkdata).send(embed);
-                    }
+                    client.channels.cache.get(checkdata).send(embed);
                 } catch(e) {}
             }
         }, 200);

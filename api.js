@@ -39,7 +39,7 @@ function API() {
 
     this.calcTime = (hours, minutes) => {
         var formatMinutes;
-        if(minutess == 0) {
+        if(minutes == 0) {
             formatMinutes = "";
         } else {
             formatMinutes = minutes + " phút ";
@@ -120,28 +120,6 @@ function API() {
                 }
             }
         return string;
-    }
-
-    var Scriptdb = require('script.db')
-    this.uptimeCalc = () => {
-        const u = new Scriptdb(`./data.json`);
-        let uptime = u.get('uptime');
-
-        var d = new Date();
-        var timenow = d.getTime();
-
-        var ticks = timenow - uptime;
-        var temp = ticks / 1000;
-        var day = hours = 0, minutes = 0, seconds = 0;
-        hours = parseInt(((temp - day * 86400) / 3600))
-        minutes = parseInt(((temp - day * 86400 - hours * 3600)) / 60)
-        seconds = parseInt(temp % 60)
-        if(uptime === undefined) {
-            hours = 0;
-            minutes = 0;
-            seconds = 0;
-        }
-        return `${hours}h ${minutes}m ${seconds}s`; 
     }
 
     var queue = "0";

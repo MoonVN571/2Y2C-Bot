@@ -9,14 +9,14 @@ module.exports = (bot, client, message) => {
 
 	if (nocheck.startsWith('<') && nocheck.endsWith(">")) return;
 
-	var loggg = new Discord.MessageEmbed()
-					.setDescription(logger);
+	// var loggg = new Discord.MessageEmbed()
+	// 				.setDescription(logger);
 					
-	if(!bot.dev) {
-		client.channels.cache.get("797426761142632450").send(loggg);
-	} else {
-		client.channels.cache.get("802456011252039680").send(loggg);	
-	}
+	// if(!bot.dev) {
+	// 	client.channels.cache.get("797426761142632450").send(loggg);
+	// } else {
+	// 	client.channels.cache.get("802456011252039680").send(loggg);	
+	// }
 
 	var notfMsg;
 	var colorNotf;
@@ -140,11 +140,9 @@ module.exports = (bot, client, message) => {
 							} catch(e) {}
 						}
 					}, 200);
-				}, 100);
+				}, 400);
 			}
-			setTimeout(() => {
 				client.channels.cache.get(bot.defaultChannel).send(embedNotf);
-			}, 400)
 		}
 	}
 	
@@ -337,7 +335,7 @@ module.exports = (bot, client, message) => {
 					} catch(e) {}
 				}
 			}, 200);
-		}, 100)
+		}, 200)
 	}
 	client.channels.cache.get(bot.defaultChannel).send(embedDeath);
 }

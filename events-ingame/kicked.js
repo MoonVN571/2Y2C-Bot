@@ -1,3 +1,5 @@
+var Discord = require('discord.js');
+
 module.exports = (bot, client, reason, loggedIn) => {
     console.log(reason, loggedIn);
     if (reason.includes("You are already connected to this proxy!")) {
@@ -8,13 +10,13 @@ module.exports = (bot, client, reason, loggedIn) => {
     if(reason == undefined) return;
 
     if (reason.includes("đang restart quay lại sau")) {
-        bot.isRestarting = true;
-        bot.unknownReason = false;
+        // bot.isRestarting = true;
+        // bot.unknownReason = false;
     }
 
     var r =  reason.toString().replace(/\{"extra":\[{"text":"|"},{"color":"gold","text":"|"}\],"text":""|{"text":"|"}}/ig).toString().replace(/}|undefined|"|{color:gold,text:/ig, '').toString().replace(/{|color:gold,text:/ig, "");
 
-    var embed = new bot.Discord.MessageEmbed()
+    var embed = new Discord.MessageEmbed()
                         .setDescription(`Bot mất kết nối: ` + r)
                         .setColor("F71319");
 

@@ -8,9 +8,6 @@ var tpsPlugin = require('mineflayer-tps')(mineflayer) // mineflayer plugin
 var fs = require('fs');
 
 const pathfinder = require('mineflayer-pathfinder').pathfinder
-const Movements = require('mineflayer-pathfinder').Movements
-const {  GoalNear } = require('mineflayer-pathfinder').goals
-
 const footer = "moonbot 2021";
 client.footer = footer;
 
@@ -29,7 +26,7 @@ const config = {
 };
 
 var dev = true;
-var debug = true;
+var debug = false;
 
 if (dev) {
 	prefix = "dev$";
@@ -98,6 +95,7 @@ function createBot() {
 	// New
 	var joined = false;
 	var restartingMsg = false; // Tin nhắn restart, cho status bot
+	var countPlayers = 0;
 
 	// Import
 	bot.restartingMsg = restartingMsg;
@@ -106,9 +104,7 @@ function createBot() {
 	bot.lobby = lobby;
 	bot.oneInterval = oneInterval; // 1 lần duy nhất
 	bot.joined = joined;
-
-	// var unknownReason = false
-	// var disconnectRequest = false;
+	bot.countPlayers = countPlayers;
 
 	bot.client = client;
 
@@ -255,7 +251,6 @@ function createBot() {
 	bot.on("message", DeathftNotifyEvent.bind(null, bot, client));
 	bot.on("playerJoined", joinedEvent.bind(null, bot, client));
 	bot.on("playerLeft", leftEvent.bind(null, bot, client));
-	bot.on("chat", restartEvent.bind(null, bot, client));
 	bot.on("chat", restartEvent.bind(null, bot, client));
 	bot._client.on("playerlist_header", ServerStatusEvent.bind(null, bot, client));
 	bot._client.on("playerlist_header", mainEvent.bind(null, bot, client));

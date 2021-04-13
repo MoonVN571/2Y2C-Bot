@@ -23,9 +23,9 @@ module.exports = (bot, client) => {
         hours = parseInt(totalSeconds / 3600);
         minutes = parseInt((totalSeconds - (hours * 3600)) / 60);
 
-        var data = new Scriptdb(`./data.json`).get('tab-content').toString().split("    | ")[0];
+        var datas = new Scriptdb(`./data.json`).get('tab-content').toString().split("    | ")[0];
 
-        client.channels.cache.get(bot.defaultChannel).setTopic(data + api.calcTime(hours, minutes) + "trước.");
+        client.channels.cache.get(bot.defaultChannel).setTopic(datas + " - Đã vào server từ " + api.calcTime(hours, minutes) + " trước.");
         setTimeout(() => {
             var guild = client.guilds.cache.map(guild => guild.id);
             setInterval(() => {
@@ -38,11 +38,11 @@ module.exports = (bot, client) => {
                     
                     try {
                         if(bot.dev) return;
-                        client.channels.cache.get(checkdata).setTopic(data)
+                        client.channels.cache.get(checkdata).setTopic(datas)
                     } catch(e) {}
                 }
             }, 200);
-        }, 100);
+        }, 300);
     }
 
     setInterval(setTime2, 5 * 60 * 1000);

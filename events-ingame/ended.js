@@ -4,11 +4,6 @@ var Discord = require('discord.js');
 var Scriptdb = require('script.db');
 var waitUntil = require('wait-until');
 
-var n = false;
-
-var xyz = require('../api');
-var api = new xyz();
-
 module.exports = (bot, client) => {
     client.user.setActivity("");
 
@@ -30,9 +25,30 @@ module.exports = (bot, client) => {
         uptime.set(`uptime`, time);
     }
 
+    function uptimeCalc() {
+        const u = new Scriptdb(`./data.json`);
+        let uptime = u.get('uptime');
+
+        var d = new Date();
+        var timenow = d.getTime();
+
+        var ticks = timenow - uptime;
+        var temp = ticks / 1000;
+        var day = hours = 0, minutes = 0, seconds = 0;
+        hours = parseInt(((temp - day * 86400) / 3600))
+        minutes = parseInt(((temp - day * 86400 - hours * 3600)) / 60)
+        seconds = parseInt(temp % 60)
+        if(uptime === undefined) {
+            hours = 0;
+            minutes = 0;
+            seconds = 0;
+        }
+        return `${hours}h ${minutes}m ${seconds}s`; 
+    }
+
     setTimeout(() => {
         var log = new Discord.MessageEmbed()
-                        .setDescription("Bot đã mất kết nối đến server. Kết nối lại sau 1 phút." + `\nĐã hoạt động từ ${api.uptimeCalc()} trước.`)
+                        .setDescription("Bot đã mất kết nối đến server. Kết nối lại sau 1 phút." + `\nĐã hoạt động từ ${uptimeCalc()} trước.`)
                         .setColor("F71319");
 
         var notf = new Discord.MessageEmbed()
