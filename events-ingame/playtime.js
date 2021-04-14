@@ -9,7 +9,7 @@ module.exports = (bot) => {
         returnThis = true;
         setTimeout(() => { returnThis = false }, 5*1000)
         if (bot.lobby) return;
-        if(!bot.joined) return;
+        if (!bot.joined) return;
         Object.values(bot.players).forEach(player => addPlayTime(player.username));
 
         function addPlayTime(player) {

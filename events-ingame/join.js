@@ -2,17 +2,21 @@ var Discord = require('discord.js');
 var Scriptdb = require('script.db');
 var fs=  require('fs');
 
+var checkOnly = false;
+
 module.exports = (bot, client, p) => {
     bot.countPlayers++;
     var username = p.username;
     var newUsername = username.replace(/_/ig, "\\_");
 
-    setTimeout(() => {
-        if(bot.botJoined) return;
-        bot.disconnectRequest = true;
-        bot.quit();
-    }, 3 * 60 * 1000);
-    
+    if(!checkOnly) {
+        checkOnly = true;
+        setTimeout(() => {
+            if(bot.botJoined) return;
+            bot.quit();
+        }, 3 * 60 * 1000);   
+    }
+
     var today = new Date()
     let day = ("00" + today.getDate()).slice(-2)
     let month = ("00" + (today.getMonth() + 1)).slice(-2)

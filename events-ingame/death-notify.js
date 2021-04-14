@@ -4,23 +4,38 @@ var Scriptdb = require("script.db");
 module.exports = (bot, client, message) => { 
 	var newcolor = 'DB2D2D';
 	var logger = message.toString();
-
 	var nocheck = message.toString().split(' ')[0];
 
 	if (nocheck.startsWith('<') && nocheck.endsWith(">")) return;
-
-	// var loggg = new Discord.MessageEmbed()
-	// 				.setDescription(logger);
-					
-	// if(!bot.dev) {
-	// 	client.channels.cache.get("797426761142632450").send(loggg);
-	// } else {
-	// 	client.channels.cache.get("802456011252039680").send(loggg);	
-	// }
+	
+	if(!bot.dev) {
+		client.channels.cache.get("797426761142632450").send(logger);
+	} else {
+		client.channels.cache.get("802456011252039680").send(logger);	
+	}
 
 	var notfMsg;
 	var colorNotf;
 	
+	var whisperMsgCheck = logger.split(' ')[1];
+	/*
+	if(whisperMsgCheck == "nhắn:") {
+		var checkDonator = logger.split(" ")[0];
+		var whisperMsg;
+
+		if(checkDonator.startsWith("[Donator]")) {
+			var username = checkDonator.replace(/\[Donator\]/ig, ""); // replace cai donator sang null
+			// check string length
+			whisperMsg = username + logger.substr(checkDonator.length);
+		}
+
+		var cancelOne = whisperMsg.replace(/_/ig, "\_");
+		var cancelTwo = cancelOne.replace(/`/ig, "\`");
+		var n = cancelTwo.replace("||", "\*");
+		var formatting = n.replace("*", "\*");
+
+		console.log(formatting)
+	} */
 	var splitLogger2 = logger.split(' ')[1];
 	if(splitLogger2 == "nhắn:") {
 		var firststr = logger.split(' ');
@@ -44,6 +59,7 @@ module.exports = (bot, client, message) => {
 		notfMsg = lognoformat;
 		colorNotf = "0xFD00FF";
 	}
+
 
 	if (logger.startsWith("nhắn cho")) {
 		var type = logger.split(" ")[2];
@@ -70,7 +86,6 @@ module.exports = (bot, client, message) => {
 	}
 
 	if(logger == "2y2c đã full") {
-		bot.checkJoined = true;
 		var fully = new Discord.MessageEmbed()
 					.setDescription("2y2c đã full")
 					.setColor(0xb60000);
@@ -145,12 +160,9 @@ module.exports = (bot, client, message) => {
 				client.channels.cache.get(bot.defaultChannel).send(embedNotf);
 		}
 	}
-	
 
 	var deathMsg;
-
-	// return essentials message with valid str
-	if(logger.startsWith("[") && logger.includes(" -> me]")) return;
+	// if(logger.startsWith("[") && logger.includes(" -> me]")) return;
 
 	// return messages
 	if(logger.startsWith("nhắn cho")) return;
@@ -159,8 +171,7 @@ module.exports = (bot, client, message) => {
 	if (logger === '2y2c đã full') return;
 	if (logger === 'Đang vào 2y2c') return;
 	if (logger === 'đang vào 2y2c...') return;
-	if (logger === undefined) return;
-	if (logger === null) return;
+	if (logger === undefined || logger == "null") return;
 
 	if (logger === "Donate để duy trì server admin đang đói chết con *ĩ *ẹ." || logger.startsWith("[Server]")
 			|| logger.startsWith("[Broadcast]") || logger == "Những ai muốn xài hack của bản 1.12 cho server hãy đọc phần #cách-chơi-cơ-bản trong discord 2y2c.") return;
@@ -287,20 +298,18 @@ module.exports = (bot, client, message) => {
 		if(dead == undefined) {
 			kd.set('deaths', 1);
 		} else {
-			kd.set('deaths', dead + 1);
+			kd.set('deaths', +dead + 1);
 		}
 	}
 
 	function saveKills(name) {
 		const kd = new Scriptdb(`./data/kd/${name}.json`);
 		var kill = kd.get('kills');
-
-		if(name == "Piglin" || name == "Zombie"  || name == "Zombified" || name == "Cave" || name == "Drowned") return;
 		
 		if(kill == undefined) {
 			kd.set('kills', 1);
 		} else {
-			kd.set('kills', kill + 1);
+			kd.set('kills', +kill + 1);
 		}
 	}
 

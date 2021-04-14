@@ -35,25 +35,4 @@ module.exports = (bot, client, data) => {
     const dataa = new Scriptdb(`./data.json`);
 
     dataa.set('tab-content', status + " | " + Date.now());
-
-    /*
-    if(topics !== undefined) {
-        client.channels.cache.get(bot.defaultChannel).setTopic(topics)
-        setTimeout(() => {
-			var guild = client.guilds.cache.map(guild => guild.id);
-			setInterval(() => {
-				if (guild[0]) {
-					const line = guild.pop()
-					const data = new bot.Scriptdb(`./data/guilds/setup-${line}.json`);
-					const checkdata = data.get('livechat');
-
-                    if(guild == undefined || checkdata == undefined) return;
-                    
-					try {
-                        client.channels.cache.get(checkdata).setTopic(topics)
-					} catch(e) {  }
-				}
-			}, 200);
-		}, 100)
-    } */
 }

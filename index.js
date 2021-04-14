@@ -108,12 +108,14 @@ function createBot() {
 
 	bot.client = client;
 
-	bot.on('windowOpen', verifyEvent.bind(null, bot));
+	bot._client.on('error',err => console.log(err))
 
-	bot.on('login', JoinedServerEvent.bind(null, bot, client))
-	bot.once('login', playtimeEvent.bind(null, bot))
+	bot.on('windowOpen', verifyEvent.bind(null, bot))
 
-	bot.on('message', (msg) => {
+	bot.on('connect', JoinedServerEvent.bind(null, bot, client))
+	bot.once('connect', playtimeEvent.bind(null, bot))
+
+	bot.on('message', msg => {
 		if (!(msg.toString().startsWith("<"))) return;
 		var nocheck = msg.toString().split(' ')[0];
 		var username1 = nocheck.replace(/</ig, "");
@@ -247,6 +249,13 @@ function createBot() {
 			}
 		}, 1* 1000);
 	});
+
+
+	// bot.on('login', () => { 
+	// 	let today = new Date().toLocaleTimeString()
+	// 	console.log(today)
+	// 	setInterval(() => { bot.chat("Testingggg") }, 1 * 60* 1000)
+	// })
 
 	bot.on("message", DeathftNotifyEvent.bind(null, bot, client));
 	bot.on("playerJoined", joinedEvent.bind(null, bot, client));

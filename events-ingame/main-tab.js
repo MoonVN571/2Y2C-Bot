@@ -42,8 +42,5 @@ module.exports = (bot, client, data) => {
         // var status = "TPS: " + tps;
         if(status.startsWith("§6Donate")) return;
         client.user.setActivity(status, { type: 'PLAYING' });
-        if(bot.debug) {
-            console.log(status)
-        }
     }, 5 * 1000)
 }
