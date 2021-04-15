@@ -12,9 +12,8 @@ module.exports = (bot, client, p) => {
     if(!checkOnly) {
         checkOnly = true;
         setTimeout(() => {
-            if(bot.joined) return;
+            if(bot.verified) return;
             bot.quit();
-            console.log("A")
         }, 3 * 60 * 1000);   
     }
 

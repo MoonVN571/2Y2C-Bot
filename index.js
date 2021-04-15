@@ -18,11 +18,7 @@ require('dotenv').config();
 
 const config = {
 	token: process.env.TOKEN,
-	ip: process.env.IP,
-	pin1: process.env.PIN1,
-	pin2: process.env.PIN2,
-	pin3: process.env.PIN3,
-	pin4: process.env.PIN4
+	ip: process.env.IP
 };
 
 var dev = true;
@@ -96,6 +92,7 @@ function createBot() {
 	var joined = false;
 	var restartingMsg = false; // Tin nhắn restart, cho status bot
 	var countPlayers = 0;
+	var verified = false;
 
 	// Import
 	bot.restartingMsg = restartingMsg;
@@ -105,6 +102,7 @@ function createBot() {
 	bot.oneInterval = oneInterval; // 1 lần duy nhất
 	bot.joined = joined;
 	bot.countPlayers = countPlayers;
+	bot.verified = verified; // check verify before disconnect
 
 	bot.client = client;
 
