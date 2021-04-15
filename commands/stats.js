@@ -1,3 +1,6 @@
+var Scriptdb = require('script.db');
+var Discord = require('discord.js');
+
 module.exports = {
     name: "stats",
     description: "stats command.",
@@ -6,7 +9,7 @@ module.exports = {
     async execute(client, message, args) {
         if (!args[0]) return message.channel.send(client.userNotFound);
 
-		const kd = new client.Scriptdb(`./data/kd/${args[0]}.json`);
+		const kd = new Scriptdb(`./data/kd/${args[0]}.json`);
 		let deads = kd.get('deaths');
 		let kills = kd.get('kills');
 
@@ -21,7 +24,7 @@ module.exports = {
 			ratioFixed = "0.00";
 		}
 
-        var embed = new client.Discord.MessageEmbed()
+        var embed = new Discord.MessageEmbed()
                         .setAuthor(`${args[0]}'s statistics`, `https://minotar.net/helm/${args[0]}`, `https://namemc.com/` + args[0])
                         .addField(`Kills`, `${kills}`, true)
                         .addField(`Deaths`, `${deads}`, true )

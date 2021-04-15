@@ -1,3 +1,5 @@
+var Scriptdb = require('script.db');
+
 module.exports = {
     name: "joindate",
     description: "joindate command.",
@@ -7,7 +9,7 @@ module.exports = {
         if(!args[0]) return;
         if(!args[0].match(bot.regex)) return;
 
-        let fj = new bot.Scriptdb(`./data/joindate/${args[0]}.json`);
+        let fj = new Scriptdb(`./data/joindate/${args[0]}.json`);
         let firstjoin = fj.get('date');
 
         if (firstjoin === undefined) return bot.whisper(username, `> Không tìm thấy người chơi.`);
