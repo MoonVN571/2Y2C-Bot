@@ -37,7 +37,7 @@ module.exports = (bot, client) => {
                     
                     try {
                         if(bot.dev) return;
-                        client.channels.cache.get(checkdata).setTopic(datas)
+                        client.channels.cache.get(checkdata).setTopic(datas + " - Đã vào server từ " + api.calcTime(hours, minutes) + "trước.")
                     } catch(e) {}
                 }
             }, 200);
@@ -60,8 +60,6 @@ module.exports = (bot, client) => {
         uptime.set(`uptime`, time);
     }
 
-    bot.disconnectRequest = false;
-    
     setInterval(() => {
         if(bot.lobby) return;
         if (stats) return;

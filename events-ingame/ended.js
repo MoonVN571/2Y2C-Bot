@@ -4,51 +4,29 @@ var Discord = require('discord.js');
 var Scriptdb = require('script.db');
 var waitUntil = require('wait-until');
 
+var a = require("../api");
+var api = new a();
+
 module.exports = (bot, client) => {
     client.user.setActivity("");
 
 	console.log('---------- BOT ENDED ----------');
 
     totalSecondss = 0;
-
-    const uptime = new Scriptdb(`./data.json`);
-    let ut = uptime.get('uptime');
-
-    if(ut === undefined) {
-        var d = new Date();
-        var time = d.getTime();
-        uptime.set(`uptime`, time);
-    } else {
-        var d = new Date();
-        var time = d.getTime();
-        uptime.delete(`uptime`)
-        uptime.set(`uptime`, time);
-    }
-
-    function uptimeCalc() {
-        const u = new Scriptdb(`./data.json`);
-        let uptime = u.get('uptime');
-
-        var d = new Date();
-        var timenow = d.getTime();
-
-        var ticks = timenow - uptime;
-        var temp = ticks / 1000;
-        var day = hours = 0, minutes = 0, seconds = 0;
-        hours = parseInt(((temp - day * 86400) / 3600))
-        minutes = parseInt(((temp - day * 86400 - hours * 3600)) / 60)
-        seconds = parseInt(temp % 60)
-        if(uptime === undefined) {
-            hours = 0;
-            minutes = 0;
-            seconds = 0;
-        }
-        return `${hours}h ${minutes}m ${seconds}s`; 
-    }
+    // if(ut === undefined) {
+    //     var d = new Date();
+    //     var time = d.getTime();
+    //     uptime.set(`uptime`, time);
+    // } else {
+    //     var d = new Date();
+    //     var time = d.getTime();
+    //     uptime.delete(`uptime`)
+    //     uptime.set(`uptime`, time);
+    // }
 
     setTimeout(() => {
         var log = new Discord.MessageEmbed()
-                        .setDescription("Bot đã mất kết nối đến server. Kết nối lại sau 1 phút." + `\nĐã hoạt động từ ${uptimeCalc()} trước.`)
+                        .setDescription("Bot đã mất kết nối đến server. Kết nối lại sau 1 phút." + `\nĐã hoạt động từ ${api.uptimeCalc()} trước.`)
                         .setColor("F71319");
 
         var notf = new Discord.MessageEmbed()
@@ -56,26 +34,28 @@ module.exports = (bot, client) => {
                                 .setColor("F71319");
         
                                 
-        if(bot.joined && !bot.dev) {
+        if(bot.joined) {
             setTimeout(() => {
                 client.channels.cache.get(bot.defaultChannel).send(notf);
             
-                setTimeout(() => {
-                    var guild = client.guilds.cache.map(guild => guild.id);
-                        setInterval(() => {
-                            if (guild[0]) {
-                                const line = guild.pop()
-                                const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
-                                const checkdata = data.get('livechat');
+                if(!bot.dev) {
+                    setTimeout(() => {
+                        var guild = client.guilds.cache.map(guild => guild.id);
+                            setInterval(() => {
+                                if (guild[0]) {
+                                    const line = guild.pop()
+                                    const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
+                                    const checkdata = data.get('livechat');
 
-                                if(checkdata == undefined || guild == undefined) return;
+                                    if(checkdata == undefined || guild == undefined) return;
 
-                                try {
-                                    client.channels.cache.get(checkdata).send(notf);
-                                } catch(e) {}
-                            }
-                        }, 200);
-                }, 1*100);
+                                    try {
+                                        client.channels.cache.get(checkdata).send(notf);
+                                    } catch(e) {}
+                                }
+                            }, 200);
+                    }, 1*100);
+                }
 
             }, 3*1000);
 

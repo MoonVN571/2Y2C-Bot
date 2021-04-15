@@ -36,6 +36,29 @@ function API() {
         }
         return age;
     }
+ 
+    this.uptimeCalc = () => {
+        var Scriptdb = require('script.db');
+        const uptime = new Scriptdb(`./data.json`);
+        let ut = uptime.get('uptime');
+
+        var d = new Date();
+        var timenow = d.getTime();
+
+        var ticks = timenow - ut;
+        var temp = ticks / 1000;
+        var day = hours = 0, minutes = 0, seconds = 0;
+        hours = parseInt(((temp - day * 86400) / 3600))
+        minutes = parseInt(((temp - day * 86400 - hours * 3600)) / 60)
+        seconds = parseInt(temp % 60)
+        if(uptime === undefined) {
+            hours = 0;
+            minutes = 0;
+            seconds = 0;
+        }
+        return hours + "h " + minutes + "m " + seconds + "s";
+    }
+
 
     this.calcTime = (hours, minutes) => {
         var formatMinutes;
