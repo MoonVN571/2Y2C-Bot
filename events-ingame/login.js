@@ -76,7 +76,7 @@ module.exports = (bot, client) => {
     if(check) return;
     check = true;
 
-    setTimeout(() => { check = false; }, 1 * 60 * 1000 + 30 * 1000)
+    setTimeout(() => { check = false; }, 30 * 1000)
 
     setInterval(() => {
         fs.readFile("ads.txt", 'utf8', function (err, data) {

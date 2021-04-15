@@ -24,7 +24,7 @@ module.exports = (bot, client, p) => {
         }
         fs.readFileSync("special-join.txt",  (err, data) => {
             if (err) throw err;
-            if(data.includes(username)) {
+            if(data.toString().includes(username)) {
                 if(bot.dev) return;
                 var embed = new Discord.MessageEmbed()
                                         .setDescription(newUsername + " left")
