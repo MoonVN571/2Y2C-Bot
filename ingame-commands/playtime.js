@@ -1,3 +1,5 @@
+var Scriptdb = require('script.db');
+
 module.exports = {
     name: "playtime",
     description: "playtime command.",
