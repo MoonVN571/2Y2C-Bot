@@ -272,85 +272,6 @@ function createBot() {
 
 		if (msg.author.bot) return
 
-		if (dev) {
-			if (msg.channel.id === "802456011252039680") {
-				if (msg.author == client.user) return;
-				setTimeout(() => {
-					bot.chat(msg.content);
-				}, 1 * 1000);
-			}
-			if (msg.channel.id == '802454010400604161') {
-				console.log(msg.content)
-
-				if (msg.content.startsWith(">")) return;
-				if (msg.content.startsWith(prefix)) return;
-
-				var content = msg.content;
-				
-				if(!content) return;
-				
-				if(command === "w") {
-					if((msg.content.startsWith("/"))) {
-						var correctContent = content.substr(2, content.length + 1);
-						var str = correctContent;
-						var chat = str.charAt(0).toUpperCase() + str.substr(3, str.length);
-
-						setTimeout(() => {
-							bot.chat(`/r [${msg.author.tag}] ${chat}`);
-						}, 1*1000);
-					}
-				}
-
-				if(command === "r") {
-					if((msg.content.startsWith("/"))) {
-						var correctContent = content.substr(2, content.length + 1);
-						var str = correctContent;
-						var chat = str.charAt(0).toUpperCase() + str.substr(1, str.length);
-
-						setTimeout(() => {
-							bot.chat(`/r [${msg.author.tag}] ${chat}`);
-						}, 1*1000);
-					}
-				}
-				
-				var str = msg.content.toString().split('\n')[0];
-				var chat= str.charAt(0).toUpperCase() + str.substr(1, str.length);
-				
-				if(msg.content.startsWith("/")) return;
-				if(msg.author.bot) return;
-				  
-				var u = msg.mentions.members.first();
-				var str = chat.split(">")[0].split("<@!")[1]; 
-		
-				var user = client.users.cache.find(user => user.id === str)
-				
-				var chatNew = chat;
-				var chatNewNew = chatNew;
-				if(u && user !== undefined) {
-					try {
-					chatNewNew  = chatNew.replace("<@!", "").replace(">", user.tag).replace(str, "")
-					} catch(e) {
-						console.log(e)
-					}
-				} else {
-					chatNewNew = chatNew;
-				}
-
-				if(!chat.endsWith(".")) {
-					chatNewNew = chatNewNew + ".";
-				}
-
-				setTimeout(() => {
-					bot.chat(`『 DEV: ${msg.author.tag} 』 ${chatNewNew}`);
-				}, 1 * 1000);
-
-				const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");
-				msg.react(send);
-			}
-			return;
-		}
-		// trên là dev mode
-
 		if (msg.channel.id === '797426761142632450') {
 			if (msg.author == client.user) return;
 			setTimeout(() => {
@@ -358,7 +279,7 @@ function createBot() {
 			}, 1 * 1000);
 		}
 
-		if (msg.channel.id == '795135669868822528') {
+		if (msg.channel.id == '795135669868822528' || msg.channel.id == "802456011252039680") {
 			if (msg.content.startsWith(">")) return;
 			if (msg.content.startsWith(prefix)) return;
 
@@ -389,14 +310,14 @@ function createBot() {
 			}
 
 			var str = msg.content.toString().split('\n')[0];
-			var chat= str.charAt(0).toUpperCase() + str.substr(1, str.length);
+			var chat = str.charAt(0).toUpperCase() + str.substr(1);
 			
 			if(msg.content.startsWith("/")) return;
 			if(msg.author.bot) return;
 
 			var chatnew = chat;
 			if(!chatnew.endsWith(".")) {
-				chatNew = chatNew + ".";
+				chatnew = chatnew + ".";
 			}
 
 			setTimeout(() => {

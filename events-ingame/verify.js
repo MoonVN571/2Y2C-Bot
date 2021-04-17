@@ -1,12 +1,4 @@
-var countOpen = 0;
-
-var one = false;
 module.exports = (bot) => {
-    if(one) return;
-    one = true;
-
-    setTimeout(() => { one = false}, 20 * 1000)
-    //console.log("evnet")
     var pin1 = 4;
     var pin2 = 3;
     var pin3 = 7;

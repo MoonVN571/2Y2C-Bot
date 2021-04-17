@@ -17,14 +17,16 @@ var a = require('../api');
 var api = new a();
 
 module.exports = (bot, client) => {
+    totalSeconds = 0;
     function setTime2() {
         totalSeconds += 300;
         hours = parseInt(totalSeconds / 3600);
         minutes = parseInt((totalSeconds - (hours * 3600)) / 60);
         
-        var datas = new Scriptdb(`./data.json`).get('tab-content').toString().split("    | ")[0];
+        var datas = new Scriptdb(`./data.json`).get('tab-content').toString().split("| ")[0];
 
         client.channels.cache.get(bot.defaultChannel).setTopic(datas + " - Đã vào server từ " + api.calcTime(hours, minutes) + "trước.");
+
         setTimeout(() => {
             var guild = client.guilds.cache.map(guild => guild.id);
             setInterval(() => {
