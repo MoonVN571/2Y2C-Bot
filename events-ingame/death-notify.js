@@ -109,10 +109,36 @@ module.exports = (bot, client, message) => {
 
 			client.channels.cache.get(bot.defaultChannel).send(fully);
 		}, 1000)
+		return;
 	}
 
-	if (logger == "Đang vào 2y2c"
-	|| logger == "đang vào 2y2c..."
+	if(logger == "Đang vào 2y2c") {
+		var fully = new Discord.MessageEmbed()
+					.setDescription("Đang vào 2y2c")
+					.setColor(0xb60000);
+		
+		setTimeout(() => {
+			var guild = client.guilds.cache.map(guild => guild.id);
+			setInterval(() => {
+				if (guild[0]) {
+					const line = guild.pop()
+					const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
+					const checkdata = data.get('livechat');
+	
+					if(guild == undefined || checkdata == undefined) return;
+	
+					try {
+						if(bot.dev) return;
+						client.channels.cache.get(checkdata).send(fully);
+					} catch(e) {}
+				}
+			}, 200);
+
+			client.channels.cache.get(bot.defaultChannel).send(fully);
+		}, 1500);
+	}
+
+	if (logger == "đang vào 2y2c..."
 	|| logger.startsWith("[Server]")
 	|| logger.startsWith("[AutoRestart]")
 	|| logger.startsWith("Bad command")
@@ -162,9 +188,7 @@ module.exports = (bot, client, message) => {
 	}
 
 	var deathMsg;
-	// if(logger.startsWith("[") && logger.includes(" -> me]")) return;
 
-	// return messages
 	if(logger.startsWith("nhắn cho")) return;
 	if(splitLogger2 == "nhắn:") return;
 

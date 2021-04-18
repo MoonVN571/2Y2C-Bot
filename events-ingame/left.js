@@ -6,7 +6,7 @@ module.exports = (bot, client, p) => {
     var username = p.username;
     var newUsername = username.replace(/_/ig, "\\_");
 
-    if (username === "Ha_My" || username === "PhanThiHaMy") {
+    if (username === "Ha_My") {
         if(bot.dev) return;
         client.channels.cache.get("807048523027578890").send(username + " left");
     }

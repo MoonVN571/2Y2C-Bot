@@ -1,9 +1,11 @@
 var Scriptdb = require('script.db');
 
+var oneInterval = false;
+var returnThis = false;
+
 module.exports = (bot) => {
-    if(bot.oneInterval) return;
-    bot.oneInterval = true;
-    var returnThis = false;
+    if(oneInterval) return;
+    oneInterval = true;
     setInterval(() => {
         if(returnThis) return;
         returnThis = true;

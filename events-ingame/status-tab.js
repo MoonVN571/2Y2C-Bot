@@ -32,6 +32,14 @@ module.exports = (bot, client, data) => {
         status = ss8.replace(" *", "")
     }
 
+    if(ss8.startsWith("*")) {
+        status = ss8.replace("*", "")
+    }
+
+    if(status.split(" ")[0].startsWith("")) {
+        status = ss8.split(" ")[0].replace("", " ") + ss8.substr(2)
+    }
+
     const dataa = new Scriptdb(`./data.json`);
 
     dataa.set('tab-content', status + " | " + Date.now());

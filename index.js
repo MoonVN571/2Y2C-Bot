@@ -110,8 +110,8 @@ function createBot() {
 
 	bot.on('windowOpen', verifyEvent.bind(null, bot))
 
-	bot.on('connect', JoinedServerEvent.bind(null, bot, client))
-	bot.once('connect', playtimeEvent.bind(null, bot))
+	bot.on('login', JoinedServerEvent.bind(null, bot, client))
+	bot.once('login', playtimeEvent.bind(null, bot))
 
 	bot.on('message', msg => {
 		if (!(msg.toString().startsWith("<"))) return;

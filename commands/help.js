@@ -31,7 +31,8 @@ module.exports = {
                                 prefix + 'prio - ``Xem thông số server.``\n' +
                                 prefix + 'uptime - ``Xem thông số server.``\n' +
                                 prefix + 'setup - ``Cài đặt bot cho livechat.``' +
-                                prefix + 'invite - ``Mời bot vào servers của bạn.`')
+                                prefix + 'invite - ``Mời bot vào servers của bạn.`'+
+                                prefix + 'serverstatus - ``Xem hàng chờ, ưu tiên và online.`` \n')
                 .addField("\u200b", '\n\nBạn có thể thêm bot cho discord [tại đây](https://discord.com/api/oauth2/authorize?client_id=768448728125407242&permissions=8&scope=bot).')
                 .setFooter(footer)
                 .setTimestamp();
