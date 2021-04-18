@@ -6,14 +6,14 @@ module.exports = {
     aliases: [''],
     
     async execute(client, message, args) {
-        if (!message.member.hasPermission('ADMINISRTATOR')) return message.channel.send("Không có quyền để dùng lệnh này.")
+        if (!message.guild.member(message.author).hasPermission("ADMINISTRATOR")) return message.channel.send("Không có quyền để dùng lệnh này.")
 
         var prefix = client.prefix;
         
         if(!args[0]) return message.channel.send("Cách dùng: " + prefix + "setup chat <tag hoặc nhập id kênh>");
         
         if(args[0] === "chat") {
-            if(!args[1]) return message.channel.send("Cách dùng: " + prefix + "setup <chat hoặc stats> <tag hoặc nhập id kênh>");
+            if(!args[1]) return message.channel.send("Cách dùng: " + prefix + "setup chat <tag hoặc nhập id kênh>");
 
             var channel;
             channel = message.content.replace(/\D/g,'');
