@@ -55,6 +55,12 @@ module.exports = (bot, client) => {
                 client.channels.cache.get("806881615623880704").send(log);
             }
         }
+        
+        var Scriptdb = require('script.db');
+        const uptime = new Scriptdb(`./data.json`);
+        uptime.delete('tab-content');
+        uptime.delete('uptime');
+
 
         waitUntil(60 * 1000, 50, function condition() {
             try {

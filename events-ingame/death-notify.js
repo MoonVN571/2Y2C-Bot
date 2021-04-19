@@ -17,6 +17,10 @@ module.exports = (bot, client, message) => {
 	var notfMsg;
 	var colorNotf;
 	
+    if(logger == "[AutoRestart] Server sẽ Restart sau 1 phút!") {
+		client.channels.cache.get("816914356230684692").send("@here " + logger + " || death-notify.js line 21");
+    }
+
 	var whisperMsgCheck = logger.split(' ')[1];
 	/*
 	if(whisperMsgCheck == "nhắn:") {

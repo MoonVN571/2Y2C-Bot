@@ -36,8 +36,8 @@ module.exports = (bot, client, data) => {
         status = ss8.replace("*", "")
     }
 
-    if(status.split(" ")[0].startsWith("")) {
-        status = ss8.split(" ")[0].replace("", " ") + ss8.substr(2)
+    if(!ss8.split(" ")[0].endsWith("tps")) {
+        status = " " + ss8;
     }
 
     const dataa = new Scriptdb(`./data.json`);

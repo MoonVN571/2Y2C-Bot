@@ -31,8 +31,8 @@ module.exports = (bot, client, data) => {
         if(currentQueue == "None") return;
         if (s7 === undefined) return;
 
-        var q = currentQueue + "/" + bot.api.getQueue();			
-        var status = "Trong hàng chờ: " + q + " - Chờ: " + bot.api.getQueue();
+        var q = currentQueue + "/" + api.getQueue();			
+        var status = "Trong hàng chờ: " + q + " - Chờ: " + api.getQueue();
 
         if(status === undefined) return;
             client.user.setActivity(status, { type: 'PLAYING' });
@@ -57,7 +57,7 @@ module.exports = (bot, client, data) => {
                     
                     try {
                         client.channels.cache.get(checkdata).send(embed);
-                    } catch(e) {  }
+                    } catch(e) {}
                 }
             }, 1000);
         }, 100)
