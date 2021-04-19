@@ -6,7 +6,7 @@ module.exports = (bot, client, p) => {
     var username = p.username;
     var newUsername = username.replace(/_/ig, "\\_");
 
-    if (username === "Ha_My") {
+    if (username === "Ha_My" || username == "PhanThiHaMy") {
         if(bot.dev) return;
         client.channels.cache.get("807048523027578890").send(username + " left");
     }
@@ -22,7 +22,7 @@ module.exports = (bot, client, p) => {
         if(newUsername == undefined) {
             newUsername = username;
         }
-        fs.readFileSync("special-join.txt",  (err, data) => {
+        fs.readFile("special-join.txt",  (err, data) => {
             if (err) throw err;
             if(data.includes(username)) {
                 if(bot.dev) return;

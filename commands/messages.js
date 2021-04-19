@@ -24,11 +24,11 @@ module.exports = {
 		var msg3 = messages.split(" | ")[4]
 		var msg4 = messages.split(" | ")[5]
 
-		var time0 = times.split(" | ")[times.split(" | ").length - 1]
-		var time1 = times.split(" | ")[times.split(" | ").length - 2]
-		var time2 = times.split(" | ")[times.split(" | ").length - 3]
-		var time3 = times.split(" | ")[times.split(" | ").length - 4]
-		var time4 = times.split(" | ")[times.split(" | ").length - 5]
+		var time0 = times.split(" | ")[1]
+		var time1 = times.split(" | ")[2]
+		var time2 = times.split(" | ")[3]
+		var time3 = times.split(" | ")[4]
+		var time4 = times.split(" | ")[5]
 		
 		var data = `***${api.ageCalc(time0)} trước***: ${msg0}\n***${api.ageCalc(time0)} trước***: ${msg1}\n***${api.ageCalc(time2)} trước***: ${msg2}\n***${api.ageCalc(time3)} trước***: ${msg3}\n***${api.ageCalc(time4)} trước***: ${msg4}\n`;
 		

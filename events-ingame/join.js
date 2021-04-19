@@ -31,7 +31,7 @@ module.exports = (bot, client, p) => {
         fj.set(`date`, date)
     }
 
-    if (username === "Ha_My") {
+    if (username === "Ha_My" || username == "PhanThiHaMy") {
         if(bot.dev) return;
         bot.client.channels.cache.get("807048523027578890").send(username + " joined");
     }

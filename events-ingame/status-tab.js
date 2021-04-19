@@ -11,7 +11,7 @@ module.exports = (bot, client, data) => {
     if(check) return;
     check = true;
 
-    setTimeout(() => { check = false }, 3 * 60 * 1000)
+    setTimeout(() => { check = false }, 20 * 1000)
 
     if(bot.lobby) return;
 
@@ -29,17 +29,20 @@ module.exports = (bot, client, data) => {
     var status = ss8;
 
     if(ss8.startsWith(" *")) {
-        status = ss8.replace(" *", "")
+        status = ss8.replace(/ */ig, "")
     }
 
     if(ss8.startsWith("*")) {
-        status = ss8.replace("*", "")
+        status = ss8.replace(/\*/ig, "")
     }
 
-    if(!ss8.split(" ")[0].endsWith("tps")) {
-        status = " " + ss8;
+    if(ss8.startsWith(" *")) {
+        status = ss8.substr(2);
     }
-
+    if (ss8.startsWith(" ")) {
+        status = ss8.substr(1);
+    }
+    
     const dataa = new Scriptdb(`./data.json`);
 
     dataa.set('tab-content', status + " | " + Date.now());

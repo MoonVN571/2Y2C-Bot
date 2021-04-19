@@ -196,7 +196,7 @@ function createBot() {
 			setTimeout(() => {
 				color = "0x797979";
 				client.channels.cache.get(defaultChannel).send(chat);
-			}, 100);
+			}, 50);
 		}
 	
 		saveMsgsData(username, logger);
@@ -272,6 +272,14 @@ function createBot() {
 
 		if (msg.author.bot) return
 
+		if (msg.channel.id === '802456011252039680') {
+			if (msg.author == client.user) return;
+			setTimeout(() => {
+				bot.chat(msg.content);
+			}, 1 * 1000);
+		}
+
+
 		if (msg.channel.id === '797426761142632450') {
 			if (msg.author == client.user) return;
 			setTimeout(() => {
@@ -279,7 +287,7 @@ function createBot() {
 			}, 1 * 1000);
 		}
 
-		if (msg.channel.id == '795135669868822528' || msg.channel.id == "802456011252039680") {
+		if (msg.channel.id == '795135669868822528') {
 			if (msg.content.startsWith(">")) return;
 			if (msg.content.startsWith(prefix)) return;
 
