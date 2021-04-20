@@ -77,7 +77,6 @@ function createBot() {
 	const leftEvent = require(`./events-ingame/left.js`);
 	const queueEvent = require(`./events-ingame/queue-tab.js`);
 	const mainEvent = require(`./events-ingame/main-tab.js`);
-	const restartEvent = require(`./events-ingame/restart-notify.js`);
 	const ServerStatusEvent = require(`./events-ingame/status-tab.js`);
 	const verifyEvent = require('./events-ingame/verify.js');
 	const playtimeEvent = require('./events-ingame/playtime.js');
@@ -115,32 +114,9 @@ function createBot() {
 
 	bot.on('message', msg => {
 		if (!(msg.toString().startsWith("<"))) return;
-		var nocheck = msg.toString().split(' ')[0];
-		var username1 = nocheck.replace(/</ig, "");
-		var username2 = username1.replace(/>/ig, "");
-		var username;
-		if (username2.startsWith("[2B2T]")) {
-			username = username2.replace("[2B2T]", "")
-		} else {
-			if (username2.startsWith("[Donator]")) {
-				username = username2.replace("[Donator]", "");
-			} else {
-				username = username2;
-			}
-		}
 
-		var log = msg.toString().replace(username, "");
-		var logger;
-		if (log.startsWith("<[Donator]")) {
-			logger = log.replace("<[Donator]> ", "")
-		} else {
-			if (log.startsWith("<[2B2T]")) {
-				logger = log.replace("<[2B2T]> ", "")
-	
-			} else {
-				logger = log.replace("<> ", "")
-			}
-		}
+		var username = msg.toString().split(" ")[0].split("<")[1].split(">")[0];
+		var logger = msg.toString().substr(username.length + 2);
 	
 		if (logger.startsWith(">")) {
 			color = "2EA711";
@@ -150,15 +126,8 @@ function createBot() {
 		const dausao = dauhuyen.replace(/_/ig, "\\_");
 		const s = dausao.replace("||", "\\||");
 		const newLogger = s.replace("*", "\\*");
+
 		var newUsername = username;
-	
-		if(username !== undefined) {
-			newUsername = username.replace(/_/ig, "\\_");
-		}
-		
-		if (newLogger === undefined) {
-			newLogger = logger;
-		}
 	
 		var bp;
 		if (dev) {
@@ -167,7 +136,6 @@ function createBot() {
 			bp = "!";
 		}
 
-		// MAIN chat
 		var chat = new Discord.MessageEmbed()
 						.setDescription(`**<${newUsername}>** ${newLogger}`)
 						.setColor(color);
@@ -258,7 +226,6 @@ function createBot() {
 	bot.on("message", DeathftNotifyEvent.bind(null, bot, client));
 	bot.on("playerJoined", joinedEvent.bind(null, bot, client));
 	bot.on("playerLeft", leftEvent.bind(null, bot, client));
-	bot.on("chat", restartEvent.bind(null, bot, client));
 	bot._client.on("playerlist_header", ServerStatusEvent.bind(null, bot, client));
 	bot._client.on("playerlist_header", mainEvent.bind(null, bot, client));
 	bot._client.on("playerlist_header", queueEvent.bind(null, bot, client));
@@ -267,9 +234,6 @@ function createBot() {
 	bot.on('end', endedEvent.bind(null, bot, client));
 
 	client.on('message', msg => {
-		const args = msg.content.slice("/".length).trim().split(/ +/g);
-		const command = args.shift().toLowerCase();
-
 		if (msg.author.bot) return
 
 		if (msg.channel.id === '802456011252039680') {
@@ -294,28 +258,6 @@ function createBot() {
 			var content = msg.content;
 			
 			if(!content) return;
-			
-			if(command === "w" || command == "whisper") {
-				if((msg.content.startsWith("/"))) {
-					var chat = content.charAt(0).toUpperCase() + content.substr(args[0].length + 1 + args[1].length + 1, str.length);
-
-					var chatt =chat.charAt(0).toUpperCase(); 
-					setTimeout(() => {
-						bot.chat(`/r [${msg.author.tag}] ${chatt}`);
-					}, 1*1000);
-				}
-			}
-
-			if(command === "r") {
-				if((msg.content.startsWith("/"))) {
-					var chat = content.substr(args[0].length + 1 + args[1].length + 1, str.length);
-
-					var chatt =chat.charAt(0).toUpperCase(); 
-					setTimeout(() => {
-						bot.chat(`/r [${msg.author.tag}] ${chatt}`);
-					}, 1*1000);
-				}
-			}
 
 			var str = msg.content.toString().split('\n')[0];
 			var chat = str.charAt(0).toUpperCase() + str.substr(1);

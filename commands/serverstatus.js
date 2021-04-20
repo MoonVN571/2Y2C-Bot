@@ -6,7 +6,7 @@ var api = new abc();
 module.exports = {
     name: "serverstatus",
     description: "serverstatus command.",
-    aliases: ['serverstatus'],
+    aliases: ['ss'],
     
     async execute(client, message, args) {
         const embed = new Discord.MessageEmbed()

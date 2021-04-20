@@ -10,18 +10,11 @@ module.exports = (bot, client, p) => {
         if(bot.dev) return;
         client.channels.cache.get("807048523027578890").send(username + " left");
     }
-
-    if (newUsername === undefined) {
-        newUsername = username;
-    }
-
+    
     if(bot.countPlayers <= Object.values(bot.players).map(p => p.username).length) return;
 
     check(username, newUsername);
     function check(username, newUsername) {
-        if(newUsername == undefined) {
-            newUsername = username;
-        }
         fs.readFile("special-join.txt",  (err, data) => {
             if (err) throw err;
             if(data.includes(username)) {

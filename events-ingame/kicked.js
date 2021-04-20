@@ -9,11 +9,6 @@ module.exports = (bot, client, reason, loggedIn) => {
 
     if(reason == undefined) return;
 
-    if (reason.includes("đang restart quay lại sau")) {
-        // bot.isRestarting = true;
-        // bot.unknownReason = false;
-    }
-
     var r =  reason.toString().replace(/\{"extra":\[{"text":"|"},{"color":"gold","text":"|"}\],"text":""|{"text":"|"}}/ig).toString().replace(/}|undefined|"|{color:gold,text:/ig, '').toString().replace(/{|color:gold,text:/ig, "");
 
     var embed = new Discord.MessageEmbed()

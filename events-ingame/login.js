@@ -1,10 +1,6 @@
 var check = false;
 var stats = false;
 
-var hours = 0;
-var minutes = 0;
-var totalSeconds = 0;
-
 
 var stats = false;
 var sending = false;
@@ -17,13 +13,19 @@ var a = require('../api');
 var api = new a();
 
 module.exports = (bot, client) => {
-    totalSeconds = 0;
+    var hours = 0;
+    var minutes = 0;
+    var totalSeconds = 0;
+    
     function setTime2() {
         totalSeconds += 300;
         hours = parseInt(totalSeconds / 3600);
         minutes = parseInt((totalSeconds - (hours * 3600)) / 60);
         
-        var datas = new Scriptdb(`./data.json`).get('tab-content').toString().split("| ")[0];
+        var get = new Scriptdb(`./data.json`).get('tab-content');
+        if(get == undefined) return;
+        
+        var datas = get.toString().split("| ")[0];
 
         client.channels.cache.get(bot.defaultChannel).setTopic(datas + " - Đã vào server từ " + api.calcTime(hours, minutes) + "trước.");
 

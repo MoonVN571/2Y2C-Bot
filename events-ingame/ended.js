@@ -56,7 +56,6 @@ module.exports = (bot, client) => {
             }
         }
         
-        var Scriptdb = require('script.db');
         const uptime = new Scriptdb(`./data.json`);
         uptime.delete('tab-content');
         uptime.delete('uptime');

@@ -2,6 +2,9 @@ var check = false;
 
 var Discord = require('discord.js');
 
+var a = require("../api");
+var api = new a();
+
 module.exports = (bot, client, data) => {
     if(check) return;
     check = true;

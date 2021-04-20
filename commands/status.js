@@ -46,12 +46,13 @@ module.exports = {
                         inline: true
                     },
                     {
-                        name: 'Chờ - Ưu tiên',
-                        value: api.getQueue() + " - " + api.getPrio(),
+                        name: 'Hàng chờ',
+                        value: "Gõ " + prefix + "queue",
                         inline: true
                     }
                     )
                 .setFooter('Cập nhật từ ' + api.ageCalc(timepassed) + " trước.", 'https://cdn.discordapp.com/avatars/768448728125407242/aa2ce1d9374de6fc0dd28d349ca135af.webp?size=1024')
+                .setColor(0x000DFF)
                 .setTimestamp();
 
 		message.channel.send(embed);

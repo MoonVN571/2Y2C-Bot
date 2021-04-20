@@ -16,31 +16,13 @@ module.exports = (bot, client, message) => {
 
 	var notfMsg;
 	var colorNotf;
-	
-    if(logger == "[AutoRestart] Server sẽ Restart sau 1 phút!") {
-		client.channels.cache.get("816914356230684692").send("@here " + logger + " || death-notify.js line 21");
+
+    if (logger === "[AutoRestart] Server Restarting!" || logger == "[AutoRestart] Server sẽ Restart sau 1 phút!") {
+        client.channels.cache.get('795534684967665695').send("@everyone " + logger);
     }
 
-	var whisperMsgCheck = logger.split(' ')[1];
-	/*
-	if(whisperMsgCheck == "nhắn:") {
-		var checkDonator = logger.split(" ")[0];
-		var whisperMsg;
-
-		if(checkDonator.startsWith("[Donator]")) {
-			var username = checkDonator.replace(/\[Donator\]/ig, ""); // replace cai donator sang null
-			// check string length
-			whisperMsg = username + logger.substr(checkDonator.length);
-		}
-
-		var cancelOne = whisperMsg.replace(/_/ig, "\_");
-		var cancelTwo = cancelOne.replace(/`/ig, "\`");
-		var n = cancelTwo.replace("||", "\*");
-		var formatting = n.replace("*", "\*");
-
-		console.log(formatting)
-	} */
 	var splitLogger2 = logger.split(' ')[1];
+
 	if(splitLogger2 == "nhắn:") {
 		var firststr = logger.split(' ');
 		var newlog = logger;
@@ -107,7 +89,7 @@ module.exports = (bot, client, message) => {
 					try {
 						if(bot.dev) return;
 						client.channels.cache.get(checkdata).send(fully);
-					} catch(e) {  }
+					} catch(e) {}
 				}
 			}, 200);
 

@@ -49,16 +49,9 @@ module.exports = (bot, client, p) => {
 
     if(bot.countPlayers <= Object.values(bot.players).map(p => p.username).length) return;
 
-    if (newUsername === undefined) {
-        newUsername = username;
-    }
-
     check(username);
     function check(username) {
-        var newUsername = username.replace(/_/ig, "\\_");;
-        if(newUsername == undefined) {
-            newUsername = username;
-        }
+        var newUsername = username.replace(/_/ig, "\\_");
         
         fs.readFile("special-join.txt", 'utf8', (err, data) => {
             if (err) throw err;
