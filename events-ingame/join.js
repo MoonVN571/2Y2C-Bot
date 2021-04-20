@@ -35,18 +35,6 @@ module.exports = (bot, client, p) => {
         if(bot.dev) return;
         bot.client.channels.cache.get("807048523027578890").send(username + " joined");
     }
-    
-    var d = new Date();
-    var time = d.getTime();
-    let lastseen = new Scriptdb(`./data/seen/${username}.json`);
-    var ls = lastseen.get('seen')
-
-    if (ls === undefined) {
-        lastseen.set('seen', time);
-    } else {
-        lastseen.set('seen', time);
-    }
-
     if(bot.countPlayers <= Object.values(bot.players).map(p => p.username).length) return;
 
     check(username);

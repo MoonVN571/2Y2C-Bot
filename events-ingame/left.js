@@ -5,7 +5,18 @@ var fs = require('fs');
 module.exports = (bot, client, p) => {
     var username = p.username;
     var newUsername = username.replace(/_/ig, "\\_");
+    
+    var d = new Date();
+    var time = d.getTime();
+    let lastseen = new Scriptdb(`./data/seen/${username}.json`);
+    var ls = lastseen.get('seen')
 
+    if (ls === undefined) {
+        lastseen.set('seen', time);
+    } else {
+        lastseen.set('seen', time);
+    }
+    
     if (username === "Ha_My" || username == "PhanThiHaMy") {
         if(bot.dev) return;
         client.channels.cache.get("807048523027578890").send(username + " left");

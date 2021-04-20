@@ -1,6 +1,7 @@
 var check = false;
 
 var Discord = require('discord.js');
+var Scriptdb = require('script.db');
 
 var a = require("../api");
 var api = new a();
@@ -53,7 +54,7 @@ module.exports = (bot, client, data) => {
             setInterval(() => {
                 if (guild[0]) {
                     const line = guild.pop()
-                    const data = new bot.Scriptdb(`./data/guilds/setup-${line}.json`);
+                    const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
                     const checkdata = data.get('livechat');
 
                     if(guild == undefined || checkdata == undefined) return;
