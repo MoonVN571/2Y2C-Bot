@@ -60,7 +60,7 @@ module.exports = {
                         + `-   **Ram:** ${memCalc} / ${maxMemCalc}\n`
                         + "-   **CPU:** " + os.cpus()[0].model + "\n"
                         + "-   **Cores:** " + os.cpus().length + "\n"
-                        + "-   **Speed:** " + os.cpus()[0].speed + "Mhz"
+                        + "-   **Speed:** " + os.cpus()[0].speed + "MHz"
                         )
                 .setColor(0x000DFF)
                 .setTimestamp()

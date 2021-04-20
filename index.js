@@ -116,8 +116,14 @@ function createBot() {
 		if (!(msg.toString().startsWith("<"))) return;
 
 		var username = msg.toString().split(" ")[0].split("<")[1].split(">")[0];
-		var logger = msg.toString().substr(username.length + 2);
-	
+
+		if(username.startsWith("[Donator")) {
+			username = username.split("[Donator]")[1]
+		}
+
+		logger = msg.toString().substr(username.length + 2);
+		
+
 		if (logger.startsWith(">")) {
 			color = "2EA711";
 		}
