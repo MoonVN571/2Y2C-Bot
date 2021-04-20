@@ -315,6 +315,8 @@ module.exports = (bot, client, message) => {
 	function saveKills(name) {
 		const kd = new Scriptdb(`./data/kd/${name}.json`);
 		var kill = kd.get('kills');
+
+		if(name == "Piglin" || name == "Zombie"  || name == "Zombified" || name == "Drowned" || name == "Phantom" || name == "Enderman") return;
 		
 		if(kill == undefined) {
 			kd.set('kills', 1);

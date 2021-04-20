@@ -121,7 +121,7 @@ function createBot() {
 			username = username.split("[Donator]")[1]
 		}
 
-		logger = msg.toString().substr(username.length + 3);
+		logger = msg.toString().substr(msg.toString().split(" ")[0].length + 1);
 
 		if (logger.startsWith(">")) {
 			color = "2EA711";
@@ -255,6 +255,8 @@ function createBot() {
 				bot.chat(msg.content);
 			}, 1 * 1000);
 		}
+
+		if(dev) return;
 
 		if (msg.channel.id == '795135669868822528') {
 			if (msg.content.startsWith(">")) return;
