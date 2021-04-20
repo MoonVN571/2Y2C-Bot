@@ -132,7 +132,7 @@ function createBot() {
 		const s = dausao.replace("||", "\\||");
 		const newLogger = s.replace("*", "\\*");
 
-		var newUsername = username;
+		var newUsername = username.replace(/_/ig, "\\_");
 	
 		var bp;
 		if (dev) {
