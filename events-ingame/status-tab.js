@@ -29,11 +29,7 @@ module.exports = (bot, client, data) => {
     var status = ss8;
 
     if(ss8.startsWith(" *")) {
-        status = ss8.substr(2);
-    }
-
-    if (ss8.startsWith(" ")) {
-        status = ss8.substr(1);
+        status = " " + ss8.substr(2);
     }
 
     if(status.startsWith("*")) {

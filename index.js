@@ -121,8 +121,7 @@ function createBot() {
 			username = username.split("[Donator]")[1]
 		}
 
-		logger = msg.toString().substr(username.length + 2);
-		
+		logger = msg.toString().substr(username.length + 3);
 
 		if (logger.startsWith(">")) {
 			color = "2EA711";
