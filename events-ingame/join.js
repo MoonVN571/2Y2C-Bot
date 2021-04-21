@@ -14,7 +14,7 @@ module.exports = (bot, client, p) => {
         setTimeout(() => {
             if(bot.verified) return;
             bot.quit();
-        }, 3 * 60 * 1000);   
+        }, 3 * 60 * 1000);
     }
 
     var today = new Date()

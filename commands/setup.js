@@ -42,7 +42,7 @@ module.exports = {
         }
 
         if(args[0] == 'restart') {
-            if(!bot.dev) return;
+            if(!client.dev) return;
             if(!args[1]) return message.channel.send("Cách dùng: " + prefix + "setup restart <tag hoặc nhập id kênh> <tên role>");
             if(!args[2] && args[1]) return message.channel.send("Cách dùng: " + prefix + "setup restart " + args[1] + " <tên role>");
 
@@ -51,17 +51,17 @@ module.exports = {
             if(channel === "") {
                 channel = args[1];
             }
-            const getMention = require('discord-mentions');
 
             var guild = message.guild.id;
             const data = new Scriptdb(`./data/guilds/setup-${guild}.json`);
+
+            var checkData = data.get('restart-role');
+            if(checkData !== undefined) return message.channel.send("Đã setup restart role")
+
             data.set('restart-channels', channel);
-            console.log(args[2])
             data.set('restart-roles', args[2].split("<@&")[1].split(">")[0]);
 
             message.channel.send("Đã setup kênh thông báo restart: " + channel + " và role: " + args[2])   
-            // let role = message.guild.roles.cache.get(data.get('restart-roles'));
-            message.channel.send("<@&" +getMention("<@&" + data.get('restart-roles') + ">").role + ">") 
         }
 
         if(args[0] == 'stats') {

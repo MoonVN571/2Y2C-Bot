@@ -340,6 +340,9 @@ client.on("message", async message => {
 					.setColor('0xC51515');
 	
 	client.footer = footer;
+	client.dev = dev;
+	client.color = "0x000DFF";
+	client.prefix = prefix;
 
     try{
         cmd.execute(client, message, args);
