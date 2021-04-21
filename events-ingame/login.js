@@ -16,7 +16,7 @@ module.exports = (bot, client) => {
     var hours = 0;
     var minutes = 0;
     var totalSeconds = 0;
-    
+    totalSeconds = 0;
     function setTime2() {
         totalSeconds += 300;
         hours = parseInt(totalSeconds / 3600);

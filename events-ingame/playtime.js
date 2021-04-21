@@ -7,6 +7,7 @@ module.exports = (bot) => {
     if(oneInterval) return;
     oneInterval = true;
     setInterval(() => {
+        oneInterval = false;
         if(returnThis) return;
         returnThis = true;
         setTimeout(() => { returnThis = false }, 5*1000)
