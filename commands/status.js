@@ -47,7 +47,7 @@ module.exports = {
                     },
                     {
                         name: 'Hàng chờ',
-                        value: "Gõ " + bot.prefix + "queue",
+                        value: "Gõ " + client.prefix + "queue",
                         inline: true
                     }
                     )
