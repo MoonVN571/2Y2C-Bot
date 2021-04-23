@@ -36,6 +36,9 @@ module.exports = (bot, client, data) => {
         status = " " + status.substr(1);
     }
     
+    if(status.split(" ")[0] !== "") {
+        status = " " + status;
+    }
     const dataa = new Scriptdb(`./data.json`);
 
     dataa.set('tab-content', status + " | " + Date.now());

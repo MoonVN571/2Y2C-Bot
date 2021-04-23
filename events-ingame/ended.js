@@ -44,9 +44,7 @@ module.exports = (bot, client) => {
                             }, 200);
                     }, 1*100);
                 }
-                
                 bot.joined = false;
-
             }, 3*1000);
 
             if(bot.dev) {

@@ -17,7 +17,7 @@ module.exports = (bot, client, message) => {
 	var notfMsg;
 	var colorNotf;
 
-    if (logger === "[AutoRestart] Server Restarting!" || logger == "[AutoRestart] Server sẽ Restart sau 1 phút!") {
+    if (logger === "[AutoRestart] Server Restarting!") {
         client.channels.cache.get('795534684967665695').send("@everyone " + logger);
     }
 

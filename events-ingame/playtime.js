@@ -1,16 +1,7 @@
 var Scriptdb = require('script.db');
 
-var oneInterval = false;
-var returnThis = false;
-
 module.exports = (bot) => {
-    if(oneInterval) return;
-    oneInterval = true;
     setInterval(() => {
-        oneInterval = false;
-        if(returnThis) return;
-        returnThis = true;
-        setTimeout(() => { returnThis = false }, 5*1000)
         if (bot.lobby) return;
         if (!bot.joined) return;
         Object.values(bot.players).forEach(player => addPlayTime(player.username));

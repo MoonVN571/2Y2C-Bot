@@ -109,7 +109,7 @@ function createBot() {
 
 	bot.on('windowOpen', verifyEvent.bind(null, bot))
 
-	bot.on('login', JoinedServerEvent.bind(null, bot, client))
+	bot.once('login', JoinedServerEvent.bind(null, bot, client))
 	bot.once('login', playtimeEvent.bind(null, bot))
 
 	bot.on('message', msg => {
@@ -221,13 +221,6 @@ function createBot() {
 		}, 1* 1000);
 	});
 
-
-	// bot.on('login', () => { 
-	// 	let today = new Date().toLocaleTimeString()
-	// 	console.log(today)
-	// 	setInterval(() => { bot.chat("Testingggg") }, 1 * 60* 1000)
-	// })
-
 	bot.on("message", DeathftNotifyEvent.bind(null, bot, client));
 	bot.on("playerJoined", joinedEvent.bind(null, bot, client));
 	bot.on("playerLeft", leftEvent.bind(null, bot, client));
@@ -241,15 +234,16 @@ function createBot() {
 	client.on('message', msg => {
 		if (msg.author.bot) return
 
-		if (msg.channel.id === '802456011252039680') {
+		if (msg.channel.id === '797426761142632450') {
 			if (msg.author == client.user) return;
+			if(bot.dev) return;
 			setTimeout(() => {
 				bot.chat(msg.content);
 			}, 1 * 1000);
 		}
 
 
-		if (msg.channel.id === '797426761142632450') {
+		if (msg.channel.id === '802456011252039680') {
 			if (msg.author == client.user) return;
 			setTimeout(() => {
 				bot.chat(msg.content);

@@ -1,10 +1,3 @@
-var check = false;
-var stats = false;
-
-
-var stats = false;
-var sending = false;
-
 var fs = require('fs');
 var Scriptdb = require('script.db');
 var Discord = require('discord.js');
@@ -51,36 +44,16 @@ module.exports = (bot, client) => {
     setInterval(setTime2, 5 * 60 * 1000);
         
     const uptime = new Scriptdb(`./data.json`);
-    let ut = uptime.get('uptime');
 
-    if(ut === undefined) {
-        var d = new Date();
-        var time = d.getTime();
-        uptime.set(`uptime`, time);
-    } else {
-        var d = new Date();
-        var time = d.getTime();
-        uptime.delete(`uptime`)
-        uptime.set(`uptime`, time);
-    }
+    var d = new Date();
+    uptime.set(`uptime`, d.getTime());
 
     setInterval(() => {
         if(bot.lobby) return;
-        if (stats) return;
-        stats = true;
+
         bot.swingArm("left");
         bot.look(Math.floor(Math.random() * Math.floor("360")), 0, true, null);
-
-        setTimeout(() => {
-            stats = false;
-        }, 10 * 1000);
     }, 1 * 60 * 1000);
-
-
-    if(check) return;
-    check = true;
-
-    setTimeout(() => { check = false; }, 30 * 1000)
 
     setInterval(() => {
         fs.readFile("ads.txt", 'utf8', function (err, data) {
@@ -88,14 +61,8 @@ module.exports = (bot, client) => {
             const lines = data.split('\n');
             var random = lines[Math.floor(Math.random() * lines.length)];
 
-            if (sending) return;
-            sending = true;
             bot.chat(random);
         });
-
-        setTimeout(() => {
-            sending = false;
-        }, 1 * 60 * 1000);
     },  10 * 60 * 1000);
 
     const queuejoined = new Discord.MessageEmbed()

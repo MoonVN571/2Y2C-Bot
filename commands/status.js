@@ -17,6 +17,11 @@ module.exports = {
 		var ping = dataa.split(" - ")[2].split(" ping")[0];
 		var timepassed  = dataa.split(" | ")[1];
 
+        var user = client.users.cache.find(user => user.id === "425599739837284362")
+        if(tps == "tps" || tps == " tps" || tps == "ping" || tps == " ping" || tps == "players" || tps == " players")
+         
+                    return message.channel.send(`Lỗi, thử lại sau! Hãy báo cáo lỗi này với **${user.username}#${user.discriminator}`)
+
 		var embed = new Discord.MessageEmbed()
                 .setAuthor('2Y2C VIETNAM','https://cdn.discordapp.com/attachments/795842485133246514/821669964673974282/communityIcon_14otnpwidot51.png')
                 .addFields(
@@ -47,11 +52,11 @@ module.exports = {
                     },
                     {
                         name: 'Hàng chờ',
-                        value: "Gõ " + client.prefix + "queue",
+                        value: "Bình thường: " + api.getQueue() + " - Ưu tiên: " + api.getPrio(),
                         inline: true
                     }
                     )
-                .setFooter('Cập nhật từ ' + api.ageCalc(timepassed) + " trước.", 'https://cdn.discordapp.com/avatars/768448728125407242/aa2ce1d9374de6fc0dd28d349ca135af.webp?size=1024')
+                .setFooter('Trạng thái server được cập nhật từ ' + api.ageCalc(timepassed) + " trước.", 'https://cdn.discordapp.com/avatars/768448728125407242/aa2ce1d9374de6fc0dd28d349ca135af.webp?size=1024')
                 .setColor(0x000DFF)
                 .setTimestamp();
 
