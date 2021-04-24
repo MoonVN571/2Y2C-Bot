@@ -230,7 +230,7 @@ function createBot() {
 
 	bot.on('kicked', kickedEvent.bind(null, bot, client));
 	bot.on('end', endedEvent.bind(null, bot, client));
-
+	bot.on('error', err => { console.log(err)})
 	client.on('message', msg => {
 		if (msg.author.bot) return
 

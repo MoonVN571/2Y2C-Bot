@@ -28,7 +28,7 @@ module.exports = (bot, client, p) => {
     function check(username, newUsername) {
         fs.readFile("special-join.txt",  (err, data) => {
             if (err) throw err;
-            if(data.includes(username)) {
+            if(data.indexOf(username) > -1) {
                 if(bot.dev) return;
                 var embed = new Discord.MessageEmbed()
                                         .setDescription(newUsername + " left")

@@ -55,7 +55,7 @@ module.exports = {
 		if (messages === undefined || times == undefined) return message.channel.send(client.userNotFound);
 
 		var embed = new Discord.MessageEmbed()
-								.setTitle(`${args[0]}'s messages`)
+								.setTitle(`Tin nhắn ${args[0]}`)
 								.setDescription(`*Tổng tin nhắn đã gửi: ${messages.split(" | ").length}*\n`)
 								.addField('*5 tin nhắn gần đây*', data)
 								.setFooter(client.footer)

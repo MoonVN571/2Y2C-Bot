@@ -9,8 +9,10 @@ module.exports = (bot, client) => {
     var hours = 0;
     var minutes = 0;
     var totalSeconds = 0;
+
     totalSeconds = 0;
-    function setTime2() {
+
+    setInterval(() => {
         totalSeconds += 300;
         hours = parseInt(totalSeconds / 3600);
         minutes = parseInt((totalSeconds - (hours * 3600)) / 60);
@@ -39,9 +41,7 @@ module.exports = (bot, client) => {
                 }
             }, 200);
         }, 300);
-    }
-
-    setInterval(setTime2, 5 * 60 * 1000);
+    }, 5 * 60 * 10000)
         
     const uptime = new Scriptdb(`./data.json`);
 
@@ -94,7 +94,7 @@ module.exports = (bot, client) => {
 
                         try {
                             client.channels.cache.get(checkdata).send(joinedd);
-                        } catch(e) {  }
+                        } catch(e) {}
                     }
                 }, 200);
             }, 100)
