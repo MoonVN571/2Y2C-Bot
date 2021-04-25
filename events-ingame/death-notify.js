@@ -135,7 +135,8 @@ module.exports = (bot, client, message) => {
 	|| logger == "The main server is down. We will be back soon!"
 	|| logger == "Vote cho server tại https://minecraft-mp.com/server-s271071."
 	|| logger == "Những ai muốn xài hack của bản 1.12 cho server hãy đọc phần #cách-chơi-cơ-bản trong discord 2y2c."
-	|| logger == " dùng lệnh/2y2c  để vào server.") {
+	|| logger == " dùng lệnh/2y2c  để vào server."
+	|| logger == "Please log-in in order to use the chat or any commands!") {
 		colorNotf = '0xb60000';
 		notfMsg = logger;
 	}
