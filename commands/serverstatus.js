@@ -10,7 +10,7 @@ module.exports = {
     
     async execute(client, message, args) {
         var status = api.getStatus();
-        if(status == null) return message.channel.send("Vui lòng thử lại.");
+        if(status == "null") return message.channel.send("Vui lòng thử lại.");
 
         const embed = new Discord.MessageEmbed()
                         .setColor(0x000DFF)

@@ -1,6 +1,6 @@
 {
   "name": "2y2c-moonbot",
-  "version": "1.8.3",
+  "version": "1.8.5",
   "description": "Livechat for 2y2c with everyone.",
   "main": "index.js",
   "dependencies": {
