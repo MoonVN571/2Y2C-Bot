@@ -12,7 +12,7 @@ module.exports = (bot, client) => {
         var totalSeconds = 0;
 
         totalSeconds = 0;
-
+        
         setInterval(() => {
             totalSeconds += 300;
             hours = parseInt(totalSeconds / 3600);
@@ -42,7 +42,7 @@ module.exports = (bot, client) => {
                     }
                 }, 200);
             }, 300);
-        }, 5 * 60 * 10000)
+        }, 5 * 60 * 1000)
             
         const uptime = new Scriptdb(`./data.json`);
 
