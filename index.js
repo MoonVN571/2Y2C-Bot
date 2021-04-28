@@ -1,4 +1,4 @@
-﻿const Discord = require("discord.js");
+const Discord = require("discord.js");
 const client = new Discord.Client();
 
 var Scriptdb = require("script.db")
@@ -85,6 +85,7 @@ function createBot() {
 	const endedEvent = require('./events-ingame/ended.js');
 
 	var color = "0x979797";
+	var color2 = "0x979797";
 	var lobby = true;
 
 	// New
@@ -125,6 +126,7 @@ function createBot() {
 
 		if (logger.startsWith(">")) {
 			color = "2EA711";
+			color2 = "2EA711";
 		}
 	
 		const dauhuyen = logger.replace(/`/ig, "\\`");
@@ -145,6 +147,10 @@ function createBot() {
 						.setDescription(`**<${newUsername}>** ${newLogger}`)
 						.setColor(color);
 		
+		var chat2 = new Discord.MessageEmbed()
+						.setDescription(`**<${newUsername}>** ${newLogger}`)
+						.setColor(color2);
+
 		if(chat !== undefined) {
 			setTimeout(() => {
 				var guild = client.guilds.cache.map(guild => guild.id);
@@ -157,21 +163,19 @@ function createBot() {
 						if(checkdata == undefined || guild == undefined) return;
 						
 						try {
-							if(chat !== undefined) {
-								if(dev) return;
-								client.channels.cache.get(checkdata).send(chat)
-							}
-						} catch(e) {  }
+							if(dev) return;
+							client.channels.cache.get(checkdata).send(chat)
+						} catch(e) {}
 					}
 				}, 100);
 			}, 100)
-
-			setTimeout(() => {
-				color = "0x797979";
-				client.channels.cache.get(defaultChannel).send(chat);
-			}, 50);
 		}
-	
+
+		if(chat2 !== undefined) {
+			client.channels.cache.get(defaultChannel).send(chat2);
+			color2 = "0x797979";
+		}
+
 		saveMsgsData(username, logger);
 		function saveMsgsData(username, logger) {
 			if(logger.startsWith(bp)) return;
