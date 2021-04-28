@@ -165,6 +165,7 @@ function createBot() {
 						try {
 							if(dev) return;
 							client.channels.cache.get(checkdata).send(chat)
+							color = "0x797979";
 						} catch(e) {}
 					}
 				}, 100);
