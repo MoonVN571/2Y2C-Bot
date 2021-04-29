@@ -22,7 +22,6 @@ const config = {
 };
 
 var dev = true;
-var debug = false;
 
 if (dev) {
 	prefix = "dev$";
@@ -50,12 +49,20 @@ client.on('ready', () => {
 	console.log('---------- STARTING BOT ----------')
 	console.log('Bot online!');
 
+	if(!dev) {
+		client.channels.cache.get('837220776284389438').send("Bot đã sẵn sàng");
+	}
+
 	client.user.setActivity("RESTARTING", { type: 'PLAYING' });
 	
     console.log(`Ready to serve in ${client.channels.cache.size} channels on ${client.guilds.cache.size} servers, for a total of ${client.users.cache.size} users.`);
 	
 	createBot();
 });
+
+client.on('shardReady', (a) => {
+console.log(a)
+})
 
 /*
  *				START_BOT
@@ -94,6 +101,11 @@ function createBot() {
 	var countPlayers = 0;
 	var verified = false;
 
+	// Uptimes
+	var totalSeconds = 0;
+	var hours = 0;
+	var minutes = 0;
+
 	// Import
 	bot.restartingMsg = restartingMsg;
 	bot.defaultChannel = defaultChannel; // Kenh mat dinh cua chat
@@ -103,6 +115,10 @@ function createBot() {
 	bot.joined = joined;
 	bot.countPlayers = countPlayers;
 	bot.verified = verified; // check verify before disconnect
+
+	bot.totalSeconds = totalSeconds;
+	bot.hours = hours;
+	bot.minutes = minutes;
 
 	bot.client = client;
 
@@ -118,8 +134,8 @@ function createBot() {
 
 		var username = msg.toString().split(" ")[0].split("<")[1].split(">")[0];
 
-		if(username.startsWith("[Donator")) {
-			username = username.split("[Donator]")[1]
+		if(username.startsWith("[")) {
+			username = username.split("]")[1]
 		}
 
 		logger = msg.toString().substr(msg.toString().split(" ")[0].length + 1);
@@ -210,10 +226,7 @@ function createBot() {
 			|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
 
 
-		if(!cmd) {
-			if(!debug) return;
-			return console.log(`\`${cmd}\` is not a valid command.`);
-		}
+		if(!cmd) return;
 	
 		bot.regex = /[a-z]|[A-Z]|[0-9]/i;
 	
@@ -237,7 +250,37 @@ function createBot() {
 	bot.on('end', endedEvent.bind(null, bot, client));
 	bot.on('error', err => { console.log(err)})
 	client.on('message', msg => {
-		if (msg.author.bot) return
+		if (msg.author.bot) return;
+
+		if(msg.content == prefix + "restart") {
+			if(msg.author.id == "425599739837284362") {
+				setTimeout(() => { client.channels.cache.get('837220776284389438').send("Bot sẽ khởi động lại trong 5 giây.") }, 1 * 1000);
+				setTimeout(() => { client.channels.cache.get('837220776284389438').send("Bot sẽ khởi động lại trong 4 giây.") }, 2 * 1000);
+				setTimeout(() => { client.channels.cache.get('837220776284389438').send("Bot sẽ khởi động lại trong 3 giây.") }, 3 * 1000);
+				setTimeout(() => { client.channels.cache.get('837220776284389438').send("Bot sẽ khởi động lại trong 2 giây.") }, 4 * 1000);
+				setTimeout(() => { client.channels.cache.get('837220776284389438').send("Bot sẽ khởi động lại trong 1 giây.") }, 5 * 1000);
+
+				setTimeout(() => {
+					client.channels.cache.get('837220776284389438').send("Tiến hành tắt bot.");
+					bot.quit();
+				}, 7 * 1000)
+
+				setTimeout(() => { 
+					client.channels.cache.get('837220776284389438').send("Tiến hành khởi động lại..");
+				}, 8 * 1000)
+				setTimeout(() => {
+					process.exit();
+				}, 10 * 1000)
+			} else {
+				var noPerm = new Discord.MessageEmbed()
+									.setDescription('Bạn phải là developer để sử dụng lệnh này.')
+									.setColor('0xC51515');
+		
+				message.channel.send(noPerm).then(msg => {
+					msg.delete({ timeout: 10000 });
+				});
+			}
+		}
 
 		if (msg.channel.id === '797426761142632450') {
 			if (msg.author == client.user) return;
@@ -301,7 +344,7 @@ for (const file of cmdss) {
 }
 
 client.on("message", async message => {
-	if(message.author.bot|| !message.content.startsWith(prefix) || message.author == client.user) return;
+	if(message.author.bot|| !message.content.startsWith(prefix) || message.author == client.user || message.channel.type == "dm") return;
 
     const args = message.content.slice(prefix.length).split(/ +/);
     const cmdName = args.shift().toLowerCase();

@@ -12,6 +12,8 @@ module.exports = (bot, client) => {
 
 	console.log('---------- BOT ENDED ----------');
 
+    bot.totalSeconds = 0;
+
     setTimeout(() => {
         var log = new Discord.MessageEmbed()
                         .setDescription("Bot đã mất kết nối đến server. Kết nối lại sau 1 phút." + `\nĐã hoạt động từ ${api.uptimeCalc()} trước.`)

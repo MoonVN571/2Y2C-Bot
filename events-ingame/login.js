@@ -7,9 +7,9 @@ var api = new a();
 
 module.exports = (bot, client) => {
     bot.once('spawn', () => {
-        var hours = 0;
-        var minutes = 0;
-        var totalSeconds = 0;
+        var hours = bot.hours;
+        var minutes = bot.minutes;
+        var totalSeconds = bot.totalSeconds;
 
         totalSeconds = 0;
         
