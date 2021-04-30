@@ -49,6 +49,8 @@ module.exports = (bot, client, data) => {
         if(embed == undefined) return;
         client.channels.cache.get(bot.defaultChannel).send(embed)
 
+        if(!bot.joined) return;
+
         setTimeout(() => {
             var guild = client.guilds.cache.map(guild => guild.id);
             setInterval(() => {

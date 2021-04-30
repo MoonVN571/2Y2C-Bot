@@ -1,6 +1,6 @@
 {
   "name": "2y2c-moonbot",
-  "version": "1.8.7",
+  "version": "1.8.8",
   "description": "Livechat for 2y2c with everyone.",
   "main": "index.js",
   "dependencies": {
@@ -16,7 +16,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ."
   },
   "repository": {
     "type": "git",

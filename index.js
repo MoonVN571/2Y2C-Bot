@@ -60,10 +60,6 @@ client.on('ready', () => {
 	createBot();
 });
 
-client.on('shardReady', (a) => {
-console.log(a)
-})
-
 /*
  *				START_BOT
  */
@@ -282,17 +278,18 @@ function createBot() {
 			}
 		}
 
-		if (msg.channel.id === '797426761142632450') {
-			if (msg.author == client.user) return;
-			if(bot.dev) return;
-			setTimeout(() => {
-				bot.chat(msg.content);
-			}, 1 * 1000);
-		}
-
 
 		if (msg.channel.id === '802456011252039680') {
 			if (msg.author == client.user) return;
+			setTimeout(() => {
+				bot.chat(msg.content);
+			}, 1 * 1000);
+			return;
+		}
+
+		if (msg.channel.id === '797426761142632450') {
+			if (msg.author == client.user) return;
+			if(bot.dev) return;
 			setTimeout(() => {
 				bot.chat(msg.content);
 			}, 1 * 1000);

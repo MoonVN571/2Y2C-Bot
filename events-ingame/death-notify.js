@@ -21,19 +21,16 @@ module.exports = (bot, client, message) => {
         client.channels.cache.get('795534684967665695').send("@everyone " + logger);
     }
 
-	var splitLogger2 = logger.split(' ')[1];
+	var checkWhisper = logger.split(' ')[1];
 
-	if(splitLogger2 == "nhắn:") {
-		var firststr = logger.split(' ');
-		var newlog = logger;
-		var log = logger.split(' ')[0];
-		if(firststr.toString().startsWith("[Donator]")) {
-			var rl = log.toString().replace(/\[Donator\]/ig, "")
-			newlog = rl + logger.substr(log.toString().length, logger.length + 2);
-		} else {
-			newlog = log + logger.substr(log.toString().length, logger.length + 2);
+	if(checkWhisper == "nhắn:") {
+		var toLog = logger
+
+		if(logger.startsWith("[")) {
+			toLog = toLog.split("]")[1];
 		}
-		var cancelOne = newlog.replace(/_/ig, "\_")
+
+		var cancelOne = toLog.replace(/_/ig, "\_")
 		var cancelTwo = cancelOne.replace(/`/ig, "\`")
 		var n = cancelTwo.replace("||", "\*")
 		var lognoformat = n.replace("*", "\*")
@@ -48,26 +45,18 @@ module.exports = (bot, client, message) => {
 
 
 	if (logger.startsWith("nhắn cho")) {
-		var type = logger.split(" ")[2];
-		var log;
+		var log = logger;
 
-		if(type.startsWith("[Donator]")) {
-			log = "nhắn cho " + type.replace(/\[Donator\]/ig, "") + " " + logger.substr(8 + type.length + 2, logger.length + 2);
-		} else {
-			log = logger;
+		if(logger.split(" ")[2].startsWith("[")) {
+			log = "nhắn cho " + logger.split("]")[1];
 		}
-		if(type == "[2B2T]") {
-			log = "nhắn cho " + type.replace(/\[2B2T\]/ig, "") + " " + logger.substr(8 + type.length + 2, logger.length + 2);
-		}
-		
+
 		var cancelOne = log.replace(/_/ig, "\_")
 		var cancelTwo = cancelOne.replace(/`/ig, "\`")
 		var cancelThree = cancelTwo.replace("*", "\*")
 		var lognoformat = cancelThree;
 		
-		if(lognoformat !== undefined) {
-			notfMsg = lognoformat;
-		}
+		notfMsg = lognoformat;
 		colorNotf = "0xFD00FF";
 	}
 
@@ -124,6 +113,10 @@ module.exports = (bot, client, message) => {
 		}, 1500);
 	}
 
+	if(logger == "Could not connect to a default or fallback server, please try again later: io.netty.channel.AbstractChannel$AnnotatedConnectException") {
+		bot.quit()
+	}
+
 	if (logger == "đang vào 2y2c..."
 	|| logger.startsWith("[Server]")
 	|| logger.startsWith("[AutoRestart]")
@@ -177,7 +170,7 @@ module.exports = (bot, client, message) => {
 	var deathMsg;
 
 	if(logger.startsWith("nhắn cho")) return;
-	if(splitLogger2 == "nhắn:") return;
+	if(checkWhisper == "nhắn:") return;
 
 	if (logger === '2y2c đã full') return;
 	if (logger === 'Đang vào 2y2c') return;
