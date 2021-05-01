@@ -245,10 +245,14 @@ function createBot() {
 	bot.on('kicked', kickedEvent.bind(null, bot, client));
 	bot.on('end', endedEvent.bind(null, bot, client));
 	bot.on('error', err => { console.log(err)})
+	var checkEvent = false;
+
 	client.on('message', msg => {
 		if (msg.author.bot) return;
 
 		if(msg.content == prefix + "restart") {
+			if(checkEvent) return;
+			checkEvent = true;
 			if(msg.author.id == "425599739837284362") {
 				setTimeout(() => { client.channels.cache.get('837220776284389438').send("Bot sẽ khởi động lại trong 5 giây.") }, 1 * 1000);
 				setTimeout(() => { client.channels.cache.get('837220776284389438').send("Bot sẽ khởi động lại trong 4 giây.") }, 2 * 1000);
@@ -272,7 +276,7 @@ function createBot() {
 									.setDescription('Bạn phải là developer để sử dụng lệnh này.')
 									.setColor('0xC51515');
 		
-				message.channel.send(noPerm).then(msg => {
+				msg.channel.send(noPerm).then(msg => {
 					msg.delete({ timeout: 10000 });
 				});
 			}

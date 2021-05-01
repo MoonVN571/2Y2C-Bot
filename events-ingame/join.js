@@ -17,6 +17,17 @@ module.exports = (bot, client, p) => {
         }, 3 * 60 * 1000);
     }
 
+    var d = new Date();
+    var time = d.getTime();
+    let lastseen = new Scriptdb(`./data/seen/${username}.json`);
+    var ls = lastseen.get('seen')
+
+    if (ls === undefined) {
+        lastseen.set('seen', time);
+    } else {
+        lastseen.set('seen', time);
+    }
+    
     var today = new Date()
     let day = ("00" + today.getDate()).slice(-2)
     let month = ("00" + (today.getMonth() + 1)).slice(-2)
