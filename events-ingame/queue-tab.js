@@ -46,10 +46,10 @@ module.exports = (bot, client, data) => {
                             .setDescription(s7)
                             .setColor("0xFFCE00");
             
+        if(!bot.joined) return;
+
         if(embed == undefined) return;
         client.channels.cache.get(bot.defaultChannel).send(embed)
-
-        if(!bot.joined) return;
 
         setTimeout(() => {
             var guild = client.guilds.cache.map(guild => guild.id);
