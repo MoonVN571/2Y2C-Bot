@@ -14,7 +14,7 @@ module.exports = {
                             "**Các loại lệnh:**" + 
                             "\n``discord`` - Xem các lệnh bot về thông số server." +
                             "\n``check`` - Xem các lệnh để kiểm tra thông tin của người chơi." +
-                            "\n``ingame-command`` - Xem các lệnh của bot ( trong game ) " +
+                            "\n``ingame-commands`` - Xem các lệnh của bot ( trong game ) " +
                             "\n``all`` - Xem tất cả các lệnh. ( không chi tiết )\n\n" +
                             
                             "***Cách để xem:** " + prefix + "help **<LOẠI LỆNH>***")

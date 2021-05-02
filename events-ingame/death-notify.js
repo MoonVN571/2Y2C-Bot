@@ -129,7 +129,8 @@ module.exports = (bot, client, message) => {
 	|| logger == "Vote cho server tại https://minecraft-mp.com/server-s271071."
 	|| logger == "Những ai muốn xài hack của bản 1.12 cho server hãy đọc phần #cách-chơi-cơ-bản trong discord 2y2c."
 	|| logger == " dùng lệnh/2y2c  để vào server."
-	|| logger == "Please log-in in order to use the chat or any commands!") {
+	|| logger == "Please log-in in order to use the chat or any commands!"
+	|| logger == "[LP] Permissions data for your user was not loaded during the pre-login stage - unable to continue. Please try again later. If you are a server admin, please check the console for any errors.") {
 		colorNotf = '0xb60000';
 		notfMsg = logger;
 	}

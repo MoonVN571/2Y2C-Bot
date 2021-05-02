@@ -27,16 +27,12 @@ module.exports = {
             
             if(checkdata == undefined) {
                 data.set('livechat', channel);
-                if(channel !== "NaN") {
-                    message.channel.send("Bạn đã setup chat tại channel: " + channel.toString())
-                } else {
-                    message.channel.send("Bạn đã setup chat tại channel: " + channel)
-                }
+                message.channel.send("Bạn đã setup chat tại kênh: " + args[2])
             } else {
                 if(args[1] == 'chat') {
                     message.channel.send("Đã setup ròi. Cách xoá: " + prefix + "setup delete chat <tag hoặc nhập id kênh>")
                 } else {
-                    message.channel.send("Đã setup ròi. Cách xoá: " + prefix + "setup delete <chat hoặc stats> <tag hoặc nhập id kênh>")
+                    message.channel.send("Đã setup ròi. Cách xoá: " + prefix + "setup delete chat <tag hoặc nhập id kênh>")
                 }
             }
         }

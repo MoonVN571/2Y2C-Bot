@@ -1,4 +1,5 @@
 var Discord = require('discord.js');
+var Scriptdb = require('script.db');
 
 var abc = require("../api")
 var api = new abc();
@@ -11,7 +12,7 @@ module.exports = {
     async execute(client, message, args) {
         if (!args[0]) return message.channel.send(client.userNotFound)
 
-		let ls = new client.Scriptdb(`./data/seen/${args[0]}.json`);
+		let ls = new Scriptdb(`./data/seen/${args[0]}.json`);
 		let seen = ls.get('seen')
 
 		if (seen == undefined) return message.channel.send(bot.userNotFound);
