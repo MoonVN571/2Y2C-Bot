@@ -130,7 +130,8 @@ module.exports = (bot, client, message) => {
 	|| logger == "Những ai muốn xài hack của bản 1.12 cho server hãy đọc phần #cách-chơi-cơ-bản trong discord 2y2c."
 	|| logger == " dùng lệnh/2y2c  để vào server."
 	|| logger == "Please log-in in order to use the chat or any commands!"
-	|| logger == "[LP] Permissions data for your user was not loaded during the pre-login stage - unable to continue. Please try again later. If you are a server admin, please check the console for any errors.") {
+	|| logger == "[LP] Permissions data for your user was not loaded during the pre-login stage - unable to continue. Please try again later. If you are a server admin, please check the console for any errors."
+	|| logger == "Donate bằng thẻ cào để duy trì server, dùng lệnh /napthe và lệnh /muarank.") {
 		colorNotf = '0xb60000';
 		notfMsg = logger;
 	}
@@ -146,6 +147,11 @@ module.exports = (bot, client, message) => {
 							.setColor(colorNotf);
 
 		if(embedNotf !== undefined) {
+			if(logger.startsWith("[Broadcast]") && logger.includes("vừa")) {
+				setTimeout(() => {  client.channels.cache.get("838711105278705695").send(embedNotf); }, 150)
+			}
+			client.channels.cache.get(bot.defaultChannel).send(embedNotf);
+
 			if(!bot.dev) {
 				setTimeout(() => {
 					var guild = client.guilds.cache.map(guild => guild.id);
@@ -162,9 +168,8 @@ module.exports = (bot, client, message) => {
 							} catch(e) {}
 						}
 					}, 200);
-				}, 400);
+				}, 100);
 			}
-				client.channels.cache.get(bot.defaultChannel).send(embedNotf);
 		}
 	}
 

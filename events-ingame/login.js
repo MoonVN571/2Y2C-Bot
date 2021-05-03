@@ -43,11 +43,13 @@ module.exports = (bot, client) => {
                 }, 200);
             }, 300);
         }, 5 * 60 * 1000)
-            
-        const uptime = new Scriptdb(`./data.json`);
+        
+        setTimeout(() => {
+            const uptime = new Scriptdb(`./data.json`);
 
-        var d = new Date();
-        uptime.set(`uptime`, d.getTime());
+            var d = new Date();
+            uptime.set(`uptime`, d.getTime());
+        }, 20 * 1000);
 
         setInterval(() => {
             if(bot.lobby) return;

@@ -254,31 +254,15 @@ function createBot() {
 			if(checkEvent) return;
 			checkEvent = true;
 			if(msg.author.id == "425599739837284362") {
-				setTimeout(() => { client.channels.cache.get('837220776284389438').send("Bot sẽ khởi động lại trong 5 giây.") }, 1 * 1000);
-				setTimeout(() => { client.channels.cache.get('837220776284389438').send("Bot sẽ khởi động lại trong 4 giây.") }, 2 * 1000);
-				setTimeout(() => { client.channels.cache.get('837220776284389438').send("Bot sẽ khởi động lại trong 3 giây.") }, 3 * 1000);
-				setTimeout(() => { client.channels.cache.get('837220776284389438').send("Bot sẽ khởi động lại trong 2 giây.") }, 4 * 1000);
-				setTimeout(() => { client.channels.cache.get('837220776284389438').send("Bot sẽ khởi động lại trong 1 giây.") }, 5 * 1000);
-
-				setTimeout(() => {
-					client.channels.cache.get('837220776284389438').send("Tiến hành tắt bot.");
-					bot.quit();
-				}, 7 * 1000)
-
+				client.channels.cache.get('837220776284389438').send("Tiến hành khởi động lại..");
+				msg.channel.send("Đã yêu cầu reset!");
+				
 				setTimeout(() => { 
-					client.channels.cache.get('837220776284389438').send("Tiến hành khởi động lại..");
-				}, 8 * 1000)
+					bot.quit();
+				}, 2 * 1000)
 				setTimeout(() => {
 					process.exit();
-				}, 10 * 1000)
-			} else {
-				var noPerm = new Discord.MessageEmbed()
-									.setDescription('Bạn phải là developer để sử dụng lệnh này.')
-									.setColor('0xC51515');
-		
-				msg.channel.send(noPerm).then(msg => {
-					msg.delete({ timeout: 10000 });
-				});
+				}, 5 * 1000)
 			}
 		}
 

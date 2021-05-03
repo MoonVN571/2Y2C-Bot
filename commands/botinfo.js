@@ -17,8 +17,8 @@ module.exports = {
     aliases: ['bi'],
     
     async execute(client, message, args) {
-        var user = client.users.find(user => user.id === "425599739837284362");
-        var bot = client.users.find(user => user.id === client.user.id);
+        var user = client.users.cache.get("425599739837284362");
+        var bot = client.users.cache.get(client.user.id);
 
         var authorID = user.username + "#" + user.discriminator;
         var botID = bot.username + "#" + bot.discriminator;
@@ -37,7 +37,7 @@ module.exports = {
                 .addField("System",
                           `-   **Platform:** ${os.type()}` + "\n"
                         + `-   **Uptime:** ${api.calc(os.uptime())}` + "\n"
-                        + `-   **Ram:** ${currentMem} / ${currentMaxMem}\n`
+                        + `-   **Ram:** ${currentMem}MB / ${currentMaxMem}MB\n`
                         + "-   **CPU:** " + os.cpus()[0].model + "\n"
                         + "-   **Cores:** " + os.cpus().length + "\n"
                         + "-   **Speed:** " + os.cpus()[0].speed + "MHz"
