@@ -1,7 +1,7 @@
 var check = false;
 
-var a = require('../api');
-var api = new a();
+var Scriptdb = require('script.db');
+var data = new Scriptdb('./data.json');
 
 module.exports = (bot, client, data) => {
     if(check) return;
@@ -24,7 +24,6 @@ module.exports = (bot, client, data) => {
         var ss3 = ss2.replace(/§c|§e|§3|§d|§a|§r/ig, "");
         var ss4 = ss3.replace(/{"text":"/ig, "")
 
-        // replace all space to none
         var ss5 = ss4.replace("    ", " ")
         var ss6 = ss5.replace("    ", " ")
         var data = ss6.split(" ")[1];
@@ -38,7 +37,18 @@ module.exports = (bot, client, data) => {
             tps = data.replace("*", "")
         }
 
-        var status = "TPS: " + tps + " - Chờ: " + + " - Ưu Tiên: " + + " | $help";
+        var queue = data.get('queue');
+        var prio = data.get('prio');
+
+        if(queue == undefined) {
+            queue = "None";
+        }
+
+        if(prio == undefined) {
+            prio = "None";
+        }
+
+        var status = "TPS: " + tps + " - Chờ: " + queue.toString().split(" | ")[0] + " - Ưu Tiên: " + prio.toString().split(" | ")[0] + " | $help";
         if(status.startsWith("§6Donate")) return;
         client.user.setActivity(status, { type: 'PLAYING' });
     }, 5 * 1000)
