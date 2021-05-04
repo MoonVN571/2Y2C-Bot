@@ -17,7 +17,7 @@ module.exports = (bot, client, p) => {
         lastseen.set('seen', time);
     }
     
-    if (username === "Ha_My" || username == "PhanThiHaMy") {
+    if (username === "Ha_My" || username == "PhanThiHaMy" || username == "_Mie_Cutee_") {
         if(bot.dev) return;
         client.channels.cache.get("807048523027578890").send(username + " left");
     }

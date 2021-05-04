@@ -8,10 +8,10 @@ module.exports = (bot, client, message) => {
 
 	if (nocheck.startsWith('<') && nocheck.endsWith(">")) return;
 	
-	if(!bot.dev) {
-		client.channels.cache.get("797426761142632450").send(logger);
+	if(bot.dev) {
+		client.channels.cache.get("802456011252039680").send(logger);
 	} else {
-		client.channels.cache.get("802456011252039680").send(logger);	
+		client.channels.cache.get("797426761142632450").send(logger);	
 	}
 
 	var notfMsg;

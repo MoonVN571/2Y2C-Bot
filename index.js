@@ -157,7 +157,7 @@ function createBot() {
 		
 		if (username === "Ha_My" || username == "PhanThiHaMy" || username == "_Mie_Cutee_") {
 			if(bot.dev) return;
-			client.channels.cache.get("807048523027578890").send("**<" + username + ">** " + logger);
+			client.channels.cache.get("839115042405482576").send("**<" + username + ">** " + logger);
 		}
 		
 		var chat2 = new Discord.MessageEmbed()
@@ -278,6 +278,7 @@ function createBot() {
 
 		if (msg.channel.id === '802456011252039680') {
 			if (msg.author == client.user) return;
+			if(!dev) return;
 			setTimeout(() => {
 				bot.chat(msg.content);
 			}, 1 * 1000);
@@ -286,7 +287,6 @@ function createBot() {
 
 		if (msg.channel.id === '797426761142632450') {
 			if (msg.author == client.user) return;
-			if(bot.dev) return;
 			setTimeout(() => {
 				bot.chat(msg.content);
 			}, 1 * 1000);
@@ -294,7 +294,7 @@ function createBot() {
 
 		if(dev) return;
 
-		if (msg.channel.id == '795135669868822528') {
+		if (msg.channel.id == defaultChannel) {
 			if (msg.content.startsWith(">")) return;
 			if (msg.content.startsWith(prefix)) return;
 
