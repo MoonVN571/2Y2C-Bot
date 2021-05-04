@@ -38,7 +38,7 @@ module.exports = (bot, client, data) => {
             tps = data.replace("*", "")
         }
 
-        var status = "TPS: " + tps + " - Chờ: " + api.getQueue() + " - Ưu Tiên: " + api.getPrio() + " | $help";
+        var status = "TPS: " + tps + " - Chờ: " + + " - Ưu Tiên: " + + " | $help";
         if(status.startsWith("§6Donate")) return;
         client.user.setActivity(status, { type: 'PLAYING' });
     }, 5 * 1000)

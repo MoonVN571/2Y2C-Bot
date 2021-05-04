@@ -126,140 +126,39 @@ function API() {
         return string;
     }
 
-    this.playtimeCalcE = (time) => {
-        var correct = time / 3;
-        var temp = correct / 1000;
-        var day = 0, hour = 0, minutes = 0;
-            day = parseInt(temp / 86400)
-            hour = parseInt(((temp - day * 86400) / 3600))
-            minutes = parseInt(((temp - day * 86400 - hour * 3600)) / 60)
-            var string;
-            if( day == 0 ) {
-                if(minutes > 0 && hour > 0 ) {
-                    string = hour + " hours " + minutes + " minutes";		
-                }
-                if(minutes == 0 && hour > 0) {
-                    string = hour + " hours";
-                }
-                if(minutes > 0 && hour == 0) {
-                    string = minutes + " minutes";
-                }
-            } else {
-                if(minutes > 0 && hour > 0 ) {
-                    string = day + " days " + hour + " hours " + minutes + " minutes";		
-                }
-                if(minutes == 0 && hour > 0) {
-                    string = day + " days " + hour + " hours";
-                }
-                if(minutes > 0 && hour == 0) {
-                    string = day + " days " + minutes + " minutes";
-                }
-            }
-        return string;
-    }
+    this.start = () => {
+        setInterval(() => {
+            mc.ping({ "host": "2y2c.org" }, (err, result) => {
+                if (result) {
+                    try {
+                        var players = [];
+                        for (i = 0; result.players.sample.length > i; i++) {
+                            players.push(result.players.sample[i].name);
+                        }
+                        var players2 = players.splice(0, Math.ceil(players.length / 2));
+                        if (players == []) {
+                            players.push(players2);
+                            players2 = ".";
+                        }
+                    } catch {
+                        var players = 'Error';
+                        var players2 = 'Error';
+                    }
 
-    var queue = "0";
-    var prio = "0";
-    var online = "undefined";
-    var status = "null";
+                    var old = players.toString().replace(",§6Cựu binh: §l0", "");
+                    var queue = old.toString().replace("§6Bình thường: §l", "");
+                    var prio = players2.toString().replace("2y2c §6Queue Size,§6Ưu Tiên: §l", "");
+                    var status = "Hàng chờ: " + queue + " - Ưu tiên: " + prio + " - Trực tuyến: " + result.players.online;
 
-    this.getQueue = () => {
-        mc.ping({ "host": "2y2c.org" }, (err, result) => {
-            if (result) {
-                try {
-                    var players = [];
-                    for (i = 0; result.players.sample.length > i; i++) {
-                        players.push(result.players.sample[i].name);
-                    }
-                    var players2 = players.splice(0, Math.ceil(players.length / 2));
-                    if (players == []) {
-                        players.push(players2);
-                        players2 = ".";
-                    }
-                } catch {
-                    var players = 'Error';
-                    var players2 = 'Error';
+                    var Scriptdb = require('script.db');
+                    const data = new Scriptdb(`./data.json`);
+
+                    data.set('status', status + " | " + Date.now());
+                    data.set('queue', queue + " | " + Date.now());
+                    data.set('prio', prio + " | " + Date.now());
                 }
-
-                var old = players.toString().replace(",§6Cựu binh: §l0", "");
-                queue = old.toString().replace("§6Bình thường: §l", "");
-            }
-        });
-        return queue;
-    }
-
-    this.getPrio = () => {
-        mc.ping({ "host": "2y2c.org" }, (err, result) => {
-            if (result) {
-                try {
-                    var players = [];
-                    for (i = 0; result.players.sample.length > i; i++) {
-                        players.push(result.players.sample[i].name);
-                    }
-                    var players2 = players.splice(0, Math.ceil(players.length / 2));
-                    if (players == []) {
-                        players.push(players2);
-                        players2 = ".";
-                    }
-                } catch {
-                    var players = 'Error';
-                    var players2 = 'Error';
-                }
-                prio = players2.toString().replace("2y2c §6Queue Size,§6Ưu Tiên: §l", "");
-            }
-        });
-        return prio;
-    }
-
-    this.getOnline = () => {
-        mc.ping({ "host": "2y2c.org" }, (err, result) => {
-            if (result) {
-                try {
-                    var players = [];
-                    for (i = 0; result.players.sample.length > i; i++) {
-                        players.push(result.players.sample[i].name);
-                    }
-                    var players2 = players.splice(0, Math.ceil(players.length / 2));
-                    if (players == []) {
-                        players.push(players2);
-                        players2 = ".";
-                    }
-                } catch {
-                    var players = 'Error';
-                    var players2 = 'Error';
-                }
-                online = result.players.online;
-            }
-        });
-        return online;
-    }
-
-    this.getStatus = () => {
-        mc.ping({ "host": "2y2c.org" }, (err, result) => {
-            if (result) {
-                try {
-                    var players = [];
-                    for (i = 0; result.players.sample.length > i; i++) {
-                        players.push(result.players.sample[i].name);
-                    }
-                    var players2 = players.splice(0, Math.ceil(players.length / 2));
-                    if (players == []) {
-                        players.push(players2);
-                        players2 = ".";
-                    }
-                } catch {
-                    var players = 'Error';
-                    var players2 = 'Error';
-                }
-                prio = players2.toString().replace("2y2c §6Queue Size,§6Ưu Tiên: §l", "");
-                online = result.players.online;
-                var old = players.toString().replace(",§6Cựu binh: §l0", "");
-                queue = old.toString().replace("§6Bình thường: §l", "");
-
-                status = "Hàng chờ: " + queue + " - Ưu tiên: " + prio + " - Trực tuyến: " + result.players.online;
-            }
-        });
-        return status;
+            });
+        }, 1 * 60 * 1000);
     }
 }
 

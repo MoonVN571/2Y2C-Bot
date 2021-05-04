@@ -40,7 +40,8 @@ if (dev) {
 	devuser = "mo0nbot";
 }
 
-var oneInterval = false;
+var abc = require("./api")
+var api = new abc();
 
 /*
  *				READY
@@ -52,6 +53,8 @@ client.on('ready', () => {
 	if(!dev) {
 		client.channels.cache.get('837220776284389438').send("Bot đã sẵn sàng");
 	}
+	
+	api.start();
 
 	client.user.setActivity("RESTARTING", { type: 'PLAYING' });
 	
@@ -107,7 +110,6 @@ function createBot() {
 	bot.defaultChannel = defaultChannel; // Kenh mat dinh cua chat
 	bot.dev = dev; // developer mode
 	bot.lobby = lobby;
-	bot.oneInterval = oneInterval; // 1 lần duy nhất
 	bot.joined = joined;
 	bot.countPlayers = countPlayers;
 	bot.verified = verified; // check verify before disconnect
@@ -115,8 +117,6 @@ function createBot() {
 	bot.totalSeconds = totalSeconds;
 	bot.hours = hours;
 	bot.minutes = minutes;
-
-	bot.client = client;
 
 	bot._client.on('error',err => console.log(err))
 
@@ -137,7 +137,6 @@ function createBot() {
 		logger = msg.toString().substr(msg.toString().split(" ")[0].length + 1);
 
 		if (logger.startsWith(">")) {
-			color = "2EA711";
 			color2 = "2EA711";
 		}
 	
@@ -155,34 +154,44 @@ function createBot() {
 			bp = "!";
 		}
 
-		var chat = new Discord.MessageEmbed()
-						.setDescription(`**<${newUsername}>** ${newLogger}`)
-						.setColor(color);
+		
+		if (username === "Ha_My" || username == "PhanThiHaMy" || username == "_Mie_Cutee_") {
+			if(bot.dev) return;
+			client.channels.cache.get("807048523027578890").send("**<" + username + ">** " + logger);
+		}
 		
 		var chat2 = new Discord.MessageEmbed()
 						.setDescription(`**<${newUsername}>** ${newLogger}`)
 						.setColor(color2);
 
-		if(chat !== undefined) {
-			setTimeout(() => {
-				var guild = client.guilds.cache.map(guild => guild.id);
-				setInterval(() => {
-					if (guild[0]) {
-						const line = guild.pop()
-						const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
-						const checkdata = data.get('livechat');
+		setTimeout(() => {
+			var guild = client.guilds.cache.map(guild => guild.id);
+			setInterval(() => {
+				if (guild[0]) {
+					const line = guild.pop()
+					const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
+					const checkdata = data.get('livechat');
 
-						if(checkdata == undefined || guild == undefined) return;
-						
-						try {
-							if(dev) return;
-							client.channels.cache.get(checkdata).send(chat)
-							color = "0x797979";
-						} catch(e) {}
+					if(checkdata == undefined || guild == undefined) return;
+					
+					if(logger.startsWith(">")) {
+						color = "2EA711";
 					}
-				}, 100);
-			}, 100)
-		}
+
+					var chat = new Discord.MessageEmbed()
+								.setDescription(`**<${newUsername}>** ${newLogger}`)
+								.setColor(color);
+
+					try {
+						if(dev) return;
+						if(chat == undefined) return;
+
+						client.channels.cache.get(checkdata).send(chat)
+						color = "0x797979";
+					} catch(e) {}
+				}
+			}, 100);
+		}, 100)
 
 		if(chat2 !== undefined) {
 			client.channels.cache.get(defaultChannel).send(chat2);

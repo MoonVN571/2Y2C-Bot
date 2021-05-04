@@ -1,7 +1,7 @@
 var Discord = require('discord.js');
 
-var abc = require("../api")
-var api = new abc();
+var Scriptdb = require('script.db');
+const data = new Scriptdb(`./data.json`);
 
 module.exports = {
     name: "serverstatus",
@@ -9,8 +9,9 @@ module.exports = {
     aliases: ['ss', 'sstatus'],
     
     async execute(client, message, args) {
-        var status = api.getStatus();
-        if(status == "null") return message.channel.send("Vui lòng thử lại.");
+        var status = data.get('status');
+
+        if(status == undefined) return message.channel.send("Không tìm thấy dữ liệu.")
 
         const embed = new Discord.MessageEmbed()
                         .setColor(0x000DFF)

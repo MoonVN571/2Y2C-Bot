@@ -35,8 +35,17 @@ module.exports = (bot, client, data) => {
         if(currentQueue == "None") return;
         if (s7 === undefined) return;
 
-        var q = currentQueue + "/" + api.getQueue();			
-        var status = "Trong hàng chờ: " + q + " - Chờ: " + api.getQueue();
+        var Scriptdb = require('script.db');
+        const dataa = new Scriptdb(`./data.json`);
+
+        var q = currentQueue + "/" + dataa.get('queue').split(" | ")[0];			
+
+        var que = dataa.get('queue');
+        if(que == undefined) {
+            que = "None";
+        }
+        
+        var status = "Trong hàng chờ: " + q + " - Chờ: " + que;
 
         if(status === undefined) return;
             client.user.setActivity(status, { type: 'PLAYING' });

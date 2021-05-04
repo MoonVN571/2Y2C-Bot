@@ -1,5 +1,5 @@
-var a = require("../api")
-var api = new a();
+var Scriptdb = require('script.db');
+const data = new Scriptdb(`./data.json`);
 
 module.exports = {
     name: "normalqueue",
@@ -7,8 +7,11 @@ module.exports = {
     aliases: ['normalqueue', 'nq'],
     
     async execute(bot, username, args) {
-        if (bot.api.getQueue() == 0) return bot.whisper(username, `> Không có bất kì hàng chờ nào.`);
+        var queue = data.get('queue');
+        if(queue == undefined) return bot.whisper(username, "> Không tìm thấy dữ liệu.");
 
-        bot.whisper(username, `> Hàng chờ: ${api.getQueue()}`);
+        if (queue.toString().split(" | ") == 0) return bot.whisper(username, `> Không có bất kì hàng chờ nào.`);
+
+        bot.whisper(username, `> Hàng chờ: ${queue}`);
     }
 }

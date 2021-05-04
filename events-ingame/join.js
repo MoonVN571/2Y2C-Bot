@@ -42,9 +42,9 @@ module.exports = (bot, client, p) => {
         fj.set(`date`, date)
     }
 
-    if (username === "Ha_My" || username == "PhanThiHaMy") {
+    if (username === "Ha_My" || username == "PhanThiHaMy" || username == "_Mie_Cutee_") {
         if(bot.dev) return;
-        bot.client.channels.cache.get("807048523027578890").send(username + " joined");
+        client.channels.cache.get("807048523027578890").send(username + " joined");
     }
     if(bot.countPlayers <= Object.values(bot.players).map(p => p.username).length) return;
 
