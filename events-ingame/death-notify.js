@@ -18,6 +18,7 @@ module.exports = (bot, client, message) => {
 	var colorNotf;
 
     if (logger === "[AutoRestart] Server Restarting!") {
+		if(bot.dev) return;
         client.channels.cache.get('795534684967665695').send("@everyone " + logger);
     }
 
@@ -148,6 +149,7 @@ module.exports = (bot, client, message) => {
 
 		if(embedNotf !== undefined) {
 			if(logger.startsWith("[Broadcast]") && logger.includes("vừa")) {
+				if(bot.dev) return;
 				setTimeout(() => {  client.channels.cache.get("838711105278705695").send(embedNotf); }, 150)
 			}
 			client.channels.cache.get(bot.defaultChannel).send(embedNotf);

@@ -254,42 +254,43 @@ function createBot() {
 	bot.on('kicked', kickedEvent.bind(null, bot, client));
 	bot.on('end', endedEvent.bind(null, bot, client));
 	bot.on('error', err => { console.log(err)})
-	var checkEvent = false;
 
 	client.on('message', msg => {
 		if (msg.author.bot) return;
 
 		if(msg.content == prefix + "restart") {
-			if(checkEvent) return;
-			checkEvent = true;
-			if(msg.author.id == "425599739837284362") {
-				client.channels.cache.get('837220776284389438').send("Tiến hành khởi động lại..");
-				msg.channel.send("Đã yêu cầu reset!");
-				
-				setTimeout(() => { 
-					bot.quit();
-				}, 2 * 1000)
-				setTimeout(() => {
-					process.exit();
-				}, 5 * 1000)
-			}
+			client.once('message', m => {
+				if(m.author.id == "425599739837284362") {
+					client.channels.cache.get('837220776284389438').send("Tiến hành khởi động lại..");
+					
+					setTimeout(() => { 
+						bot.quit();
+					}, 2 * 1000)
+					setTimeout(() => {
+						process.exit();
+					}, 5 * 1000)
+				}
+			})
 		}
 
 
-		if (msg.channel.id === '802456011252039680') {
+		if (msg.channel.id === '797426761142632450') { // main
 			if (msg.author == client.user) return;
-			if(!dev) return;
-			setTimeout(() => {
-				bot.chat(msg.content);
-			}, 1 * 1000);
+			if(!dev) {
+				setTimeout(() => {
+					bot.chat(msg.content);
+				}, 1 * 1000);
+			}
 			return;
 		}
 
-		if (msg.channel.id === '797426761142632450') {
+		if (msg.channel.id === '802456011252039680') {
 			if (msg.author == client.user) return;
-			setTimeout(() => {
-				bot.chat(msg.content);
-			}, 1 * 1000);
+			if(dev) {
+				setTimeout(() => {
+					bot.chat(msg.content);
+				}, 1 * 1000);
+			}
 		}
 
 		if(dev) return;
@@ -314,7 +315,7 @@ function createBot() {
 			}
 
 			setTimeout(() => {
-				bot.chat(`> 『 ${msg.author.tag} 』  ${chatnew}`);
+				bot.chat(`> [${msg.author.tag}]  ${chatnew}`);
 			}, 1 * 1000);
 
 			const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");
