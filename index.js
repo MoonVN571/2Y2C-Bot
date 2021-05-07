@@ -259,18 +259,16 @@ function createBot() {
 		if (msg.author.bot) return;
 
 		if(msg.content == prefix + "restart") {
-			client.once('message', m => {
-				if(m.author.id == "425599739837284362") {
-					client.channels.cache.get('837220776284389438').send("Tiến hành khởi động lại..");
-					
-					setTimeout(() => { 
-						bot.quit();
-					}, 2 * 1000)
-					setTimeout(() => {
-						process.exit();
-					}, 5 * 1000)
-				}
-			})
+			if(m.author.id == "425599739837284362") {
+				client.channels.cache.get('837220776284389438').send("Tiến hành khởi động lại..");
+				
+				setTimeout(() => { 
+					bot.quit();
+				}, 2 * 1000)
+				setTimeout(() => {
+					process.exit();
+				}, 5 * 1000)
+			}
 		}
 
 
