@@ -25,7 +25,7 @@ module.exports = {
 
        var embed = new Discord.MessageEmbed()
                 .addField("Thông tin", 
-                          "-   **Tên bot:** " + botID + " - 768448728125407242\n"
+                          "-   **Tên bot:** " + botID + " - ID: 768448728125407242\n"
                         + "-   **Người tạo:** " + authorID + " - ID: 425599739837284362\n"
                         + "-   **Ngày tạo bot:** 21/10/2020\n"
                         + "-   **Ngày tạo minecraft bot:** 5/1/2021\n\n"

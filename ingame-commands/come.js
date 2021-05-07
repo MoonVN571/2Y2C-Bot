@@ -16,7 +16,7 @@ module.exports = {
         const mcData = require('minecraft-data')(bot.version)
         const defaultMove = new Movements(bot, mcData)
         
-        bot.whisper(username, "> Đang đi đến X: " + parseInt(p.x) + " Y: " + parseInt(p.y) + " Z: " + parseInt(p.z))
+        bot.whisper(username, "> Đang đi đến X: " + parseInt(p.x) + " Y: " + parseInt(p.y) + " Z: " + parseInt(p.z) + ". Nếu bot không di chuyển, hãy dùng !avoid.")
 
         bot.pathfinder.setMovements(defaultMove)
         bot.pathfinder.setGoal(new GoalNear(p.x, p.y, p.z, 1))

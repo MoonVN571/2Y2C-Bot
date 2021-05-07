@@ -15,7 +15,7 @@ module.exports = {
 
         const embed = new Discord.MessageEmbed()
                         .setColor(0x000DFF)
-                        .setDescription(status);
+                        .setDescription(status.split(" | ")[0]);
 
         message.channel.send(embed);
     }

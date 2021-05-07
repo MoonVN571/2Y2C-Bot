@@ -1,4 +1,5 @@
 var Discord = require('discord.js');
+var Scriptdb = require('script.db');
 
 var a = require("../api")
 var api = new a();

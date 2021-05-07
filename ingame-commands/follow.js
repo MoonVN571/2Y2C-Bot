@@ -13,7 +13,7 @@ module.exports = {
 		const target = bot.players[username] ? bot.players[username].entity : null
 		if (!target) return bot.whisper(username, '> Không ở trong tầm nhìn!');
 		
-		bot.whisper(username, "> Đang theo " + username)
+		bot.whisper(username, "> Bot đang theo bạn! Nếu bot không di chuyển, hãy dùng !avoid.")
 
 		bot.pathfinder.setMovements(defaultMove)
 		bot.pathfinder.setGoal(new GoalFollow(target, 3), true)
