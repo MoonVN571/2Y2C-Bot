@@ -9,7 +9,7 @@ module.exports = (bot) => {
     bot.clickWindow(pin3, 0, 0, null)
     bot.clickWindow(pin4, 0, 0, null)
     
-    setTimeout(() => { bot.chat('/2y2c') }, 10*1000)
+    setTimeout(() => { bot.chat('/2y2c'); }, 15*1000);
 
-    setTimeout(() => { bot.clickWindow(10,0,0); bot.verified = true; }, 12*1000);
+    setTimeout(() => { bot.clickWindow(10,0,0); bot.verified = true; }, 20*1000);
 }

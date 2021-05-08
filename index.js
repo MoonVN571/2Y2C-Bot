@@ -156,7 +156,7 @@ function createBot() {
 
 		
 		if (username === "Ha_My" || username == "PhanThiHaMy" || username == "_Mie_Cutee_") {
-			if(bot.dev) return;
+			if(dev) return;
 			client.channels.cache.get("839115042405482576").send("**<" + username + ">** " + logger);
 		}
 		
@@ -182,10 +182,10 @@ function createBot() {
 								.setDescription(`**<${newUsername}>** ${newLogger}`)
 								.setColor(color);
 
-					try {
-						if(dev) return;
-						if(chat == undefined) return;
+					if(dev) return;
+					if(chat == undefined) return;
 
+					try {
 						client.channels.cache.get(checkdata).send(chat)
 						color = "0x797979";
 					} catch(e) {}
@@ -231,6 +231,24 @@ function createBot() {
 			|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
 
 
+		if(cmdName == "reload") {
+			if(username == "MoonVN" || username == "MoonZ" || username == "MoonOnTop") {
+				if(!args[0]) return bot.whisper(username, "> Nhập tên lệnh cần reload.")
+	
+				const cmd = require(`./ingame-commands/${args[0]}.js`);
+	
+				delete require.cache[require.resolve(`./ingame-commands/${args[0]}.js`)];
+	
+				if(!cmd) return bot.whisper(username, "> Không tìm thấy tên lệnh này.")
+				bot.commands.delete(args[0])
+				bot.commands.set(args[0], cmd);
+				
+				bot.whisper(username, "> Reload thành công: " + args[0])
+			} else {
+				bot.whisper(username, "> Không thể sử dụng lệnh này.")
+			}
+		}
+		
 		if(!cmd) return;
 	
 		bot.regex = /[a-z]|[A-Z]|[0-9]/i;
@@ -304,7 +322,9 @@ function createBot() {
 			var str = msg.content.toString().split('\n')[0];
 			var chat = str.charAt(0).toUpperCase() + str.substr(1);
 			
-			if(msg.content.startsWith("/")) return;
+
+			if(msg.content.includes("§")) return message.channel.send("Hiện tại đang có bug với ký tự này, đã huỷ gửi.");
+
 			if(msg.author.bot) return;
 
 			var chatnew = chat;
@@ -339,6 +359,8 @@ for (const file of cmdss) {
 client.on("message", async message => {
 	if(message.author.bot|| !message.content.startsWith(prefix) || message.author == client.user || message.channel.type == "dm") return;
 
+	if(dev && message.guild.id !== "794912016237985802") return message.channel.send("Lệnh đã bị tắt tại nhóm này.");
+	
     const args = message.content.slice(prefix.length).split(/ +/);
     const cmdName = args.shift().toLowerCase();
 
@@ -347,7 +369,7 @@ client.on("message", async message => {
 
 	if(cmdName == "reload") {
 		var noPerm = new Discord.MessageEmbed()
-							.setDescription('Bạn phải là developer để sử dụng lệnh này.')
+							.setDescription('Bạn phải là nhà phát triển để sử dụng lệnh này.')
 							.setColor('0xC51515');
 
 		if(message.author.id !== "425599739837284362")

@@ -219,7 +219,7 @@ module.exports = (bot, client, message) => {
 
 		saveKills(user)
 		deathMsg = logger;
-	}
+	} 
 
 	if (logger.includes('khô máu với')) {
 		var str = logger;
@@ -257,12 +257,22 @@ module.exports = (bot, client, message) => {
 		}
 		saveKills(newUser)
 		deathMsg = logger;
-	}
+	} 
 
 	if (logger.includes('giết') && logger.includes("bằng")) {
 		var str = logger;
 		var user = str.split(" ")[2];
 		var killer = str.split(" ")[1];
+
+		saveKills(killer)
+		saveDead(user)
+		deathMsg = logger;
+	}
+
+	if (logger.includes("nổ banh xác")) {
+		var str = logger;
+		var user = str.split(" ")[4];
+		var killer = str.split(" ")[0];
 
 		saveKills(killer)
 		saveDead(user)

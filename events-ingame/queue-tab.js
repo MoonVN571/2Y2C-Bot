@@ -43,9 +43,11 @@ module.exports = (bot, client, data) => {
         var que = dataa.get('queue');
         if(que == undefined) {
             que = "None";
+        } else {
+            que = que.split(" | ")[0];
         }
         
-        var status = "Trong hàng chờ: " + q + " - Chờ: " + que;
+        var status = "Trong hàng chờ: " + q + " - Chờ: " + que + " | $help";
 
         if(status === undefined) return;
             client.user.setActivity(status, { type: 'PLAYING' });
@@ -60,6 +62,7 @@ module.exports = (bot, client, data) => {
         if(embed == undefined) return;
         client.channels.cache.get(bot.defaultChannel).send(embed)
 
+        if(bot.dev) return;
         setTimeout(() => {
             var guild = client.guilds.cache.map(guild => guild.id);
             setInterval(() => {

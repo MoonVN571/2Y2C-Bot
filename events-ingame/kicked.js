@@ -15,16 +15,9 @@ module.exports = (bot, client, reason, loggedIn) => {
                         .setDescription(`Bot mất kết nối: ` + r)
                         .setColor("F71319");
 
-    
-    if(bot.dev) {
-        console.log(r)
-    }
-
     if(bot.dev) return;
     
     if(bot.joined) {
-        client.channels.cache.get(bot.defaultChannel).send(embed).then(() => {
-            client.channels.cache.get("816695017858531368").send(embed)
-        });
+        client.channels.cache.get(bot.defaultChannel).send(embed);
     }
 }
