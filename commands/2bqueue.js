@@ -3,8 +3,7 @@ var Discord = require('discord.js');
 
 module.exports = {
     name: "2bqueue",
-    description: "2bqueue command.",
-    aliases: ['2bq', '2bqueue'],
+    aliases: ['2bq', '2bque'],
     
     async execute(client, message, args) {
         superagent.get("https://2b2t.io/api/queue?last=true").end((err, data) => {
@@ -20,7 +19,7 @@ module.exports = {
 				}
 
 				var queue = new Discord.MessageEmbed()
-									.setDescription("Hàng chờ 2B2T: " + queuequeue + " - Ưu tiên 2B2T: " + prio)
+									.setDescription("2B2T - Hàng chờ: " + queuequeue + " | Ưu tiên 2B2T: " + prio)
 									.setColor(0x2EA711);
 
 				message.channel.send(queue);
