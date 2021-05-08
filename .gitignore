@@ -103,6 +103,6 @@ dist
 # Other
 package-lock.json
 khac/
-test/
 *.json
 ads.txt
+special-join.txt
