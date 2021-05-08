@@ -1,5 +1,5 @@
 var Scriptdb = require('script.db');
-var data = Scriptdb('../data.json');
+var data = new Scriptdb('./data');
 
 module.exports = {
     name: "prio",

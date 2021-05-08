@@ -9,7 +9,7 @@ module.exports = {
     aliases: [''],
     
     async execute(bot, username, args) {
-		let quote = new Scriptdb(`${config.disk}/data/quotes/${args[0]}.json`)
+		let quote = new Scriptdb(`./data/quotes/${args[0]}.json`)
 		let msgs = quote.get('messages')
 		let times = quote.get('times')
         
