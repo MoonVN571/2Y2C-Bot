@@ -259,7 +259,7 @@ function createBot() {
 		if (msg.author.bot) return;
 
 		if(msg.content == prefix + "restart") {
-			if(m.author.id == "425599739837284362") {
+			if(msg.author.id == "425599739837284362") {
 				client.channels.cache.get('837220776284389438').send("Tiến hành khởi động lại..");
 				
 				setTimeout(() => { 
