@@ -19,7 +19,7 @@ module.exports = {
 				}
 
 				var queue = new Discord.MessageEmbed()
-									.setDescription("2B2T - Hàng chờ: " + queuequeue + " | Ưu tiên 2B2T: " + prio)
+									.setDescription("2B2T | Hàng chờ: " + queuequeue + " - Ưu tiên: " + prio)
 									.setColor(0x2EA711);
 
 				message.channel.send(queue);
