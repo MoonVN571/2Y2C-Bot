@@ -230,7 +230,6 @@ function createBot() {
 		const cmd = client.commands.get(cmdName)
 			|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
 
-
 		if(cmdName == "reload") {
 			if(username == "MoonVN" || username == "MoonZ" || username == "MoonOnTop") {
 				if(!args[0]) return bot.whisper(username, "> Nhập tên lệnh cần reload.")
@@ -240,8 +239,8 @@ function createBot() {
 				delete require.cache[require.resolve(`./ingame-commands/${args[0]}.js`)];
 	
 				if(!cmd) return bot.whisper(username, "> Không tìm thấy tên lệnh này.")
-				bot.commands.delete(args[0])
-				bot.commands.set(args[0], cmd);
+				client.commands.delete(args[0])
+				client.commands.set(args[0], cmd);
 				
 				bot.whisper(username, "> Reload thành công: " + args[0])
 			} else {
