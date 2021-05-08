@@ -15,7 +15,7 @@ module.exports = {
 		let ls = new Scriptdb(`./data/seen/${args[0]}.json`);
 		let seen = ls.get('seen')
 
-		if (seen == undefined) return message.channel.send(bot.userNotFound);
+		if (seen == undefined) return message.channel.send(client.userNotFound);
 		
 		var age = api.ageCalc(seen);
 		var embed = new Discord.MessageEmbed()

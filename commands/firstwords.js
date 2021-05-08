@@ -10,13 +10,13 @@ module.exports = {
     aliases: ['fw'],
     
     async execute(client, message, args) {
-		if (!args[0]) return message.channel.send(bot.userNotFound)
+		if (!args[0]) return message.channel.send(client.userNotFound)
 
 		let quote = new Scriptdb(`./data/quotes/${args[0]}.json`)
 		let msgs = quote.get('messages')
 		let times = quote.get('times')
 		
-		if (msgs === undefined || times == undefined) return message.channel.send(bot.userNotFound);
+		if (msgs === undefined || times == undefined) return message.channel.send(client.userNotFound);
 
 		var data = msgs.split(" | ")[msgs.split(" | ").length - 1];
 		var time = times.split(" | ")[times.split(" | ").length - 1];
