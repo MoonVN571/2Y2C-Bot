@@ -1,5 +1,5 @@
 var Scriptdb = require('script.db');
-const data = new Scriptdb(`./data.json`);
+const data = new Scriptdb(`../data.json`);
 
 module.exports = {
     name: "normalqueue",
