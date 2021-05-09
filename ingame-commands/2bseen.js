@@ -1,4 +1,4 @@
-var superagent = require('superagent');
+var request = require('request');
 
 var apiNew = require('../api');
 var api = new apiNew();
@@ -14,10 +14,12 @@ module.exports = {
 
         if (!args[0]) return
 
-        superagent.get("https://api.2b2t.dev/seen?username=" + args[0]).end((err, data) => {
-            if(data.body[0] == undefined) return bot.whisper(username, "> Không tìm thấy người chơi.")
+        request('https://api.2b2t.dev/seen?username=' + args[0], function (error, response, body) {
+            var data = JSON.parse(body)[0];
 
-            let seen = data.body[0].seen
+            if(data.seen == undefined) return bot.whisper(username, "> Không tìm thấy người chơi.")
+
+            let seen = data.seen;
 
             var toTime = new Date(seen);
 
