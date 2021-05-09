@@ -126,6 +126,15 @@ function API() {
         return string;
     }
 
+    this.removeFormat = (data) => {
+		const dauhuyen = data.replace(/`/ig, "\\`");
+		const dausao = dauhuyen.replace(/_/ig, "\\_");
+		const s = dausao.replace("||", "\\||");
+		const newData = s.replace("*", "\\*");
+
+        return newData;
+    }
+
     this.start = () => {
         setInterval(() => {
             mc.ping({ "host": "2y2c.org" }, (err, result) => {

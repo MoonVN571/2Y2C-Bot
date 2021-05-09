@@ -48,37 +48,33 @@ module.exports = (bot, client, p) => {
     }
     if(bot.countPlayers <= Object.values(bot.players).map(p => p.username).length) return;
 
-    check(username);
-    function check(username) {
-        var newUsername = username.replace(/_/ig, "\\_");
-        
-        fs.readFile("special-join.txt", 'utf8', (err, data) => {
-            if (err) throw err;
-            if(data.toString().split("\r\n").indexOf(username) > -1) {
-                if(bot.dev) return;
-                var embed = new Discord.MessageEmbed()
-                    .setDescription(newUsername + " joined")
-                    .setColor('0xb60000');
+    // oldfag join
+    fs.readFile("special-join.txt", 'utf8', (err, data) => {
+        if (err) throw err;
+        if(data.toString().split("\r\n").indexOf(username) > -1) {
+            if(bot.dev) return;
+            var embed = new Discord.MessageEmbed()
+                .setDescription(api.removeFormat(username) + " joined")
+                .setColor('0xb60000');
 
-                client.channels.cache.get("807506107840856064").send(embed);
-            }
-        });
-    }
+            client.channels.cache.get("807506107840856064").send(embed);
+        }
+    });
     
     if(username == "MoonZ" || username == "LinhLinh" || username == "bachbach") {
         var embed = new Discord.MessageEmbed()
-            .setDescription("[STAFF] " + newUsername + " joined")
+            .setDescription("[STAFF] " + username + " joined")
             .setColor('0xb60000')
 
-        if(bot.dev) return;
-        client.channels.cache.get("826280327998996480").send(embed);
+        if(!bot.dev) 
+            client.channels.cache.get("826280327998996480").send(embed);
     }
     
     var embed = new Discord.MessageEmbed()
-                        .setDescription(newUsername + " joined")
-                        .setColor('0xb60000');	
+                        .setDescription(api.removeFormat(username) + " joined")
+                        .setColor('0xb60000');
 
-    client.channels.cache.get(bot.defaultChannel).send(embed)
+    client.channels.cache.get(bot.defaultChannel).send(embed);
     
     if(bot.dev) return;
     setTimeout(() => {

@@ -140,31 +140,23 @@ function createBot() {
 			color2 = "2EA711";
 		}
 	
-		const dauhuyen = logger.replace(/`/ig, "\\`");
-		const dausao = dauhuyen.replace(/_/ig, "\\_");
-		const s = dausao.replace("||", "\\||");
-		const newLogger = s.replace("*", "\\*");
-
-		var newUsername = username.replace(/_/ig, "\\_");
-	
 		var bp;
 		if (dev) {
 			bp = "!!";
 		} else {
 			bp = "!";
 		}
-
 		
 		if (username === "Ha_My" || username == "PhanThiHaMy" || username == "_Mie_Cutee_") {
 			if(dev) return;
-			client.channels.cache.get("839115042405482576").send("**<" + username + ">** " + logger);
+			client.channels.cache.get("839115042405482576").send("**<" + api.removeFormat(username) + ">** " + api.removeFormat(logger));
 		}
 		
 		var chat2 = new Discord.MessageEmbed()
-						.setDescription(`**<${newUsername}>** ${newLogger}`)
+						.setDescription(`**<${api.removeFormat(username)}>** ${api.removeFormat(logger)}`)
 						.setColor(color2);
 
-		var setLogger = `**<${newUsername}>** ${newLogger}`;
+		var setLogger = `**<${api.removeFormat(api.removeFormat(username))}>** ${api.removeFormat(logger)}`;
 		setTimeout(() => {
 			var guild = client.guilds.cache.map(guild => guild.id);
 			setInterval(() => {

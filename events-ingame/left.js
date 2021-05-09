@@ -4,7 +4,6 @@ var fs = require('fs');
 
 module.exports = (bot, client, p) => {
     var username = p.username;
-    var newUsername = username.replace(/_/ig, "\\_");
     
     var d = new Date();
     var time = d.getTime();
@@ -24,33 +23,30 @@ module.exports = (bot, client, p) => {
     
     if(bot.countPlayers <= Object.values(bot.players).map(p => p.username).length) return;
 
-    check(username, newUsername);
-    function check(username, newUsername) {
-        fs.readFile("special-join.txt",  (err, data) => {
-            if (err) throw err;
-            if(data.toString().split("\r\n").indexOf(username) > -1) {
-                if(bot.dev) return;
-                var embed = new Discord.MessageEmbed()
-                                        .setDescription(newUsername + " left")
-                                        .setColor('0xb60000')
+    fs.readFile("special-join.txt",  (err, data) => {
+        if (err) throw err;
+        if(data.toString().split("\r\n").indexOf(username) > -1) {
+            if(bot.dev) return;
+            var embed = new Discord.MessageEmbed()
+                                    .setDescription(api.removeFormat(username) + " left")
+                                    .setColor('0xb60000')
 
-                if(bot.dev) return;
-                client.channels.cache.get("807506107840856064").send(embed);
-            }
-        });
-    }
+            if(bot.dev) return;
+            client.channels.cache.get("807506107840856064").send(embed);
+        }
+    });
 
     if(username == "MoonZ" || username == "LinhLinh" || username == "bachbach") {
         var embed = new Discord.MessageEmbed()
-            .setDescription("[STAFF] " + newUsername + " left")
+            .setDescription("[STAFF] " + username + " left")
             .setColor('0xb60000')
 
-        if(bot.dev) return;
+        if(!bot.dev)
         client.channels.cache.get("826280327998996480").send(embed);
     }
 
     var embed = new Discord.MessageEmbed()
-                        .setDescription(newUsername + " left")
+                        .setDescription(api.removeFormat(username) + " left")
                         .setColor('0xb60000')
 
     client.channels.cache.get(bot.defaultChannel).send(embed)

@@ -1,6 +1,9 @@
 var Discord = require('discord.js');
 var Scriptdb = require("script.db");
 
+var a = require('../api');
+var api = new a();
+
 module.exports = (bot, client, message) => { 
 	var newcolor = 'DB2D2D';
 	var logger = message.toString();
@@ -31,16 +34,7 @@ module.exports = (bot, client, message) => {
 			toLog = toLog.split("]")[1];
 		}
 
-		var cancelOne = toLog.replace(/_/ig, "\_")
-		var cancelTwo = cancelOne.replace(/`/ig, "\`")
-		var n = cancelTwo.replace("||", "\*")
-		var lognoformat = n.replace("*", "\*")
-
-		if(lognoformat === undefined) {
-			logformat = newlog;
-		}
-
-		notfMsg = lognoformat;
+		notfMsg = api.removeFormat(toLog);
 		colorNotf = "0xFD00FF";
 	}
 
@@ -138,20 +132,18 @@ module.exports = (bot, client, message) => {
 	}
 
 	if(notfMsg !== undefined) {
-		var strn = notfMsg.replace(/\*/ig, "\\*")
-		var str = strn.replace(/`/ig, "\\`")
-		const s = str.replace("||", "\\||");
-		var notf = s.replace(/_/ig, "\\_")
+		var notf = api.removeFormat(notfMsg)
 
 		var embedNotf = new Discord.MessageEmbed()
 							.setDescription(notf)
 							.setColor(colorNotf);
 
 		if(embedNotf !== undefined) {
-			if(logger.startsWith("[Broadcast]") && logger.includes("vừa")) {
+			if(logger.startsWith("[Broadcast]") && logger.includes("vừa")) { // donators
 				if(bot.dev) return;
 				setTimeout(() => {  client.channels.cache.get("838711105278705695").send(embedNotf); }, 150)
 			}
+
 			client.channels.cache.get(bot.defaultChannel).send(embedNotf);
 
 			if(!bot.dev) {
@@ -339,16 +331,8 @@ module.exports = (bot, client, message) => {
 
 	if(deathMsg == undefined) return;
 	
-	var strn = deathMsg.replace("*", "\\*")
-	var str = strn.replace(/`/ig, "\\`")
-	var newDeathMsg = str.replace(/_/ig, "\\_")
-
-	if (newDeathMsg === undefined) {
-		newDeathMsg = deathMsg;
-	}
-
 	var embedDeath = new Discord.MessageEmbed()
-							.setDescription(newDeathMsg)
+							.setDescription(api.removeFormat(deathMsg))
 							.setColor(newcolor);
 
 	if(embedDeath == undefined) return;
