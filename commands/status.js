@@ -10,13 +10,12 @@ module.exports = {
     aliases: ['uptime', 'tps', 'q', 'queue', 'que', 'prio', 'prioqueue', 'normalqueue'],
 
     async execute(client, message, args) {
-        var data = new Scriptdb(`../data.json`);
+        var data = new Scriptdb("./data.json");
 
         var queue = data.get('queue');
         var prio = data.get('prio');
 
         var tab = data.get('tab-content');
-
         if(tab == undefined) return message.channel.send("Bot chưa kết nối đến server hoặc server không hoạt động.");
 
 		var uptime = tab.split(' - ')[3].split(" | ")[0].split("restart từ")[1].split("trước")[0];

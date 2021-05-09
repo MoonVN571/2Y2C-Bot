@@ -43,8 +43,6 @@ if (dev) {
 var abc = require("./api")
 var api = new abc();
 
-// Chưa update vao vps
-
 /*
  *				READY
  */

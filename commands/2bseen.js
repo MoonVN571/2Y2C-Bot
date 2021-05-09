@@ -1,4 +1,4 @@
-var superagent = require('superagent');
+const request = require('request');
 var Discord = require('discord.js');
 
 var apiNew = require('../api');
@@ -11,8 +11,8 @@ module.exports = {
     async execute(client, message, args) {
         if (!args[0]) return message.channel.send(client.userNotFound);
 
-        superagent.get("https://api.2b2t.dev/seen?username=" + args[0]).end((err, data) => {
-            if(data.body[0] == undefined) return message.channel.send(client.userNotFound)
+        request('https://api.2b2t.dev/seen?username=' + args[0], function (error, response, body) {
+            if(body[0] == undefined) return message.channel.send(client.userNotFound)
 
             let seen = data.body[0].seen
 

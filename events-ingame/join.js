@@ -10,7 +10,6 @@ var checkOnly = false;
 module.exports = (bot, client, p) => {
     bot.countPlayers++;
     var username = p.username;
-    var newUsername = username.replace(/_/ig, "\\_");
 
     if(!checkOnly) {
         checkOnly = true;
