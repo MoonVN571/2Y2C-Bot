@@ -2,6 +2,9 @@ var Discord = require('discord.js');
 var Scriptdb = require('script.db');
 var fs=  require('fs');
 
+var ap = require('../api');
+var api = new ap();
+
 var checkOnly = false;
 
 module.exports = (bot, client, p) => {
