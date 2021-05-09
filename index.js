@@ -43,6 +43,8 @@ if (dev) {
 var abc = require("./api")
 var api = new abc();
 
+// Chưa update vao vps
+
 /*
  *				READY
  */
@@ -315,7 +317,7 @@ function createBot() {
 			var chat = str.charAt(0).toUpperCase() + str.substr(1);
 			
 
-			if(msg.content.includes("§")) return message.channel.send("Hiện tại đang có bug với ký tự này, đã huỷ gửi.");
+			if(msg.content.includes("§")) return msg.channel.send("Hiện tại đang có bug với ký tự này, đã huỷ gửi.");
 
 			if(msg.author.bot) return;
 
