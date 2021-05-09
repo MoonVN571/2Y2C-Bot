@@ -36,7 +36,7 @@ module.exports = (bot, client, p) => {
         }
     });
 
-    if(username == "MoonZ" || username == "LinhLinh" || username == "bachbach") {
+    if(username == "MoonZ" || username == "bachbach") {
         var embed = new Discord.MessageEmbed()
             .setDescription("[STAFF] " + username + " left")
             .setColor('0xb60000')
