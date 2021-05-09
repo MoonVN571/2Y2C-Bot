@@ -164,6 +164,7 @@ function createBot() {
 						.setDescription(`**<${newUsername}>** ${newLogger}`)
 						.setColor(color2);
 
+		var setLogger = `**<${newUsername}>** ${newLogger}`;
 		setTimeout(() => {
 			var guild = client.guilds.cache.map(guild => guild.id);
 			setInterval(() => {
@@ -174,12 +175,12 @@ function createBot() {
 
 					if(checkdata == undefined || guild == undefined) return;
 					
-					if(logger.startsWith(">")) {
+					if(setLogger.split(" ")[1].startsWith(">")) {
 						color = "2EA711";
 					}
 
 					var chat = new Discord.MessageEmbed()
-								.setDescription(`**<${newUsername}>** ${newLogger}`)
+								.setDescription(setLogger)
 								.setColor(color);
 
 					if(dev) return;

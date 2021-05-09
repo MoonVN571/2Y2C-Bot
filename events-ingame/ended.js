@@ -61,7 +61,7 @@ module.exports = (bot, client) => {
         uptime.delete('uptime');
 
 
-        waitUntil(20 * 1000, 50, function condition() {
+        waitUntil(60 * 1000, 50, function condition() {
             try {
                 console.log("Recoonecting to the server.");
                 start.createBot()
