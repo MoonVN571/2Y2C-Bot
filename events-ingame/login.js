@@ -12,6 +12,8 @@ module.exports = (bot, client) => {
         var totalSeconds = bot.totalSeconds;
 
         totalSeconds = 0;
+
+        api.start();
         
         setInterval(() => {
             totalSeconds += 300;

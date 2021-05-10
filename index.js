@@ -54,8 +54,6 @@ client.on('ready', () => {
 		client.channels.cache.get('837220776284389438').send("Bot đã sẵn sàng");
 	}
 	
-	api.start();
-
 	client.user.setActivity("RESTARTING", { type: 'PLAYING' });
 	
     console.log(`Ready to serve in ${client.channels.cache.size} channels on ${client.guilds.cache.size} servers, for a total of ${client.users.cache.size} users.`);
@@ -156,7 +154,7 @@ function createBot() {
 						.setDescription(`**<${api.removeFormat(username)}>** ${api.removeFormat(logger)}`)
 						.setColor(color2);
 
-		var setLogger = `**<${api.removeFormat(api.removeFormat(username))}>** ${api.removeFormat(logger)}`;
+		var setLogger = `**<${api.removeFormat(username)}>** ${api.removeFormat(logger)}`;
 		setTimeout(() => {
 			var guild = client.guilds.cache.map(guild => guild.id);
 			setInterval(() => {
