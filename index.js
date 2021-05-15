@@ -96,7 +96,6 @@ function createBot() {
 	var joined = false;
 	var restartingMsg = false; // Tin nhắn restart, cho status bot
 	var countPlayers = 0;
-	var verified = false;
 
 	// Uptimes
 	var totalSeconds = 0;
@@ -110,7 +109,6 @@ function createBot() {
 	bot.lobby = lobby;
 	bot.joined = joined;
 	bot.countPlayers = countPlayers;
-	bot.verified = verified; // check verify before disconnect
 
 	bot.totalSeconds = totalSeconds;
 	bot.hours = hours;
@@ -202,6 +200,11 @@ function createBot() {
 				messages.set("messages", logger + " | " + msgs)
 				messages.set("times", times + " | " + Date.now())
 			}
+		}
+
+		
+		if(logger.includes("2y2c") && logger.includes('pvp')) {
+			bot.whisper(username, "> Ý của bạn là IP của 2y2cpvp? Owner là Moonz ( Moonz#0001 ). IP address: 2y2cpvp.ga.")
 		}
 
 		if(!logger.startsWith(bp)) return;

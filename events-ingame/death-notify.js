@@ -19,7 +19,7 @@ module.exports = (bot, client, message) => {
 
 	var notfMsg;
 	var colorNotf;
-
+	
     if (logger === "[AutoRestart] Server Restarting!") {
 		if(bot.dev) return;
         client.channels.cache.get('795534684967665695').send("@everyone " + logger);
@@ -108,8 +108,10 @@ module.exports = (bot, client, message) => {
 		}, 1500);
 	}
 
-	if(logger == "Could not connect to a default or fallback server, please try again later: io.netty.channel.AbstractChannel$AnnotatedConnectException") {
+	if(logger == "Could not connect to a default or fallback server, please try again later: io.netty.channel.AbstractChannel$AnnotatedConnectException"
+	|| logger == "Exception Connecting:ReadTimeoutException : null") {
 		bot.quit()
+	
 	}
 
 	if (logger == "đang vào 2y2c..."

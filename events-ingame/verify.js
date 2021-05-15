@@ -11,5 +11,5 @@ module.exports = (bot) => {
     
     setTimeout(() => { bot.chat('/2y2c'); }, 15*1000);
 
-    setTimeout(() => { bot.clickWindow(10,0,0); bot.verified = true; }, 20*1000);
+    setTimeout(() => { bot.clickWindow(10,0,0) }, 20*1000);
 }

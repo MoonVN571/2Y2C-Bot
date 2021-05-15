@@ -9,6 +9,19 @@ module.exports = {
         var prefix = client.prefix;
         var footer = client.footer;
 
+        var cmdName = args[0];
+        const cmd = client.commandss.get(cmdName)
+        || client.commandss.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
+
+        // lười wa
+        if(!args[0] && args[0] == cmd) {
+            var embed = new Discord.MessageEmbed()
+                                .setDescription(cmd.name + ": " + cmd.description)
+                                .setColor(0x000DFF)
+            message.channel.send(embed)
+            return;
+        }
+
         var noargs = new Discord.MessageEmbed()
                             .setDescription( 
                             "**Các loại lệnh:**" + 
@@ -34,8 +47,10 @@ module.exports = {
                                 prefix + 'uptime - ``Xem thông số server.``\n' +
                                 prefix + 'setup - ``Cài đặt bot cho livechat.``' +
                                 prefix + 'invite - ``Mời bot vào servers của bạn.`'+
+                                prefix + 'reload - ``Reload lệnh bot ( dev only ).`` \n' +
                                 prefix + 'serverstatus - ``Xem hàng chờ, ưu tiên và online.`` \n' +
-                                prefix + 'botinfo - ``Xem thông tin bot.`` \n')
+                                prefix + 'botinfo - ``Xem thông tin bot.`` \n' +
+                                prefix + 'botuptime - ``Xem uptime bot.`` \n')
                 .addField("\u200b", '\n\nBạn có thể thêm bot cho discord [tại đây](https://discord.com/api/oauth2/authorize?client_id=768448728125407242&permissions=8&scope=bot).')
                 .setFooter(footer)
                 .setTimestamp();
@@ -93,7 +108,7 @@ module.exports = {
         if (args[0] == "all") {
             var embed = new Discord.MessageEmbed()
                                 .setColor(0x000DFF)
-                                .addField("*Discord Commands*", "help*, status, queue, prioqueue, serverstatus, invite, botinfo. ($)", false)
+                                .addField("*Discord Commands*", "help*, status, queue, prioqueue, serverstatus, invite, botinfo, botuptime. ($)", false)
                                 .addField("*Check Commands*", "stats, playtime, joindate, seen, uptime. ($)", false)
                                 .addField("*Ingame Commands*", "help, tps, coordinate, kill, ping, queue, prio, stats, joindate, playtime, seen, 2bqueue, buykit, runtime, report, rules, avoid, come, follow, stop, firstwords, lastwords. (!)", false)
                                 .addField("\u200b", '\n\nBạn có thể thêm bot cho discord [tại đây](https://discord.com/api/oauth2/authorize?client_id=768448728125407242&permissions=8&scope=bot).')

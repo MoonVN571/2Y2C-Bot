@@ -14,9 +14,8 @@ module.exports = (bot, client, p) => {
     if(!checkOnly) {
         checkOnly = true;
         setTimeout(() => {
-            if(bot.verified) return;
             bot.quit();
-        }, 3 * 60 * 1000);
+        }, 5 * 60 * 1000);
     }
 
     var d = new Date();

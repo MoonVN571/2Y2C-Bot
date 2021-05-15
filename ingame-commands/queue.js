@@ -1,5 +1,5 @@
 var Scriptdb = require('script.db');
-var data = new Scriptdb('./data');
+var data = new Scriptdb('./data.json');
 
 module.exports = {
     name: "queue",
@@ -7,7 +7,6 @@ module.exports = {
     aliases: ['queue', 'q', 'que'],
     
     async execute(bot, username, args) {
-        console.log(data)
         var queue = data.get('queue');
         var prio = data.get('prio');
 
