@@ -204,6 +204,11 @@ function createBot() {
 			}
 		}
 
+		
+		if(logger.includes("2y2c") && logger.includes('pvp')) {
+			bot.whisper(username, "> Ý của bạn là IP của 2y2cpvp? Owner là Moonz ( Moonz#0001 ). IP address: 2y2cpvp.ga.")
+		}
+
 		if(!logger.startsWith(bp)) return;
 		const args = logger.slice(bp.length).split(/ +/);
 		const cmdName = args.shift().toLowerCase();

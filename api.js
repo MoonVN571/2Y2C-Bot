@@ -1,4 +1,4 @@
-const mc = require("minecraft-protocol");
+var Scriptdb = require('script.db');
 
 function API() {
     this.ageCalc = (time) => {
@@ -51,7 +51,6 @@ function API() {
     }
  
     this.uptimeCalc = () => {
-        var Scriptdb = require('script.db');
         const uptime = new Scriptdb(`./data.json`);
         let ut = uptime.get('uptime');
 
@@ -133,41 +132,6 @@ function API() {
 		const newData = s.replace("*", "\\*");
 
         return newData;
-    }
-
-    this.start = () => {
-        setInterval(() => {
-            mc.ping({ "host": "2y2c.org" }, (err, result) => {
-                if (result) {
-                    try {
-                        var players = [];
-                        for (i = 0; result.players.sample.length > i; i++) {
-                            players.push(result.players.sample[i].name);
-                        }
-                        var players2 = players.splice(0, Math.ceil(players.length / 2));
-                        if (players == []) {
-                            players.push(players2);
-                            players2 = ".";
-                        }
-                    } catch {
-                        var players = 'Error';
-                        var players2 = 'Error';
-                    }
-
-                    var old = players.toString().replace(",§6Cựu binh: §l0", "");
-                    var queue = old.toString().replace("§6Bình thường: §l", "");
-                    var prio = players2.toString().replace("2y2c §6Queue Size,§6Ưu Tiên: §l", "");
-                    var status = "Hàng chờ: " + queue + " - Ưu tiên: " + prio + " - Trực tuyến: " + result.players.online;
-
-                    var Scriptdb = require('script.db');
-                    const data = new Scriptdb(`./data.json`);
-
-                    data.set('status', status + " | " + Date.now());
-                    data.set('queue', queue + " | " + Date.now());
-                    data.set('prio', prio + " | " + Date.now());
-                }
-            });
-        }, 1 * 60 * 1000);
     }
 }
 

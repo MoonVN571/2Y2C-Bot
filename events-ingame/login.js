@@ -5,17 +5,25 @@ var Discord = require('discord.js');
 var a = require('../api');
 var api = new a();
 
+const mc = require("minecraft-protocol");
+
+var o = false;
+
 module.exports = (bot, client) => {
-    bot.once('spawn', () => {
-        var hours = bot.hours;
-        var minutes = bot.minutes;
-        var totalSeconds = bot.totalSeconds;
 
-        totalSeconds = 0;
-
-        api.start();
-        
+    if(!o) {
+        console.log("1")
+        o = true;
         setInterval(() => {
+            var hours = bot.hours;
+            var minutes = bot.minutes;
+            var totalSeconds = bot.totalSeconds;
+
+            var today = new Date();
+            var time = today.getHours()+':'+today.getMinutes()+':'+today.getSeconds();
+
+            console.log("tab " + time)
+
             totalSeconds += 300;
             hours = parseInt(totalSeconds / 3600);
             minutes = parseInt((totalSeconds - (hours * 3600)) / 60);
@@ -45,6 +53,47 @@ module.exports = (bot, client) => {
                 }, 200);
             }, 300);
         }, 5 * 60 * 1000)
+    
+        setInterval(() => {
+            var today = new Date();
+            var time = today.getHours()+':'+today.getMinutes()+':'+today.getSeconds();
+
+            console.log("host " + time)
+            mc.ping({ "host": "2y2c.org" }, (err, result) => {
+                if (result) {
+                    try {
+                        var players = [];
+                        for (i = 0; result.players.sample.length > i; i++) {
+                            players.push(result.players.sample[i].name);
+                        }
+                        var players2 = players.splice(0, Math.ceil(players.length / 2));
+                        if (players == []) {
+                            players.push(players2);
+                            players2 = ".";
+                        }
+                    } catch {
+                        var players = 'Error';
+                        var players2 = 'Error';
+                    }
+
+                    var old = players.toString().replace(",§6Cựu binh: §l0", "");
+                    var queue = old.toString().replace("§6Bình thường: §l", "");
+                    var prio = players2.toString().replace("2y2c §6Queue Size,§6Ưu Tiên: §l", "");
+                    var status = "Hàng chờ: " + queue + " - Ưu tiên: " + prio + " - Trực tuyến: " + result.players.online;
+
+                    var Scriptdb = require('script.db');
+                    const data = new Scriptdb(`./data.json`);
+
+                    data.set('status', status + " | " + Date.now());
+                    data.set('queue', queue + " | " + Date.now());
+                    data.set('prio', prio + " | " + Date.now());
+                }
+            });
+        }, 1 * 60 * 1000);
+    }
+
+    bot.once('spawn', () => {
+        totalSeconds = 0;
         
         setTimeout(() => {
             const uptime = new Scriptdb(`./data.json`);
