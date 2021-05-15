@@ -9,19 +9,6 @@ module.exports = {
         var prefix = client.prefix;
         var footer = client.footer;
 
-        var cmdName = args[0];
-        const cmd = client.commandss.get(cmdName)
-        || client.commandss.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
-
-        // lười wa
-        if(!args[0] && args[0] == cmd) {
-            var embed = new Discord.MessageEmbed()
-                                .setDescription(cmd.name + ": " + cmd.description)
-                                .setColor(0x000DFF)
-            message.channel.send(embed)
-            return;
-        }
-
         var noargs = new Discord.MessageEmbed()
                             .setDescription( 
                             "**Các loại lệnh:**" + 

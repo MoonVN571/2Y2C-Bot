@@ -1,7 +1,6 @@
 var check = false;
 
 var Scriptdb = require('script.db');
-var dataa = new Scriptdb('./data.json');
 
 module.exports = (bot, client, data) => {
     if(check) return;
@@ -37,6 +36,7 @@ module.exports = (bot, client, data) => {
     }
 
 
+    var dataa = new Scriptdb('./data.json');
     var queue = dataa.get('queue');
     var prio = dataa.get('prio');
 
