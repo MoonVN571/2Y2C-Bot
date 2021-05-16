@@ -6,7 +6,7 @@ module.exports = (bot, client, reason, loggedIn) => {
         console.log("Bot end for another is active!");
         process.exit();
     }
-
+    
     if(reason == undefined) return;
 
     var r =  reason.toString().replace(/\{"extra":\[{"text":"|"},{"color":"gold","text":"|"}\],"text":""|{"text":"|"}}/ig).toString().replace(/}|undefined|"|{color:gold,text:/ig, '').toString().replace(/{|color:gold,text:/ig, "");

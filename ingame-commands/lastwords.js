@@ -6,7 +6,7 @@ var api = new a();
 module.exports = {
     name: "lastwords",
     description: "lastwords command.",
-    aliases: [''],
+    aliases: ['lw'],
     
     async execute(bot, username, args) {
 		let quote = new Scriptdb(`./data/quotes/${args[0]}.json`)

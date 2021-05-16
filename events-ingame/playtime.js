@@ -2,15 +2,9 @@ var Scriptdb = require('script.db');
 
 module.exports = (bot) => {
     setInterval(() => {
-
         if (bot.lobby) return;
         if (!bot.joined) return;
         Object.values(bot.players).forEach(player => addPlayTime(player.username));
-
-        var today = new Date();
-        var time = today.getHours()+':'+today.getMinutes()+':'+today.getSeconds();
-
-        console.log("start " + time)
 
         function addPlayTime(player) {
             let pt = new Scriptdb(`./data/playtime/${player}.json`);

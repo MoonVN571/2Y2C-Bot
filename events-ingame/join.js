@@ -5,19 +5,9 @@ var fs=  require('fs');
 var ap = require('../api');
 var api = new ap();
 
-var checkOnly = false;
-
 module.exports = (bot, client, p) => {
     bot.countPlayers++;
     var username = p.username;
-
-    if(!checkOnly) {
-        checkOnly = true;
-        setTimeout(() => {
-            if(bot.verified) return;
-            bot.quit();
-        }, 3 * 60 * 1000);
-    }
 
     var d = new Date();
     var time = d.getTime();

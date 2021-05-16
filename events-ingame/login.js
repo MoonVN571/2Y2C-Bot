@@ -12,28 +12,15 @@ var o = false;
 module.exports = (bot, client) => {
 
     if(!o) {
-        console.log("1")
         o = true;
+        
         setInterval(() => {
-            var hours = bot.hours;
-            var minutes = bot.minutes;
-            var totalSeconds = bot.totalSeconds;
-
-            var today = new Date();
-            var time = today.getHours()+':'+today.getMinutes()+':'+today.getSeconds();
-
-            console.log("tab " + time)
-
-            totalSeconds += 300;
-            hours = parseInt(totalSeconds / 3600);
-            minutes = parseInt((totalSeconds - (hours * 3600)) / 60);
-            
             var get = new Scriptdb(`./data.json`).get('tab-content');
             if(get == undefined) return;
             
             var datas = get.toString().split("| ")[0];
 
-            client.channels.cache.get(bot.defaultChannel).setTopic(datas + " - Đã vào server từ " + api.calcTime(hours, minutes) + "trước.");
+            client.channels.cache.get(bot.defaultChannel).setTopic(datas + " - Đã vào server từ " + api.uptimeCalc() + "trước.");
 
             setTimeout(() => {
                 var guild = client.guilds.cache.map(guild => guild.id);
@@ -47,7 +34,7 @@ module.exports = (bot, client) => {
                         
                         try {
                             if(bot.dev) return;
-                            client.channels.cache.get(checkdata).setTopic(datas + " - Đã vào server từ " + api.calcTime(hours, minutes) + "trước.")
+                            client.channels.cache.get(checkdata).setTopic(datas + " - Đã vào server từ " + api.uptimeCalc() + "trước.")
                         } catch(e) {}
                     }
                 }, 200);
@@ -55,10 +42,6 @@ module.exports = (bot, client) => {
         }, 5 * 60 * 1000)
     
         setInterval(() => {
-            var today = new Date();
-            var time = today.getHours()+':'+today.getMinutes()+':'+today.getSeconds();
-
-            console.log("host " + time)
             mc.ping({ "host": "2y2c.org" }, (err, result) => {
                 if (result) {
                     try {
@@ -92,9 +75,7 @@ module.exports = (bot, client) => {
         }, 1 * 60 * 1000);
     }
 
-    bot.once('spawn', () => {
-        totalSeconds = 0;
-        
+    bot.once('spawn', () => { // listen khi bot spawn trong lobby
         setTimeout(() => {
             const uptime = new Scriptdb(`./data.json`);
 
@@ -104,7 +85,7 @@ module.exports = (bot, client) => {
 
         setInterval(() => {
             if(bot.lobby) return;
-
+            
             bot.swingArm("left");
             bot.look(Math.floor(Math.random() * Math.floor("360")), 0, true, null);
         }, 1 * 60 * 1000);
