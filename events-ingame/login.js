@@ -15,23 +15,12 @@ module.exports = (bot, client) => {
         o = true;
         
         setInterval(() => {
-            var hours = bot.hours;
-            var minutes = bot.minutes;
-            var totalSeconds = bot.totalSeconds;
-
-            var today = new Date();
-            var time = today.getHours()+':'+today.getMinutes()+':'+today.getSeconds();
-
-            totalSeconds += 300;
-            hours = parseInt(totalSeconds / 3600);
-            minutes = parseInt((totalSeconds - (hours * 3600)) / 60);
-            
             var get = new Scriptdb(`./data.json`).get('tab-content');
             if(get == undefined) return;
             
             var datas = get.toString().split("| ")[0];
 
-            client.channels.cache.get(bot.defaultChannel).setTopic(datas + " - Đã vào server từ " + api.calcTime(hours, minutes) + "trước.");
+            client.channels.cache.get(bot.defaultChannel).setTopic(datas + " - Đã vào server từ " + api.uptimeCalc().replace("s", " giây").replace("h", " giờ").replace("m", " phút") + " trước.");
 
             setTimeout(() => {
                 var guild = client.guilds.cache.map(guild => guild.id);
@@ -45,7 +34,7 @@ module.exports = (bot, client) => {
                         
                         try {
                             if(bot.dev) return;
-                            client.channels.cache.get(checkdata).setTopic(datas + " - Đã vào server từ " + api.calcTime(hours, minutes) + "trước.")
+                            client.channels.cache.get(checkdata).setTopic(datas + " - Đã vào server từ " + api.uptimeCalc() + " trước.")
                         } catch(e) {}
                     }
                 }, 200);
@@ -87,13 +76,10 @@ module.exports = (bot, client) => {
     }
 
     bot.once('spawn', () => { // listen khi bot spawn trong lobby
-        totalSeconds = 0;
-        setTimeout(() => {
-            const uptime = new Scriptdb(`./data.json`);
+        const uptime = new Scriptdb(`./data.json`);
 
-            var d = new Date();
-            uptime.set(`uptime`, d.getTime());
-        }, 20 * 1000);
+        var d = new Date();
+        uptime.set(`uptime`, d.getTime());
 
         setInterval(() => {
             if(bot.lobby) return;

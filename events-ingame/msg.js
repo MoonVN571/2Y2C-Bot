@@ -117,8 +117,8 @@ module.exports = (bot, client, message) => {
 	if (logger == "đang vào 2y2c..."
 	|| logger.startsWith("[Server]")
 	|| logger.startsWith("[AutoRestart]")
-	|| logger.startsWith("Bad command")
 	|| logger.startsWith("[Broadcast]")
+	|| logger == "Unknown command"
 	|| logger === "Donate để duy trì server admin đang đói chết con *ĩ *ẹ."
 	|| logger === " diễn đàn của server https://www.reddit.com/r/2y2c/."
 	|| logger === "server thường back up vào 1h sáng nên tps đsẽ tụt vào khoảng thời gian này."
