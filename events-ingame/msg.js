@@ -45,13 +45,8 @@ module.exports = (bot, client, message) => {
 		if(logger.split(" ")[2].startsWith("[")) {
 			log = "nhắn cho " + logger.split("]")[1];
 		}
-
-		var cancelOne = log.replace(/_/ig, "\_")
-		var cancelTwo = cancelOne.replace(/`/ig, "\`")
-		var cancelThree = cancelTwo.replace("*", "\*")
-		var lognoformat = cancelThree;
 		
-		notfMsg = lognoformat;
+		notfMsg = api.removeFormat(log);
 		colorNotf = "0xFD00FF";
 	}
 
