@@ -2,38 +2,96 @@ var Scriptdb = require('script.db');
 
 function API() {
     this.ageCalc = (time) => {
-        var d = new Date()
-        var temp = (d.getTime() - time) / 1000;
-        var year = 0, month = 0, day = 0, hour = 0, minutes = 0;
-        day = parseInt(temp / 86400)
-        month = parseInt(day / 30)
-        year = parseInt(month / 12)
-        hour = parseInt(((temp - day * 86400) / 3600))
-        minutes = parseInt(((temp - day * 86400 - hour * 3600)) / 60)
-    
+        const date =  new Date();
+        const dateSince = new Date(time);
+        var year = date.getFullYear() - dateSince.getFullYear(),
+        month = date.getMonth() - dateSince.getMonth(),
+        day = date.getDate() - dateSince.getDate()
+        hour = date.getHours() - dateSince.getHours(),
+        minute = date.getMinutes() - dateSince.getMinutes()
+        second = date.getSeconds() - dateSince.getSeconds();
+
+        if(year.toString().startsWith('-'))
+            year = year.toString().split('-')[1]
+
+        if(month.toString().startsWith('-'))
+            month = month.toString().split('-')[1]
+
+        if(day.toString().startsWith('-'))
+            day = day.toString().split('-')[1]
+
+        if(hour.toString().startsWith('-'))
+            hour = hour.toString().split('-')[1]
+
+        if(minute.toString().startsWith('-'))
+            minute = minute.toString().split('-')[1]
+        
+        if(second.toString().startsWith('-'))
+            second = second.toString().split('-')[1]
+
+        // console.log(year, month, day, hour, minute)
+        // year = 0
+        // month = 0
+        // day = 0
+        // hour = 0
+        // minute = 0
         var age;
-        if(month > 0) {
-            age = `${month} tháng`
-            if(month > 12) {
-                age = `${year} năm`   
+        if(year > 0) {
+            if(month > 0) {
+                if(day > 0) {
+                    age = `${year} năm ${month} tháng ${day} ngày`
+                } else {
+                    age = `${year} năm ${month} tháng`
+                }
+            } else {
+                if(day > 0) {
+                    age = `${year} năm ${day} ngày`
+                } else {
+                    age = `${year} năm`
+                }
             }
         } else {
-            if (day > 0) {
-                age = `${day} ngày`;
-                var weekFormat = parseInt(day / 7)
-                if(weekFormat >= 1) {
-                    age = `${weekFormat} tuần`
+            if(month > 0) {
+                if(day > 0) {
+                    age = `${month} tháng ${day} ngày`
+                } else {
+                    age = `${month} tháng`
                 }
-            } else if (day == 0) {
-                age = `${hour} giờ`;
-                if (hour == 0) {
-                    age = `${minutes} phút`;
-                    if(minutes == 0) {
-                        age = `vài giây`
+            } else {
+                if(day > 0) {
+                    if(hour > 0) {
+                        age = `${day} ngày ${hour} giờ`
+                        if(minute > 0) {
+                            age = `${day} ngày ${hour} giờ ${minute} phút`
+                        } else {
+                            age = `${day} ngày ${hour} giờ`
+                        }
+                    } else {
+                        age = `${day} ngày`
+                        if(minute > 0) {
+                            age = `${day} ngày ${minute} phút`
+                        } else {
+                            age = `${day} ngày`
+                        }
+                    }
+                } else {
+                    if(hour > 0) {
+                        if(minute > 0) {
+                            age = `${hour} giờ ${minute} phút`
+                        } else {
+                            age = `${hour} giờ`
+                        }
+                    } else {
+                        if(minute > 0) {
+                            age = `${day} ngày ${minute} phút`
+                        } else {
+                            age = `vài giây`
+                        }
                     }
                 }
             }
         }
+        age = age + " ";
         return age;
     }
 

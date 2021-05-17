@@ -34,6 +34,21 @@ module.exports = (bot, client, p) => {
         fj.set(`date`, date)
     }
 
+    var data = new Scriptdb(`./offlinemsgs.json`);
+    if(data.get(username + '.author') !== undefined) {
+        var author = data.get(username + '.author');
+        var time = api.ageCalc(data.get(author + '.' + username +'.time'));
+
+        var authorMsg = data.get(author + '.' + username);
+
+        bot.whisper(username, `Tin nhắn chờ từ ${author} [${time} trước]: ${authorMsg}`);
+        
+        data.delete(username + '.author');
+        data.delete(author + '.' + username +'.time');
+        data.delete(author + '.' + username);
+    }
+
+
     if (username === "Ha_My" || username == "PhanThiHaMy" || username == "_Mie_Cutee_") {
         if(bot.dev) return;
         client.channels.cache.get("807048523027578890").send(username + " joined");
