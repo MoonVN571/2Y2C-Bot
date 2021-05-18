@@ -8,8 +8,7 @@ function API() {
         month = date.getMonth() - dateSince.getMonth(),
         day = date.getDate() - dateSince.getDate()
         hour = date.getHours() - dateSince.getHours(),
-        minute = date.getMinutes() - dateSince.getMinutes()
-        second = date.getSeconds() - dateSince.getSeconds();
+        minute = date.getMinutes() - dateSince.getMinutes();
 
         if(year.toString().startsWith('-'))
             year = year.toString().split('-')[1]
@@ -26,15 +25,12 @@ function API() {
         if(minute.toString().startsWith('-'))
             minute = minute.toString().split('-')[1]
         
-        if(second.toString().startsWith('-'))
-            second = second.toString().split('-')[1]
-
         // console.log(year, month, day, hour, minute)
         // year = 0
         // month = 0
-        // day = 0
+        // day = 1
         // hour = 0
-        // minute = 0
+        // minute = 1
         var age;
         if(year > 0) {
             if(month > 0) {
@@ -50,14 +46,14 @@ function API() {
                     age = `${year} năm`
                 }
             }
-        } else {
+        } else { // year < 0
             if(month > 0) {
                 if(day > 0) {
                     age = `${month} tháng ${day} ngày`
                 } else {
                     age = `${month} tháng`
                 }
-            } else {
+            } else { // month < 0
                 if(day > 0) {
                     if(hour > 0) {
                         age = `${day} ngày ${hour} giờ`
@@ -66,24 +62,31 @@ function API() {
                         } else {
                             age = `${day} ngày ${hour} giờ`
                         }
-                    } else {
-                        age = `${day} ngày`
-                        if(minute > 0) {
-                            age = `${day} ngày ${minute} phút`
-                        } else {
-                            age = `${day} ngày`
+                    } else { // hour < 0
+                        if(hour > 0) {
+                            if(minute > 0) {
+                                age = `${day} ngày ${hour} giờ ${minute} phút`
+                            } else {
+                                age = `${day} ngày ${hour} giờ`
+                            }
+                        } else { // hour < 0
+                            if(minute > 0) {
+                                age = `${day} ngày ${minute} phút`
+                            } else {
+                                age = `${day} ngày`
+                            }
                         }
                     }
-                } else {
+                } else { // day < 0
                     if(hour > 0) {
                         if(minute > 0) {
                             age = `${hour} giờ ${minute} phút`
                         } else {
                             age = `${hour} giờ`
                         }
-                    } else {
+                    } else { // hour < 0
                         if(minute > 0) {
-                            age = `${day} ngày ${minute} phút`
+                            age = `${minute} phút`
                         } else {
                             age = `vài giây`
                         }
