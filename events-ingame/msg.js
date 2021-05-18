@@ -34,7 +34,9 @@ module.exports = (bot, client, message) => {
 			toLog = toLog.split("]")[1];
 		}
 
-		notfMsg = api.removeFormat(toLog);
+		api.removeFormat(toLog);
+		
+		notfMsg = toLog;
 		colorNotf = "0xFD00FF";
 	}
 
@@ -45,8 +47,10 @@ module.exports = (bot, client, message) => {
 		if(logger.split(" ")[2].startsWith("[")) {
 			log = "nhắn cho " + logger.split("]")[1];
 		}
-		
-		notfMsg = api.removeFormat(log);
+
+		api.removeFormat(log);
+
+		notfMsg = log;
 		colorNotf = "0xFD00FF";
 	}
 
