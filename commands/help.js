@@ -100,7 +100,7 @@ module.exports = {
         if (args[0] == "all") {
             var embed = new Discord.MessageEmbed()
                                 .setColor(0x000DFF)
-                                .addField("*Discord Commands*", "help*, status, queue, prioqueue, serverstatus, invite, botinfo, botuptime. ($)", false)
+                                .addField("*Discord Commands*", "help*, status, queue, prioqueue, setup, serverstatus, invite, botinfo, botuptime. ($)", false)
                                 .addField("*Check Commands*", "stats, playtime, joindate, seen, uptime, 2bstats, 2bseen. ($)", false)
                                 .addField("*Ingame Commands*", "help, tps, kill, ping, queue, prio, stats, joindate, playtime, seen, 2bqueue, 2bstats, runtime, report, rules, avoid, come, follow, stop, firstwords, lastwords. (!)", false)
                                 .addField("\u200b", '\n\nBạn có thể thêm bot cho discord [tại đây](https://discord.com/api/oauth2/authorize?client_id=768448728125407242&permissions=8&scope=bot).')
