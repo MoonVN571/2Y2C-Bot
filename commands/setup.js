@@ -30,13 +30,14 @@ module.exports = {
                 message.channel.send("Bạn đã setup chat tại kênh: " + args[2])
             } else {
                 if(args[1] == 'chat') {
-                    message.channel.send("Đã setup ròi. Cách xoá: " + prefix + "setup delete chat <tag hoặc nhập id kênh>")
+                    message.channel.send("Đã setup ròi. Cách xoá: " + prefix + "delete chat <Kênh>")
                 } else {
-                    message.channel.send("Đã setup ròi. Cách xoá: " + prefix + "setup delete chat <tag hoặc nhập id kênh>")
+                    message.channel.send("Đã setup ròi. Cách xoá: " + prefix + "delete chat Kênh>")
                 }
             }
         }
 
+        /*
         if(args[0] == 'restart') {
             if(!client.dev) return;
             if(!args[1]) return message.channel.send("Cách dùng: " + prefix + "setup restart <tag hoặc nhập id kênh> <tên role>");
@@ -86,6 +87,6 @@ module.exports = {
                     message.channel.send("Đã setup ròi. Cách xoá: " + prefix + "setup delete <chat hoặc stats> <tag hoặc nhập id kênh>")
                 }
             }
-        }
+        } */
     }
 }
