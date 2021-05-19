@@ -11,6 +11,7 @@ var abc = require("./api");
 var api = new abc();
 
 const pathfinder = require('mineflayer-pathfinder').pathfinder
+
 const footer = "moonbot 2021";
 client.footer = footer;
 
@@ -25,12 +26,11 @@ const config = {
 };
 
 var dev = true;
+var debug = false;
 
 if (dev) {
 	prefix = "dev$";
 }
-
-console.log('Developer Mode: ' + dev)
 
 var defaultChannel;
 var devuser = "mo0nbot";
@@ -47,25 +47,39 @@ if (dev) {
  *				READY
  */
 client.on('ready', () => {
-	console.log('---------- STARTING BOT ----------')
-	console.log('Bot online!');
-
-	if(!dev) {
-		client.channels.cache.get('837220776284389438').send("Bot đã sẵn sàng");
-	}
-	
 	client.user.setActivity("RESTARTING", { type: 'PLAYING' });
 	
-    console.log(`Ready to serve in ${client.channels.cache.size} channels on ${client.guilds.cache.size} servers, for a total of ${client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)} users.`);
-	
+	console.log('------------------------');
+	console.log('       Moon Bot         ')
+	console.log('------------------------');
+	console.log('Guilds: ' + client.guilds.cache.size);
+	console.log('Channels: ' + client.channels.cache.size);
+	console.log('Total users: ' + client.guilds.cache.reduce((a, g) => a + g.memberCount, 0));
+	console.log('------------------------');
+
+	console.log('Bot started!');
+	console.log('Developer: ' + dev.toString().replace(/t/, "T").replace(/f/, "F"));
+
 	createBot();
 });
+
+async function sendMessage(channel, content) {
+	var onChannel = client.channels.cache.get(channel);
+	
+	if(channel == null) return message.channel.send(content);
+
+	if(!onChannel) return console.log("Không thấy kênh " + channel);
+
+	await onChannel.send(content);
+}
+
 
 /*
  *				START_BOT
  */
 function createBot() {
-	console.log('---------- LOADING BOT ----------')
+	console.log('------------------------');
+	
 	const bot = mineflayer.createBot({
 		host: config.ip,
 		port: 25565,
@@ -100,6 +114,8 @@ function createBot() {
 	// Import
 	bot.defaultChannel = defaultChannel; // Kenh mat dinh cua chat
 	bot.dev = dev; // developer mode
+	bot.debug = debug;
+	bot.sendMessage = sendMessage;
 	bot.lobby = lobby;
 	bot.joined = joined;
 	bot.countPlayers = countPlayers;
@@ -115,7 +131,7 @@ function createBot() {
 		var username = msg.toString().split(" ")[0].split("<")[1].split(">")[0];
 	
 		if(username.startsWith("[")) {
-			username = username.split("]")[1]
+			username = username.split("]")[1];
 		}
 	
 		logger = msg.toString().substr(msg.toString().split(" ")[0].length + 1);
@@ -299,10 +315,11 @@ function createBot() {
 			
 			if(!content) return;
 
+			if(content.length > 88) return message.channel.send("Rút ngắn tin nhắn của bạn lại để có thể gửi.");
+			
 			var str = msg.content.toString().split('\n')[0];
 			var chat = str.charAt(0).toUpperCase() + str.substr(1);
 			
-
 			if(msg.content.includes("§")) return msg.channel.send("Hiện tại đang có bug với ký tự này, đã huỷ gửi.");
 
 			if(msg.author.bot) return;
@@ -381,9 +398,14 @@ client.on("message", async message => {
 	client.color = "0x000DFF";
 	client.prefix = prefix;
 
+	client.sendMessage = sendMessage;
+	
     try{
         cmd.execute(client, message, args);
     }catch(err) {
+		message.author.send(err.toString()).then(() => {
+			message.author.send("Hãy báo cáo lỗi này cho admin nếu bạn nghĩ đây là do bot.");
+		})
         console.log(err);
     }
 });

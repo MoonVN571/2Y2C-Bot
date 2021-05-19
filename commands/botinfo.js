@@ -28,11 +28,16 @@ module.exports = {
                           "-   **Tên bot:** " + botID + " - ID: 768448728125407242\n"
                         + "-   **Người tạo:** " + authorID + " - ID: 425599739837284362\n"
                         + "-   **Ngày tạo bot:** 21/10/2020\n"
-                        + "-   **Ngày tạo minecraft bot:** 5/1/2021\n\n"
+                        + "-   **Bot game tạo vào:** 5/1/2021\n\n"
 
-                        + "-   **Bot version:** " + require("../package.json").version + "\n"
-                        + "-   **Mineflayer version:** " + require("../node_modules/mineflayer/package.json").version + "\n"
-                        + "-   **Discord.js version:** " + require("discord.js").version
+                        + "-   **Moon bot:** " + require("../package.json").version + "\n"
+                        + "-   **Minecraft bot:** " + require("../node_modules/mineflayer/package.json").version + " (mineflayer)\n"
+                        + "-   **Discord bot:** " + require("discord.js").version
+                        )
+                .addField("Bot stats", 
+                        "Guilds: " + client.guilds.cache.size
+                        + "Channels: " + client.channels.cache.size
+                        + "Users: " + client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)
                         )
                 .addField("System",
                           `-   **Platform:** ${os.type()}` + "\n"
