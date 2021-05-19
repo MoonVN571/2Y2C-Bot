@@ -35,9 +35,9 @@ module.exports = {
                         + "-   **Discord bot:** " + require("discord.js").version
                         )
                 .addField("Bot stats", 
-                        "Guilds: " + client.guilds.cache.size + "\n"
-                        + "Channels: " + client.channels.cache.size + "\n"
-                        + "Users: " + client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)
+                        "-   **Guilds:** " + client.guilds.cache.size + "\n"
+                        + "-   **Channels:** " + client.channels.cache.size + "\n"
+                        + "-   **Users:** " + client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)
                         )
                 .addField("System",
                           `-   **Platform:** ${os.type()}` + "\n"
