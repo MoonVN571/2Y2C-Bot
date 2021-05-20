@@ -4,11 +4,12 @@ function API() {
     this.ageCalc = (time) => {
         const date =  new Date();
         const dateSince = new Date(time);
-        var year = date.getFullYear() - dateSince.getFullYear(),
-        month = date.getMonth() - dateSince.getMonth(),
-        day = date.getDate() - dateSince.getDate()
-        hour = date.getHours() - dateSince.getHours(),
-        minute = date.getMinutes() - dateSince.getMinutes();
+        
+        var year = dateSince.getFullYear() - date.getFullYear(),
+        month = dateSince.getMonth() - date.getMonth(),
+        day = dateSince.getDate() - date.getDate(),
+        hour = dateSince.getHours() - date.getHours(),
+        minute = dateSince.getMinutes() - date.getMinutes();
 
         if(year.toString().startsWith('-'))
             year = year.toString().split('-')[1]

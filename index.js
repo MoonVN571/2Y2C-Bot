@@ -66,13 +66,10 @@ client.on('ready', () => {
 async function sendMessage(channel, content) {
 	var onChannel = client.channels.cache.get(channel);
 	
-	if(channel == null) return message.channel.send(content);
-
 	if(!onChannel) return console.log("Không thấy kênh " + channel);
 
 	await onChannel.send(content);
 }
-
 
 /*
  *				START_BOT
@@ -315,7 +312,7 @@ function createBot() {
 			
 			if(!content) return;
 
-			if(content.length > 88) return message.channel.send("Rút ngắn tin nhắn của bạn lại để có thể gửi.");
+			if(content.length > 88) return msg.channel.send("Rút ngắn tin nhắn của bạn lại để có thể gửi.");
 			
 			var str = msg.content.toString().split('\n')[0];
 			var chat = str.charAt(0).toUpperCase() + str.substr(1);
@@ -406,6 +403,7 @@ client.on("message", async message => {
 		message.author.send(err.toString()).then(() => {
 			message.author.send("Hãy báo cáo lỗi này cho admin nếu bạn nghĩ đây là do bot.");
 		})
+		console.log(cmdName);
         console.log(err);
     }
 });

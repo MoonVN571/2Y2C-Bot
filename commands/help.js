@@ -23,7 +23,7 @@ module.exports = {
                             .setFooter(footer)
                             .setColor(0x000DFF);
 
-        if (!args[0]) return client.sendMessage(null, noargs);
+        if (!args[0]) return message.channel.send(noargs);
 
         if (args[0] == "discord") {
             var helpdiscord = new Discord.MessageEmbed()
@@ -44,7 +44,7 @@ module.exports = {
                                 .setFooter(footer)
                                 .setTimestamp();
 
-            client.sendMessage(null, helpdiscord);
+            message.channel.send(helpdiscord);
         }
 
         if (args[0] === "ingame-commands" || args[0] == "ig-cmds" || args[0] == "ic") {
@@ -79,7 +79,7 @@ module.exports = {
                                 .setFooter(footer)
                                 .setTimestamp();
 
-            client.sendMessage(null, ingamecmd);
+            message.channel.send(ingamecmd);
         }
 
         if (args[0] === "check") {
@@ -96,7 +96,7 @@ module.exports = {
                             .setFooter(footer)
                             .setTimestamp();
 
-            client.sendMessage(null, check);
+            message.channel.send(check);
         }
 
         if (args[0] == "all") {
@@ -109,7 +109,7 @@ module.exports = {
                                 .setFooter(footer)
                                 .setTimestamp();
 
-            client.sendMessage(null, embed);
+            message.channel.send(embed);
         }
     }
 }
