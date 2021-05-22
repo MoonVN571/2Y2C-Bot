@@ -8,14 +8,14 @@ module.exports = (bot, client, message) => {
 	var newcolor = 'DB2D2D';
 	var logger = message.toString();
 	var nocheck = message.toString().split(' ')[0];
-
-	if (nocheck.startsWith('<') && nocheck.endsWith(">")) return;
 	
 	if(bot.dev) {
 		client.channels.cache.get("802456011252039680").send(logger);
 	} else {
 		client.channels.cache.get("797426761142632450").send(logger);	
 	}
+
+	if (nocheck.startsWith('<') && nocheck.endsWith(">")) return;
 
 	var notfMsg;
 	var colorNotf;

@@ -17,7 +17,7 @@ module.exports = {
         request('https://api.2b2t.dev/seen?username=' + args[0], function (error, response, body) {
             var data = JSON.parse(body)[0];
 
-            if(data.seen == undefined) return bot.whisper(username, "> Không tìm thấy người chơi.")
+            if(data == undefined) return bot.whisper(username, "> Không tìm thấy người chơi.")
 
             let seen = data.seen;
 

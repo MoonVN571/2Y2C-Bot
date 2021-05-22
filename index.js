@@ -28,6 +28,8 @@ const config = {
 var dev = true;
 var debug = false;
 
+var oneTime = false;
+
 if (dev) {
 	prefix = "dev$";
 }
@@ -116,7 +118,8 @@ function createBot() {
 	bot.lobby = lobby;
 	bot.joined = joined;
 	bot.countPlayers = countPlayers;
-
+	bot.oneTime = oneTime;
+	
 	bot.on('windowOpen', verifyEvent.bind(null, bot));
 
 	bot.once('login', JoinedServerEvent.bind(null, bot, client));
@@ -395,6 +398,7 @@ client.on("message", async message => {
 	client.color = "0x000DFF";
 	client.prefix = prefix;
 
+	client.ping = client.ws.ping;
 	client.sendMessage = sendMessage;
 	
     try{
