@@ -66,7 +66,7 @@ module.exports = {
                     }
                     )
                     // , 'https://cdn.discordapp.com/avatars/768448728125407242/aa2ce1d9374de6fc0dd28d349ca135af.webp?size=1024'
-                .setFooter('Trạng thái server được cập nhật từ ' + api.ageCalc(timepassed) + " trước.")
+                .setFooter('Trạng thái server được cập nhật từ ' + api.ageCalc(timepassed) + " trước.", 'https://cdn.discordapp.com/avatars/768448728125407242/f18ec971961b23db96e6cf0f3f79ec1c.png?size=256')
                 .setColor(0x000DFF)
                 .setTimestamp();
 
