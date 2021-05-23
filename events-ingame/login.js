@@ -7,20 +7,24 @@ var api = new a();
 
 const mc = require("minecraft-protocol");
 
-var o = false;
-
 module.exports = (bot, client) => {
-
-    if(!o) {
-        o = true;
-        
+    if(!bot.oneTime) {
         setInterval(() => {
+            if(!bot.dev) {
+                bot.sendMessage('844247133967745044', 'Try set topic status.');
+            }
+
             var get = new Scriptdb(`./data.json`).get('tab-content');
             if(get == undefined) return;
             
             var datas = get.toString().split("| ")[0];
 
-            client.channels.cache.get(bot.defaultChannel).setTopic(datas + " - Đã vào server từ " + api.uptimeCalc() + "trước.");
+            client.channels.cache.get(bot.defaultChannel).setTopic(
+                datas + " - Đã vào server từ " + api.uptimeCalc().replace("s", " giây").replace("h", " giờ").replace("m", " phút") + " trước."
+                ).then(() => {
+                    if(!bot.dev)
+                        bot.sendMessage('844247133967745044', 'Successful set status.');
+                });
 
             setTimeout(() => {
                 var guild = client.guilds.cache.map(guild => guild.id);
@@ -34,14 +38,18 @@ module.exports = (bot, client) => {
                         
                         try {
                             if(bot.dev) return;
-                            client.channels.cache.get(checkdata).setTopic(datas + " - Đã vào server từ " + api.uptimeCalc() + "trước.")
+                            client.channels.cache.get(checkdata).setTopic(datas + " - Đã vào server từ " + api.uptimeCalc() + " trước.")
                         } catch(e) {}
                     }
                 }, 200);
             }, 300);
-        }, 5 * 60 * 1000)
-    
+        }, 5 * 60 * 1000);
+
         setInterval(() => {
+            if(!bot.dev) {
+                bot.sendMessage('844247133967745044', 'Pinging server status.');
+            }
+
             mc.ping({ "host": "2y2c.org" }, (err, result) => {
                 if (result) {
                     try {
@@ -70,27 +78,28 @@ module.exports = (bot, client) => {
                     data.set('status', status + " | " + Date.now());
                     data.set('queue', queue + " | " + Date.now());
                     data.set('prio', prio + " | " + Date.now());
+
+                    if(!bot.dev)
+                    bot.sendMessage('844247133967745044', 'Set server status data.');
                 }
             });
         }, 1 * 60 * 1000);
-    }
-
-    bot.once('spawn', () => { // listen khi bot spawn trong lobby
-        setTimeout(() => {
-            const uptime = new Scriptdb(`./data.json`);
-
-            var d = new Date();
-            uptime.set(`uptime`, d.getTime());
-        }, 20 * 1000);
 
         setInterval(() => {
             if(bot.lobby) return;
+            if(!bot.dev) {
+                bot.sendMessage('844247133967745044', 'Anti afk.');
+            }
             
             bot.swingArm("left");
             bot.look(Math.floor(Math.random() * Math.floor("360")), 0, true, null);
         }, 1 * 60 * 1000);
 
         setInterval(() => {
+            if(!bot.dev) {
+                bot.sendMessage('844247133967745044', 'Auto message.');
+            }
+
             fs.readFile("ads.txt", 'utf8', function (err, data) {
                 if (err) throw err;
                 const lines = data.split('\n');
@@ -99,6 +108,17 @@ module.exports = (bot, client) => {
                 bot.chat(random);
             });
         },  10 * 60 * 1000);
+    }
+
+    bot.once('spawn', () => { // listen khi bot spawn trong lobby
+        if(!bot.dev) {
+            bot.sendMessage('844247133967745044', 'Bot spawned.');
+        }
+
+        const uptime = new Scriptdb(`./data.json`);
+
+        var d = new Date();
+        uptime.set(`uptime`, d.getTime());
 
         const queuejoined = new Discord.MessageEmbed()
                             .setDescription(`Bot đang vào server..`)
@@ -112,7 +132,7 @@ module.exports = (bot, client) => {
         bot.joined = true;
         if(bot.dev) {
             client.channels.cache.get(bot.defaultChannel).send(joinedd);
-            client.channels.cache.get("807045720699830273").send(queuejoined);
+            client.channels.cache.get("807045720699830273").send(queuejoined); // bot log
         } else {
             client.channels.cache.get(bot.defaultChannel).send(joinedd);
             
@@ -133,7 +153,7 @@ module.exports = (bot, client) => {
                 }, 200);
             }, 100)
 
-            client.channels.cache.get("806881615623880704").send(queuejoined)
+            client.channels.cache.get("806881615623880704").send(queuejoined); // devlog
         }
     })
 }

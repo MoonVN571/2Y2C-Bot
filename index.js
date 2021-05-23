@@ -5,8 +5,13 @@ var mineflayer = require('mineflayer') // bot minecraft
 var tpsPlugin = require('mineflayer-tps')(mineflayer) // mineflayer plugin
 
 var fs = require('fs');
+var Scriptdb = require('script.db');
+
+var abc = require("./api");
+var api = new abc();
 
 const pathfinder = require('mineflayer-pathfinder').pathfinder
+
 const footer = "moonbot 2021";
 client.footer = footer;
 
@@ -21,12 +26,13 @@ const config = {
 };
 
 var dev = true;
+var debug = false;
+
+var oneTime = false;
 
 if (dev) {
 	prefix = "dev$";
 }
-
-console.log('Developer Mode: ' + dev)
 
 var defaultChannel;
 var devuser = "mo0nbot";
@@ -43,25 +49,36 @@ if (dev) {
  *				READY
  */
 client.on('ready', () => {
-	console.log('---------- STARTING BOT ----------')
-	console.log('Bot online!');
-
-	if(!dev) {
-		client.channels.cache.get('837220776284389438').send("Bot đã sẵn sàng");
-	}
-	
 	client.user.setActivity("RESTARTING", { type: 'PLAYING' });
 	
-    console.log(`Ready to serve in ${client.channels.cache.size} channels on ${client.guilds.cache.size} servers, for a total of ${client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)} users.`);
-	
+	console.log('------------------------');
+	console.log('       Moon Bot         ')
+	console.log('------------------------');
+	console.log('Guilds: ' + client.guilds.cache.size);
+	console.log('Channels: ' + client.channels.cache.size);
+	console.log('Total users: ' + client.guilds.cache.reduce((a, g) => a + g.memberCount, 0));
+	console.log('------------------------');
+
+	console.log('Bot started!');
+	console.log('Developer: ' + dev.toString().replace(/t/, "T").replace(/f/, "F"));
+
 	createBot();
 });
+
+async function sendMessage(channel, content) {
+	var onChannel = client.channels.cache.get(channel);
+	
+	if(!onChannel) return console.log("Không thấy kênh " + channel);
+
+	await onChannel.send(content);
+}
 
 /*
  *				START_BOT
  */
 function createBot() {
-	console.log('---------- LOADING BOT ----------')
+	console.log('------------------------');
+	
 	const bot = mineflayer.createBot({
 		host: config.ip,
 		port: 25565,
@@ -83,7 +100,9 @@ function createBot() {
 	const JoinedServerEvent = require('./events-ingame/login.js');
 	const kickedEvent = require('./events-ingame/kicked.js');
 	const endedEvent = require('./events-ingame/ended.js');
-	const chatEvent = require('./events-ingame/message.js')
+	
+	var color = "0x979797";
+	var color2 = "0x979797";
 
 	var lobby = true;
 
@@ -94,17 +113,184 @@ function createBot() {
 	// Import
 	bot.defaultChannel = defaultChannel; // Kenh mat dinh cua chat
 	bot.dev = dev; // developer mode
+	bot.debug = debug;
+	bot.sendMessage = sendMessage;
 	bot.lobby = lobby;
 	bot.joined = joined;
 	bot.countPlayers = countPlayers;
-
+	bot.oneTime = oneTime;
+	
 	bot.on('windowOpen', verifyEvent.bind(null, bot));
 
 	bot.once('login', JoinedServerEvent.bind(null, bot, client));
 	bot.once('login', playtimeEvent.bind(null, bot));
 
-	bot.on('message', chatEvent.bind(null, bot, client));
-	// bot.on('message', msg => { console.log(msg.toString())})
+	bot.on('message', msg => {
+		if (!(msg.toString().startsWith("<"))) return;
+	
+		var username = msg.toString().split(" ")[0].split("<")[1].split(">")[0];
+	
+		if(username.startsWith("[")) {
+			username = username.split("]")[1];
+		}
+	
+		logger = msg.toString().substr(msg.toString().split(" ")[0].length + 1);
+	
+		if (logger.startsWith(">")) {
+			color2 = "2EA711";
+		}
+	
+		var bp;
+		if (bot.dev) {
+			bp = "!!";
+		} else {
+			bp = "!";   
+		}
+		
+		if (username === "Ha_My" || username == "PhanThiHaMy" || username == "_Mie_Cutee_") {
+			if(bot.dev) return;
+			client.channels.cache.get("839115042405482576").send("**<" + api.removeFormat(username) + ">** " + api.removeFormat(logger));
+		}
+		
+		var chat2 = new Discord.MessageEmbed()
+						.setDescription(`**<${api.removeFormat(username)}>** ${api.removeFormat(logger)}`)
+						.setColor(color2);
+	
+		var setLogger = `**<${api.removeFormat(username)}>** ${api.removeFormat(logger)}`;
+		setTimeout(() => {
+			var guild = client.guilds.cache.map(guild => guild.id);
+			setInterval(() => {
+				if (guild[0]) {
+					const line = guild.pop()
+					const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
+					const checkdata = data.get('livechat');
+	
+					if(checkdata == undefined || guild == undefined) return;
+					
+					if(setLogger.split(" ")[1].startsWith(">")) {
+						color = "2EA711";
+					}
+	
+					var chat = new Discord.MessageEmbed()
+								.setDescription(setLogger)
+								.setColor(color);
+	
+					if(bot.dev) return;
+					if(chat == undefined) return;
+	
+					try {
+						client.channels.cache.get(checkdata).send(chat)
+						color = "0x797979";
+					} catch(e) {}
+				}
+			}, 100);
+		}, 100)
+	
+		if(chat2 !== undefined) {
+			client.channels.cache.get(bot.defaultChannel).send(chat2);
+			color2 = "0x797979";
+		}
+	
+		saveMsgsData(username, logger);
+		function saveMsgsData(username, logger) {
+			if(logger.startsWith(bp)) return;
+			let messages = new Scriptdb(`./data/quotes/${username}.json`);
+			let msgs = messages.get("messages")
+			let times = messages.get("times")
+			if(msgs == undefined) {
+				messages.set("messages", logger)
+				messages.set("times", Date.now())
+			} else {
+				messages.set("messages", logger + " | " + msgs)
+				messages.set("times", times + " | " + Date.now())
+			}
+		}
+	
+		if(logger.includes("bán kit ko") || logger.includes("ban kit") || logger.includes('sell kit')) {
+			bot.whisper(username, "> Moon Shop: moonz.ga/moonshop");
+		}
+	
+		
+        if(!bot.dev) {
+			// nguoi duoc ket hon
+			var checkMarry = new Scriptdb('./data/marry/' + username + ".json");
+
+			if(checkMarry.get('waiting')) { // kiem tra neu co data dang cho ket hon
+				if(logger == "yes") {
+					bot.chat('> Đã đồng ý kết hôn với ' + checkMarry.get('author'));
+					checkMarry.set('married', checkMarry.get('author'));
+					checkMarry.set('time', Date.now());
+				}
+
+				if(logger == "no") {
+					bot.chat('> Đã từ chối kết hôn với ' + checkMarry.get('author'));
+					checkMarry.delete('waiting'); // loai bo ket hon
+				}
+			}
+		}
+		
+		if(!logger.startsWith(bp)) return;
+		const args = logger.slice(bp.length).split(/ +/);
+		const cmdName = args.shift().toLowerCase();
+	
+		client.commands = new Discord.Collection();
+	
+		const cmds = require('fs').readdirSync(`./ingame-commands/`).filter(file => file.endsWith('.js'));
+	
+		for(const file of cmds){
+			const cmd = require(`./ingame-commands/${file}`);
+			
+			client.commands.set(cmd.name, cmd);
+		}
+	
+		const cmd = client.commands.get(cmdName)
+			|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
+	
+		if(cmdName == "reload") {
+			if(username == "MoonVN" || username == "MoonZ" || username == "MoonOnTop" || username == "MoonX") {
+				if(!args[0]) return bot.whisper(username, "> Nhập tên lệnh cần reload.")
+	
+				try {
+					const cmd = require(`./ingame-commands/${args[0]}.js`);
+		
+					delete require.cache[require.resolve(`./ingame-commands/${args[0]}.js`)];
+		
+					if(!cmd) return bot.whisper(username, "> Không tìm thấy tên lệnh này.")
+					client.commands.delete(args[0])
+					client.commands.set(args[0], cmd);
+					
+					bot.whisper(username, "> Reload thành công: " + args[0])
+				} catch (e) {
+					bot.whisper(username, "> Có lỗi sảy ra!");
+				}
+			} else {
+				bot.whisper(username, "> Không thể sử dụng lệnh này.")
+			}
+		}
+	
+		if(cmdName == "sudo") {
+			if(!args[0]) return bot.whisper(username, "Không tìm thấy nội dung.")
+			
+			if(username == "MoonVN" || username == "MoonZ" || username == "MoonOnTop") {
+				bot.chat(logger.substr(6));
+				bot.whisper(username, "Đang thực hiện: " + logger.substr(6))
+			}
+		}
+		
+		if(!cmd) return;
+	
+		bot.regex = /[a-z]|[A-Z]|[0-9]/i;
+		bot.logger = logger;
+
+		setTimeout(() => {
+			try {
+				cmd.execute(bot, username, args);
+			}catch(err){
+				console.log(err);
+			}
+		}, 1* 1000);
+	});
+
 	bot.on("message", msgEvent.bind(null, bot, client));
 
 	bot.on("playerJoined", joinedEvent.bind(null, bot, client));
@@ -152,10 +338,11 @@ function createBot() {
 			
 			if(!content) return;
 
+			if(content.length > 88) return msg.channel.send("Rút ngắn tin nhắn của bạn lại để có thể gửi.");
+			
 			var str = msg.content.toString().split('\n')[0];
 			var chat = str.charAt(0).toUpperCase() + str.substr(1);
 			
-
 			if(msg.content.includes("§")) return msg.channel.send("Hiện tại đang có bug với ký tự này, đã huỷ gửi.");
 
 			if(msg.author.bot) return;
@@ -234,9 +421,16 @@ client.on("message", async message => {
 	client.color = "0x000DFF";
 	client.prefix = prefix;
 
+	client.ping = client.ws.ping;
+	client.sendMessage = sendMessage;
+	
     try{
         cmd.execute(client, message, args);
     }catch(err) {
+		message.author.send(err.toString()).then(() => {
+			message.author.send("Hãy báo cáo lỗi này cho admin nếu bạn nghĩ đây là do bot.");
+		})
+		console.log(cmdName);
         console.log(err);
     }
 });

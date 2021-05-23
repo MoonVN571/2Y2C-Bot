@@ -8,14 +8,14 @@ module.exports = (bot, client, message) => {
 	var newcolor = 'DB2D2D';
 	var logger = message.toString();
 	var nocheck = message.toString().split(' ')[0];
-
-	if (nocheck.startsWith('<') && nocheck.endsWith(">")) return;
 	
 	if(bot.dev) {
 		client.channels.cache.get("802456011252039680").send(logger);
 	} else {
 		client.channels.cache.get("797426761142632450").send(logger);	
 	}
+
+	if (nocheck.startsWith('<') && nocheck.endsWith(">")) return;
 
 	var notfMsg;
 	var colorNotf;
@@ -34,7 +34,9 @@ module.exports = (bot, client, message) => {
 			toLog = toLog.split("]")[1];
 		}
 
-		notfMsg = api.removeFormat(toLog);
+		api.removeFormat(toLog);
+		
+		notfMsg = toLog;
 		colorNotf = "0xFD00FF";
 	}
 
@@ -46,12 +48,9 @@ module.exports = (bot, client, message) => {
 			log = "nhắn cho " + logger.split("]")[1];
 		}
 
-		var cancelOne = log.replace(/_/ig, "\_")
-		var cancelTwo = cancelOne.replace(/`/ig, "\`")
-		var cancelThree = cancelTwo.replace("*", "\*")
-		var lognoformat = cancelThree;
-		
-		notfMsg = lognoformat;
+		api.removeFormat(log);
+
+		notfMsg = log;
 		colorNotf = "0xFD00FF";
 	}
 

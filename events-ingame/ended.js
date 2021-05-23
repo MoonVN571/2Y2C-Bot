@@ -10,7 +10,8 @@ var api = new a();
 module.exports = (bot, client) => {
     client.user.setActivity("");
 
-	console.log('---------- BOT ENDED ----------');
+    console.log('      Bot Ended');
+	console.log('------------------------');
 
     bot.totalSeconds = 0;
 
@@ -63,16 +64,14 @@ module.exports = (bot, client) => {
 
         waitUntil(60 * 1000, 50, function condition() {
             try {
-                console.log("Recoonecting to the server.");
-                start.createBot()
+                start.createBot();
                 return true;
             } catch (error) {
                 console.log("Error: " + error);
                 return false;
             }
         }, function done(result) {
-            console.log("Completed: " + result);
+            console.log('Reconected to the server.');
         });
-        return;
     }, 2 * 1000);
 }

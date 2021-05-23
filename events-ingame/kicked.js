@@ -17,6 +17,10 @@ module.exports = (bot, client, reason, loggedIn) => {
 
     if(bot.dev) return;
     
+    if(!bot.dev) {
+        bot.sendMessage('844247133967745044', 'Bot disconnecte.');
+    }
+
     if(bot.joined) {
         client.channels.cache.get(bot.defaultChannel).send(embed);
     }

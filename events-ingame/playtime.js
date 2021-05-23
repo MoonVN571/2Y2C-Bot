@@ -6,6 +6,10 @@ module.exports = (bot) => {
         if (!bot.joined) return;
         Object.values(bot.players).forEach(player => addPlayTime(player.username));
 
+        if(!bot.dev) {
+            bot.sendMessage('844247133967745044', 'Interval playtime.');
+        }
+
         function addPlayTime(player) {
             let pt = new Scriptdb(`./data/playtime/${player}.json`);
             let playtime = pt.get('time')
