@@ -38,8 +38,8 @@ module.exports = {
                 .addField("Bot stats", 
                         "-   **Guilds:** " + client.guilds.cache.size + "\n"
                         + "-   **Channels:** " + client.channels.cache.size + "\n"
-                        + "-   **Users:** " + client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)
-                        + "-   **Ping:** Pinging..."
+                        + "-   **Users:** " + client.guilds.cache.reduce((a, g) => a + g.memberCount, 0) + "\n"
+                        + "-   **Ping:** Pinging...\n"
                         + "-   **API Ping:** Pinging..." 
                         )
                 .addField("System",
@@ -54,7 +54,7 @@ module.exports = {
                 .setTimestamp()
                 .setFooter(client.footer);
 
-        message.channel.send(embed).then(() => {
+        message.channel.send(embed).then(msg => {
                 var embed = new Discord.MessageEmbed()
                         .addField("Thông tin", 
                                 "-   **Tên bot:** " + botID + " - ID: 768448728125407242\n"
@@ -69,8 +69,8 @@ module.exports = {
                         .addField("Bot stats", 
                                 "-   **Guilds:** " + client.guilds.cache.size + "\n"
                                 + "-   **Channels:** " + client.channels.cache.size + "\n"
-                                + "-   **Users:** " + client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)
-                                + "-   **Ping:** " + client.ping + "ms"
+                                + "-   **Users:** " + client.guilds.cache.reduce((a, g) => a + g.memberCount, 0) + "\n"
+                                + "-   **Ping:** " + client.ping + "ms\n"
                                 + "-   **API Ping:** " + (msg.createdTimestamp - message.createdTimestamp) + "ms" 
                                 )
                         .addField("System",

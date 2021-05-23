@@ -8,7 +8,7 @@ var api = new a();
 const mc = require("minecraft-protocol");
 
 module.exports = (bot, client) => {
-    if(bot.oneTime) {
+    if(!bot.oneTime) {
         setInterval(() => {
             if(!bot.dev) {
                 bot.sendMessage('844247133967745044', 'Try set topic status.');
