@@ -1,6 +1,7 @@
 var check = false;
 
 var Scriptdb = require('script.db');
+var log = require('log-to-file');
 
 module.exports = (bot, client, data) => {
     if(check) return;
@@ -50,5 +51,8 @@ module.exports = (bot, client, data) => {
 
     var status = "TPS: " + tps + " - Chờ: " + queue.toString().split(" | ")[0] + " - Ưu Tiên: " + prio.toString().split(" | ")[0] + " | $help";
     if(status.startsWith("§6Donate")) return;
+    
     client.user.setActivity(status, { type: 'PLAYING' });
+    log("Set user status on main server");
+
 }

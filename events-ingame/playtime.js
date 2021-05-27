@@ -1,4 +1,5 @@
 var Scriptdb = require('script.db');
+var log = require('log-to-file');
 
 module.exports = (bot) => {
     setInterval(() => {
@@ -7,7 +8,7 @@ module.exports = (bot) => {
         Object.values(bot.players).forEach(player => addPlayTime(player.username));
 
         if(!bot.dev) {
-            bot.sendMessage('844247133967745044', 'Interval playtime.');
+            log("Playtime count started")
         }
 
         function addPlayTime(player) {

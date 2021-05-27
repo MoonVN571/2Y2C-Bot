@@ -4,6 +4,7 @@ var fs=  require('fs');
 
 var ap = require('../api');
 var api = new ap();
+const log = require('log-to-file');
 
 module.exports = (bot, client, p) => {
     bot.countPlayers++;
@@ -43,6 +44,8 @@ module.exports = (bot, client, p) => {
 
         bot.whisper(username, `Tin nhắn chờ từ ${author} [${time} trước]: ${authorMsg}`);
         
+        log("Sending message to online player with offlinemsgs.")
+
         data.delete(username + '.author');
         data.delete(author + '.' + username +'.time');
         data.delete(author + '.' + username);
@@ -53,12 +56,14 @@ module.exports = (bot, client, p) => {
         if(bot.dev) return;
         client.channels.cache.get("807048523027578890").send(username + " joined");
     }
+
     if(bot.countPlayers <= Object.values(bot.players).map(p => p.username).length) return;
 
     // oldfag join
     fs.readFile("special-join.txt", 'utf8', (err, data) => {
         if (err) throw err;
         if(data.toString().split("\r\n").indexOf(username) > -1) {
+            log("Oldfag name " + username + " joined.");
             if(bot.dev) return;
             var embed = new Discord.MessageEmbed()
                 .setDescription(api.removeFormat(username) + " joined")

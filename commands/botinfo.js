@@ -3,14 +3,7 @@ var os = require("os");
 var a = require("../api");
 var api = new a()
 
-var mbTotal = ((os.totalmem())/1048576);
-var mbFree = ((os.freemem())/1048576);
-
-var currentMaxMem = parseInt(mbTotal);
-var currentMem = parseInt(currentMaxMem - mbFree);
-
 var Discord = require('discord.js');
-const msg = require("../events-ingame/msg");
 
 module.exports = {
     name: "botinfo",
@@ -44,11 +37,11 @@ module.exports = {
                         )
                 .addField("System",
                           `-   **Platform:** ${os.type()}` + "\n"
-                        + `-   **Uptime:** ${api.calc(os.uptime())}` + "\n"
-                        + `-   **Ram:** ${currentMem}MB / ${currentMaxMem}MB\n`
-                        + "-   **CPU:** " + os.cpus()[0].model + "\n"
-                        + "-   **Cores:** " + os.cpus().length + "\n"
-                        + "-   **Speed:** " + os.cpus()[0].speed + "MHz"
+                        + `-   **Window Uptime:** ${api.calc(os.uptime())}` + "\n"
+                        + `-   **Memory:** ${((process.memoryUsage().heapUsed / 1024) / 1024).toFixed(2)} MB\n`
+                        + "-   **CPU Process:** " + os.cpus()[0].model + "\n"
+                        + "-   **CPU Cores:** " + os.cpus().length + "\n"
+                        + "-   **CPU Speed:** " + os.cpus()[0].speed + "MHz"
                         )
                 .setColor(0x000DFF)
                 .setTimestamp()
@@ -74,13 +67,13 @@ module.exports = {
                                 + "-   **API Ping:** " + (msg.createdTimestamp - message.createdTimestamp) + "ms" 
                                 )
                         .addField("System",
-                                `-   **Platform:** ${os.type()}` + "\n"
-                                + `-   **Uptime:** ${api.calc(os.uptime())}` + "\n"
-                                + `-   **Ram:** ${currentMem}MB / ${currentMaxMem}MB\n`
-                                + "-   **CPU:** " + os.cpus()[0].model + "\n"
-                                + "-   **Cores:** " + os.cpus().length + "\n"
-                                + "-   **Speed:** " + os.cpus()[0].speed + "MHz"
-                                )
+                                        `-   **Platform:** ${os.type()}` + "\n"
+                                + `-   **Window Uptime:** ${api.calc(os.uptime())}` + "\n"
+                                + `-   **Memory:** ${((process.memoryUsage().heapUsed / 1024) / 1024).toFixed(2)} MB\n`
+                                + "-   **CPU Process:** " + os.cpus()[0].model + "\n"
+                                + "-   **CPU Cores:** " + os.cpus().length + "\n"
+                                + "-   **CPU Speed:** " + os.cpus()[0].speed + "MHz"
+                        )
                         .setColor(0x000DFF)
                         .setTimestamp()
                         .setFooter(client.footer);

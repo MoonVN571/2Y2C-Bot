@@ -5,15 +5,14 @@ var abc = require("../api")
 var api = new abc();
 
 module.exports = {
-    name: "mesasges",
-    description: "messages command.",
-    aliases: ['messages'],
+    name: "kills",
+    aliases: [''],
     
     async execute(client, message, args) {
         if (!args[0]) return message.channel.send(client.userNotFound)
 
-		let quotes = new Scriptdb(`./data/quotes/${args[0]}.json`)
-		let messages = quotes.get('messages')
+		let quotes = new Scriptdb(`./data/kills/${args[0]}.json`)
+		let messages = quotes.get('kills')
 		let times = quotes.get('times')
 
 		if(times == undefined || messages == undefined) return message.channel.send(client.userNotFound)
@@ -70,9 +69,9 @@ module.exports = {
 		if (messages === undefined || times == undefined) return message.channel.send(client.userNotFound);
 
 		var embed = new Discord.MessageEmbed()
-								.setTitle(`Tin nhắn ${args[0]}`)
-								.setDescription(`*Tổng tin nhắn đã gửi: ${messages.split(" | ").length}*\n`)
-								.addField('*5 tin nhắn gần đây*', data)
+								.setTitle(`Báo cáo của ${args[0]}`)
+								.setDescription(`*Tổng số lần giết đã ghi nhận: ${messages.split(" | ").length}*\n`)
+								.addField('*5 lần giết gần đây*', data)
 								.setFooter(client.footer)
 								.setTimestamp()
 								.setColor(0x2EA711);

@@ -5,6 +5,8 @@ var fs = require('fs');
 var ap = require('../api');
 var api = new ap();
 
+var log = require('log-to-file');
+
 module.exports = (bot, client, p) => {
     var username = p.username;
     
@@ -29,6 +31,8 @@ module.exports = (bot, client, p) => {
     fs.readFile("special-join.txt",  (err, data) => {
         if (err) throw err;
         if(data.toString().split("\r\n").indexOf(username) > -1) {
+            log("Oldfag name " + username + " left.");
+            
             if(bot.dev) return;
             var embed = new Discord.MessageEmbed()
                                     .setDescription(api.removeFormat(username) + " left")
@@ -45,7 +49,7 @@ module.exports = (bot, client, p) => {
             .setColor('0xb60000')
 
         if(!bot.dev)
-        client.channels.cache.get("826280327998996480").send(embed);
+        client.channels.cache.get("826280327998996480").send(embed); // shop staff join
     }
 
     var embed = new Discord.MessageEmbed()

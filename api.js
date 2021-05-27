@@ -3,7 +3,7 @@ var Scriptdb = require('script.db');
 function API() {
     this.ageCalc = (time) => {
         const date =  new Date();
-        const dateSince = new Date(time);
+        const dateSince = new Date(+time);
         
         var year = dateSince.getFullYear() - date.getFullYear(),
         month = dateSince.getMonth() - date.getMonth(),
@@ -95,7 +95,12 @@ function API() {
                 }
             }
         }
+
         age = age + " ";
+
+        if(year == "NaN" || month == "NaN" || day== "NaN" || hour == "NaN" || minute== "NaN" )
+            age = null;
+
         return age;
     }
 
@@ -126,6 +131,23 @@ function API() {
         minutes = parseInt(((temp - day * 86400 - hours * 3600)) / 60)
         seconds = parseInt(temp % 60)
         if(uptime === undefined) {
+            hours = 0;
+            minutes = 0;
+            seconds = 0;
+        }
+        return hours + "h " + minutes + "m " + seconds + "s";
+    }
+
+    this.queueTime = () => {
+        const data = new Scriptdb(`./data.json`);
+        let ticks = data.get('queueEnd') - data.get('queueStart');
+
+        var temp = ticks / 1000;
+        var day = hours = 0, minutes = 0, seconds = 0;
+        hours = parseInt(((temp - day * 86400) / 3600))
+        minutes = parseInt(((temp - day * 86400 - hours * 3600)) / 60)
+        seconds = parseInt(temp % 60)
+        if(data.get('queueEnd') == undefined) {
             hours = 0;
             minutes = 0;
             seconds = 0;

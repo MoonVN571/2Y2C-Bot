@@ -5,24 +5,23 @@ var abc = require("../api")
 var api = new abc();
 
 module.exports = {
-    name: "mesasges",
-    description: "messages command.",
-    aliases: ['messages'],
+    name: "deaths",
+    aliases: [''],
     
     async execute(client, message, args) {
         if (!args[0]) return message.channel.send(client.userNotFound)
 
-		let quotes = new Scriptdb(`./data/quotes/${args[0]}.json`)
-		let messages = quotes.get('messages')
+		let quotes = new Scriptdb(`./data/deaths/${args[0]}.json`)
+		let deaths = quotes.get('deaths')
 		let times = quotes.get('times')
 
-		if(times == undefined || messages == undefined) return message.channel.send(client.userNotFound)
+		if(times == undefined || deaths == undefined) return message.channel.send(client.userNotFound)
 
-		var msg0 = messages.split(" | ")[messages.split(" | ").length - 1]
-		var msg1 = messages.split(" | ")[messages.split(" | ").length - 2]
-		var msg2 = messages.split(" | ")[messages.split(" | ").length - 3]	
-		var msg3 = messages.split(" | ")[messages.split(" | ").length - 4]
-		var msg4 = messages.split(" | ")[messages.split(" | ").length - 5]
+		var msg0 = deaths.split(" | ")[deaths.split(" | ").length - 1]
+		var msg1 = deaths.split(" | ")[deaths.split(" | ").length - 2]
+		var msg2 = deaths.split(" | ")[deaths.split(" | ").length - 3]	
+		var msg3 = deaths.split(" | ")[deaths.split(" | ").length - 4]
+		var msg4 = deaths.split(" | ")[deaths.split(" | ").length - 5]
 
 		var time0 = +times.split(" | ")[times.split(" | ").length - 1]
 		var time1 = +times.split(" | ")[times.split(" | ").length - 2]
@@ -67,12 +66,12 @@ module.exports = {
 			data = `***${api.ageCalc(time4)} trước***: ${msg4}\n`
 		}
 
-		if (messages === undefined || times == undefined) return message.channel.send(client.userNotFound);
+		if (deaths === undefined || times == undefined) return message.channel.send(client.userNotFound);
 
 		var embed = new Discord.MessageEmbed()
-								.setTitle(`Tin nhắn ${args[0]}`)
-								.setDescription(`*Tổng tin nhắn đã gửi: ${messages.split(" | ").length}*\n`)
-								.addField('*5 tin nhắn gần đây*', data)
+								.setTitle(`Báo cáo của ${args[0]}`)
+								.setDescription(`*Tổng số ghi nhận người này: ${deaths.split(" | ").length}*\n`)
+								.addField('*5 lần chết gần đây*', data)
 								.setFooter(client.footer)
 								.setTimestamp()
 								.setColor(0x2EA711);

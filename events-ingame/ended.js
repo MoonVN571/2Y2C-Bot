@@ -7,6 +7,8 @@ var waitUntil = require('wait-until');
 var a = require("../api");
 var api = new a();
 
+var log = require('log-to-file');
+
 module.exports = (bot, client) => {
     client.user.setActivity("");
 
@@ -15,9 +17,11 @@ module.exports = (bot, client) => {
 
     bot.totalSeconds = 0;
 
+    log("Bot ended");
+
     setTimeout(() => {
         var log = new Discord.MessageEmbed()
-                        .setDescription("Bot đã mất kết nối đến server. Kết nối lại sau 1 phút." + `\nĐã hoạt động từ ${api.uptimeCalc()} trước.`)
+                        .setDescription("Bot đã mất kết nối đến server. Kết nối lại sau 1 phút." + `\nThời gian ngoài hàng chờ: ${api.queueTime()}.\n Thời gian bot trong server: ${api.uptimeCalc()}.`)
                         .setColor("F71319");
 
         var notf = new Discord.MessageEmbed()
@@ -57,6 +61,10 @@ module.exports = (bot, client) => {
             }
         }
         
+        var timeQ = new Scriptdb('./data.json');
+        timeQ.delete('queueStart');
+        timeQ.delete('queueEnd');
+
         const uptime = new Scriptdb(`./data.json`);
         uptime.delete('tab-content');
         uptime.delete('uptime');

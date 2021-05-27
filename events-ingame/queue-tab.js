@@ -3,8 +3,7 @@ var check = false;
 var Discord = require('discord.js');
 var Scriptdb = require('script.db');
 
-var a = require("../api");
-var api = new a();
+var log = require('log-to-file');
 
 module.exports = (bot, client, data) => {
     if(check) return;
@@ -46,20 +45,30 @@ module.exports = (bot, client, data) => {
         } else {
             que = que.split(" | ")[0];
         }
+
+        if(q == "") return;
         
         var status = "Trong hàng chờ: " + q + " - Chờ: " + que + " | $help";
 
         if(status === undefined) return;
-            client.user.setActivity(status, { type: 'PLAYING' });
+            client.user.setActivity(status, { type: 'PLAYING' }).then(() => {
+                log("Set status to bot queue stats");
+            })
     
         if(s7 == null || s7 == "" || s7.includes("2YOUNG")) return;
         var embed = new Discord.MessageEmbed()
                             .setDescription(s7)
                             .setColor("0xFFCE00");
-            
+        
+        var timeQ = new Scriptdb('./data.json')
+        timeQ.set('queueStart', Date.now() + 10000);
+
         if(!bot.joined) return;
 
         if(embed == undefined) return;
+
+        if(bot.haveJoined) return;
+        
         client.channels.cache.get(bot.defaultChannel).send(embed)
 
         if(bot.dev) return;
@@ -77,7 +86,7 @@ module.exports = (bot, client, data) => {
                         client.channels.cache.get(checkdata).send(embed);
                     } catch(e) {}
                 }
-            }, 1000);
+            }, 100);
         }, 100)
-    }, 10 * 1000);
+    }, 20 * 1000);
 }

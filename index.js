@@ -29,6 +29,7 @@ var dev = true;
 var debug = false;
 
 var oneTime = false;
+var haveJoined = false;
 
 if (dev) {
 	prefix = "dev$";
@@ -44,6 +45,7 @@ if (dev) {
 	defaultChannel = '795135669868822528';
 	devuser = "mo0nbot";
 }
+const log = require('log-to-file');
 
 /*
  *				READY
@@ -60,9 +62,20 @@ client.on('ready', () => {
 	console.log('------------------------');
 
 	console.log('Bot started!');
+
 	console.log('Developer: ' + dev.toString().replace(/t/, "T").replace(/f/, "F"));
+	
+	log("Bot ready");
 
 	createBot();
+
+	var timeQ = new Scriptdb('./data.json');
+	timeQ.delete('queueStart');
+	timeQ.delete('queueEnd');
+
+	const uptime = new Scriptdb(`./data.json`);
+	uptime.delete('tab-content');
+	uptime.delete('uptime');
 });
 
 async function sendMessage(channel, content) {
@@ -78,6 +91,7 @@ async function sendMessage(channel, content) {
  */
 function createBot() {
 	console.log('------------------------');
+	log("Creating bot");
 	
 	const bot = mineflayer.createBot({
 		host: config.ip,
@@ -119,6 +133,7 @@ function createBot() {
 	bot.joined = joined;
 	bot.countPlayers = countPlayers;
 	bot.oneTime = oneTime;
+	bot.haveJoined = haveJoined;
 	
 	bot.on('windowOpen', verifyEvent.bind(null, bot));
 
@@ -204,10 +219,6 @@ function createBot() {
 				messages.set("messages", logger + " | " + msgs)
 				messages.set("times", times + " | " + Date.now())
 			}
-		}
-	
-		if(logger.includes("bán kit ko") || logger.includes("ban kit") || logger.includes('sell kit')) {
-			bot.whisper(username, "> Moon Shop: moonz.ga/moonshop");
 		}
 	
 		if(!logger.startsWith(bp)) return;

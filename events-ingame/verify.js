@@ -1,13 +1,10 @@
 module.exports = (bot) => {
-    var pin1 = 4;
-    var pin2 = 3;
-    var pin3 = 7;
-    var pin4 = 1;
+    var v = process.env.PIN;
     
-    bot.clickWindow(pin1, 0, 0, null)
-    bot.clickWindow(pin2, 0, 0, null) 
-    bot.clickWindow(pin3, 0, 0, null)
-    bot.clickWindow(pin4, 0, 0, null)
+    bot.clickWindow(v.split(" ")[0], 0, 0, null)
+    bot.clickWindow(v.split(" ")[1], 0, 0, null) 
+    bot.clickWindow(v.split(" ")[2], 0, 0, null)
+    bot.clickWindow(v.split(" ")[3], 0, 0, null)
     
     setTimeout(() => { bot.chat('/2y2c'); }, 15*1000);
 

@@ -82,10 +82,27 @@ module.exports = (bot, client, message) => {
 	}
 
 	if(logger == "Đang vào 2y2c") {
+		bot.haveJoined = true;
+
+        var timeQ = new Scriptdb('./data.json')
+        timeQ.set('queueEnd', Date.now());
+
+		var quetime = new Discord.MessageEmbed()
+					.setDescription(`Trong hàng chờ được ${api.queueTime()}.`)
+					.setColor(0xeeee00);
+
+		if(!timeQ.toString().includes("NaN")) {
+			if(bot.dev) {
+				client.channels.cache.get("807045720699830273").send(quetime);
+			} else {
+				client.channels.cache.get("806881615623880704").send(quetime);
+			}
+		}
+
 		var fully = new Discord.MessageEmbed()
 					.setDescription("Đang vào 2y2c")
 					.setColor(0xb60000);
-		
+
 		setTimeout(() => {
 			var guild = client.guilds.cache.map(guild => guild.id);
 			setInterval(() => {
@@ -186,7 +203,7 @@ module.exports = (bot, client, message) => {
 		var str = logger;
 		var user = str.split(" ")[6];
 		
-		saveKills(user)
+		saveKills(user, logger)
 		deathMsg = logger;
 	}
 
@@ -194,7 +211,7 @@ module.exports = (bot, client, message) => {
 		var str = logger;
 		var user = str.split(" ")[4];
 
-		saveKills(user)
+		saveKills(user, logger)
 		deathMsg = logger;
 	}
 	
@@ -202,7 +219,7 @@ module.exports = (bot, client, message) => {
 		var str = logger;
 		var user = str.split(" ")[7];
 		
-		saveKills(user)
+		saveKills(user, logger)
 		deathMsg = logger;
 	}
 
@@ -210,7 +227,7 @@ module.exports = (bot, client, message) => {
 		var str = logger;
 		var user = str.split(" ")[4];
 
-		saveKills(user)
+		saveKills(user, logger)
 		deathMsg = logger;
 	} 
 
@@ -218,7 +235,7 @@ module.exports = (bot, client, message) => {
 		var str = logger;
 		var user = str.split(" ")[4];
 
-		saveKills(user)
+		saveKills(user, logger)
 		deathMsg = logger;
 	}
 
@@ -226,7 +243,7 @@ module.exports = (bot, client, message) => {
 		var str = logger;
 		var user = str.split(" ")[2];
 		
-		saveKills(user)
+		saveKills(user, logger)
 		deathMsg = logger;
 	}
 
@@ -237,7 +254,7 @@ module.exports = (bot, client, message) => {
 		if(user.includes("'s")) {
 			newUser = user.replace("'s", "")
 		}
-		saveKills(newUser)
+		saveKills(newUser, logger)
 		deathMsg = logger;
 	}
 
@@ -248,7 +265,7 @@ module.exports = (bot, client, message) => {
 		if(user.includes("'s")) {
 			newUser = user.replace("'s", "")
 		}
-		saveKills(newUser)
+		saveKills(newUser, logger)
 		deathMsg = logger;
 	} 
 
@@ -257,8 +274,8 @@ module.exports = (bot, client, message) => {
 		var user = str.split(" ")[2];
 		var killer = str.split(" ")[1];
 
-		saveKills(killer)
-		saveDead(user)
+		saveKills(killer, logger)
+		saveDead(user, logger)
 		deathMsg = logger;
 	}
 
@@ -267,8 +284,8 @@ module.exports = (bot, client, message) => {
 		var user = str.split(" ")[4];
 		var killer = str.split(" ")[0];
 
-		saveKills(killer)
-		saveDead(user)
+		saveKills(killer, logger)
+		saveDead(user, logger)
 		deathMsg = logger;
 	}
 
@@ -302,31 +319,52 @@ module.exports = (bot, client, message) => {
 	|| logger.includes('tưởng')) {
 		var user = logger.split(" ")[0];
 
-		saveDead(user)
+		saveDead(user, logger);
 		deathMsg = logger;
 	}
 
-	function saveDead(name) {
-		const kd = new Scriptdb(`./data/kd/${name}.json`);
-		var dead = kd.get('deaths');
-		
-		if(dead == undefined) {
-			kd.set('deaths', 1);
+	function saveDead(name, logger) {
+		const death = new Scriptdb(`./data/kd/${name}.json`);
+		var data = death.get('deaths');
+
+		// deaths msg
+		const d = new Scriptdb(`./data/deaths/${name}.json`);
+		if(d.get('deaths') == undefined) {
+			d.set('deaths', logger);
+			d.set('times', Date.now());
 		} else {
-			kd.set('deaths', +dead + 1);
+			d.set('deaths', d.get('deaths') + " | " + logger);
+			d.set('times', d.get('times') + " | " + Date.now());
+		}
+
+		if(data == undefined) {
+			death.set('deaths', 1);
+		} else {
+			death.set('deaths', +data + 1);
 		}
 	}
 
-	function saveKills(name) {
-		const kd = new Scriptdb(`./data/kd/${name}.json`);
-		var kill = kd.get('kills');
+	function saveKills(name, logger) {
+		const kill = new Scriptdb(`./data/kd/${name}.json`);
+		var data = kill.get('kills');
 
+		// phai o day moi dung :v
 		if(name == "Piglin" || name == "Zombie"  || name == "Zombified" || name == "Drowned" || name == "Phantom" || name == "Enderman") return;
-		
-		if(kill == undefined) {
-			kd.set('kills', 1);
+
+		// kills msg
+		const k = new Scriptdb(`./data/kills/${name}.json`);
+		if(k.get('kills') == undefined) {
+			k.set('deaths', logger);
+			k.set('times', Date.now());
 		} else {
-			kd.set('kills', +kill + 1);
+			k.set('deaths', k.get('deaths') + " | " + logger);
+			k.set('times', k.get('times') + " | " + Date.now());
+		}
+		
+		if(data == undefined) {
+			kill.set('kills', 1);
+		} else {
+			kill.set('kills', +data + 1);
 		}
 	}
 

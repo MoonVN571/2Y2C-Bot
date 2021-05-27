@@ -1,5 +1,7 @@
 var Discord = require('discord.js');
 
+var log = require('log-to-file');
+
 module.exports = (bot, client, reason, loggedIn) => {
     console.log(reason, loggedIn);
     if (reason.includes("You are already connected to this proxy!")) {
@@ -17,9 +19,7 @@ module.exports = (bot, client, reason, loggedIn) => {
 
     if(bot.dev) return;
     
-    if(!bot.dev) {
-        bot.sendMessage('844247133967745044', 'Bot disconnecte.');
-    }
+    log('Bot disconnected with: ' + reason)
 
     if(bot.joined) {
         client.channels.cache.get(bot.defaultChannel).send(embed);

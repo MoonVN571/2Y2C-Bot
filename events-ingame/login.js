@@ -6,12 +6,13 @@ var a = require('../api');
 var api = new a();
 
 const mc = require("minecraft-protocol");
+const log = require('log-to-file');
 
 module.exports = (bot, client) => {
     if(!bot.oneTime) {
         setInterval(() => {
             if(!bot.dev) {
-                bot.sendMessage('844247133967745044', 'Try set topic status.');
+                log("Set topic status repeating.");
             }
 
             var get = new Scriptdb(`./data.json`).get('tab-content');
@@ -22,8 +23,7 @@ module.exports = (bot, client) => {
             client.channels.cache.get(bot.defaultChannel).setTopic(
                 datas + " - Đã vào server từ " + api.uptimeCalc().replace("s", " giây").replace("h", " giờ").replace("m", " phút") + " trước."
                 ).then(() => {
-                    if(!bot.dev)
-                        bot.sendMessage('844247133967745044', 'Successful set status.');
+                    log("Update topic status with all channels")
                 });
 
             setTimeout(() => {
@@ -46,10 +46,6 @@ module.exports = (bot, client) => {
         }, 5 * 60 * 1000);
 
         setInterval(() => {
-            if(!bot.dev) {
-                bot.sendMessage('844247133967745044', 'Pinging server status.');
-            }
-
             mc.ping({ "host": "2y2c.org" }, (err, result) => {
                 if (result) {
                     try {
@@ -79,26 +75,22 @@ module.exports = (bot, client) => {
                     data.set('queue', queue + " | " + Date.now());
                     data.set('prio', prio + " | " + Date.now());
 
-                    if(!bot.dev)
-                    bot.sendMessage('844247133967745044', 'Set server status data.');
+                    log("Set status queue repeating");
                 }
             });
         }, 1 * 60 * 1000);
 
         setInterval(() => {
             if(bot.lobby) return;
-            if(!bot.dev) {
-                bot.sendMessage('844247133967745044', 'Anti afk.');
-            }
+
+            log("Trying to anti afk.")
             
             bot.swingArm("left");
             bot.look(Math.floor(Math.random() * Math.floor("360")), 0, true, null);
         }, 1 * 60 * 1000);
 
         setInterval(() => {
-            if(!bot.dev) {
-                bot.sendMessage('844247133967745044', 'Auto message.');
-            }
+            log("Bot was send a messages");
 
             fs.readFile("ads.txt", 'utf8', function (err, data) {
                 if (err) throw err;
@@ -111,9 +103,7 @@ module.exports = (bot, client) => {
     }
 
     bot.once('spawn', () => { // listen khi bot spawn trong lobby
-        if(!bot.dev) {
-            bot.sendMessage('844247133967745044', 'Bot spawned.');
-        }
+        log("Bot started function")
 
         const uptime = new Scriptdb(`./data.json`);
 
