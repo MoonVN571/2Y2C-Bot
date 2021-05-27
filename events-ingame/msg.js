@@ -91,7 +91,7 @@ module.exports = (bot, client, message) => {
 					.setDescription(`Trong hàng chờ được ${api.queueTime()}.`)
 					.setColor(0xeeee00);
 
-		if(!timeQ.toString().includes("NaN")) {
+		if(!api.queueTime().includes("NaN")) {
 			if(bot.dev) {
 				client.channels.cache.get("807045720699830273").send(quetime);
 			} else {
