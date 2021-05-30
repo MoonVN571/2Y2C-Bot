@@ -24,6 +24,7 @@ module.exports = {
             var guild = message.guild.id;
             const data = new Scriptdb(`./data/guilds/setup-${guild}.json`);
             
+            if(data.get('livechat') == undefined) return message.channel.send("Không tìm thấy kênh đã setup.");
 
             if(channel == "NaN") {
                 message.channel.send("Bạn đã xoá chat tại channel: <#" + args[2] + ">");
