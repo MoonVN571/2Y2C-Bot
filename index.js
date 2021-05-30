@@ -73,9 +73,10 @@ client.on('ready', () => {
 	timeQ.delete('queueStart');
 	timeQ.delete('queueEnd');
 
-	const uptime = new Scriptdb(`./data.json`);
-	uptime.delete('tab-content');
-	uptime.delete('uptime');
+	const data = new Scriptdb(`./data.json`);
+	data.delete('tab-content');
+	data.delete('uptime');
+	data.delete('players');
 });
 
 async function sendMessage(channel, content) {

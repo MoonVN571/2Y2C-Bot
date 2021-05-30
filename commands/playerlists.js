@@ -10,6 +10,8 @@ module.exports = {
 
         var playerArray = db.get('players');
 
+        if(playerArray == undefined) return message.channel.send("Bot chưa vào server hoặc server không hoạt động.");
+
         var count = playerArray.length;
 
         message.channel.send("Đang tính toán...").then(msg => {

@@ -68,14 +68,13 @@ module.exports = (bot, client) => {
             }
         }
         
-        var timeQ = new Scriptdb('./data.json');
-        timeQ.delete('queueStart');
-        timeQ.delete('queueEnd');
+        const data =   Scriptdb(`./data.json`);
+        data.delete('queueStart');
+        data.delete('queueEnd');
 
-        const uptime = new Scriptdb(`./data.json`);
-        uptime.delete('tab-content');
-        uptime.delete('uptime');
-
+        data.delete('tab-content');
+        data.delete('uptime');
+        data.delete('players');
 
         waitUntil(60 * 1000, 50, function condition() {
             try {
