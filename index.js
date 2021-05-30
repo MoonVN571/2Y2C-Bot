@@ -70,12 +70,16 @@ client.on('ready', () => {
 	createBot();
 
 	var data = new Scriptdb('./data.json');
-	data.delete('queueStart');
-	data.delete('queueEnd');
+	try {
+		data.delete('queueStart');
+		data.delete('queueEnd');
 
-	data.delete('tab-content');
-	data.delete('uptime');
-	data.delete('players');
+		data.delete('tab-content');
+		data.delete('uptime');
+		data.delete('players');
+	} catch(e) {
+		log("failed to delete with error: " + e);
+	}
 });
 
 async function sendMessage(channel, content) {

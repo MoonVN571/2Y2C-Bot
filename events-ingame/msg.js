@@ -329,6 +329,7 @@ module.exports = (bot, client, message) => {
 
 		// deaths msg
 		const d = new Scriptdb(`./data/deaths/${name}.json`);
+		logger = logger.replace("/", "\/");
 		if(d.get('deaths') == undefined) {
 			d.set('deaths', logger);
 			d.set('times', Date.now());
@@ -352,6 +353,7 @@ module.exports = (bot, client, message) => {
 		if(name == "Piglin" || name == "Zombie"  || name == "Zombified" || name == "Drowned" || name == "Phantom" || name == "Enderman") return;
 
 		// kills msg
+		logger = logger.replace("/", "\/");
 		const k = new Scriptdb(`./data/kills/${name}.json`);
 		if(k.get('kills') == undefined) {
 			k.set('deaths', logger);

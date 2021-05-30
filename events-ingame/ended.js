@@ -69,13 +69,17 @@ module.exports = (bot, client) => {
         }
         
         const data =   Scriptdb(`./data.json`);
-        data.delete('queueStart');
-        data.delete('queueEnd');
+        try{
+            data.delete('queueStart');
+            data.delete('queueEnd');
 
-        data.delete('tab-content');
-        data.delete('uptime');
-        data.delete('players');
-
+            data.delete('tab-content');
+            data.delete('uptime');
+            data.delete('players');
+        } catch(e) {
+            log("failed to delete with error: " + e);
+        }
+        
         waitUntil(60 * 1000, 50, function condition() {
             try {
                 start.createBot();
