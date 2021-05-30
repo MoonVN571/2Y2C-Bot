@@ -69,11 +69,10 @@ client.on('ready', () => {
 
 	createBot();
 
-	var timeQ = new Scriptdb('./data.json');
-	timeQ.delete('queueStart');
-	timeQ.delete('queueEnd');
+	var data = new Scriptdb('./data.json');
+	data.delete('queueStart');
+	data.delete('queueEnd');
 
-	const data = new Scriptdb(`./data.json`);
 	data.delete('tab-content');
 	data.delete('uptime');
 	data.delete('players');
