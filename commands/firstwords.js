@@ -18,17 +18,23 @@ module.exports = {
 		
 		if (msgs === undefined || times == undefined) return message.channel.send(client.userNotFound);
 
-		var data = msgs.split(" | ")[msgs.split(" | ").length - 1];
+		var data;
 		var time;
         
         try {
-            time = times.split(" | ")[msgs.split(" | ").length - 1];
+            data = msgs.split(" | ")[msgs.split(" | ").length - 1];
+        } catch(e) {
+            data = mgs;
+        }
+
+        try {
+            time = times.split(" | ")[times.split(" | ").length - 1];
         } catch(e) {
             time = times;
         }
 
         var embed = new MessageEmbed()
-                            .setDescription("**" + api.ageCalc(time) + " trước**: <" + args[0] + "> " + data)
+                            .setDescription("**" + args[0] + "** [" + api.ageCalc(time) + " trước]: " + data)
                             .setColor(0x2EA711)
 
         message.channel.send(embed);

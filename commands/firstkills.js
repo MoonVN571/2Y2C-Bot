@@ -21,6 +21,12 @@ module.exports = {
 		var time;
 
         try {
+            data = msgs.split(" | ")[msgs.split(" | ").length - 1];
+        } catch(e) {
+            data = msgs;
+        }
+
+        try {
             time = times.split(" | ")[times.split(" | ").length - 1]
         } catch(e) {
             time = times;

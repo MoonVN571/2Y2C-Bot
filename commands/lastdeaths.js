@@ -17,8 +17,14 @@ module.exports = {
 		
 		if (msgs === undefined || times == undefined) return message.channel.send(client.userNotFound);
 
-		var data = msgs.split(" | ")[0];
+		var data;
 		var time;
+
+        try {
+            data = msgs.split(" | ")[0];
+        } catch(e) {
+            data = msgs;
+        }
 
         try {
             time = times.split(" | ")[0];
