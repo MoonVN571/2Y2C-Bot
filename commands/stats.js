@@ -1,5 +1,5 @@
 var Scriptdb = require('script.db');
-var Discord = require('discord.js');
+var { MessageEmbed } = require('discord.js');
 
 module.exports = {
     name: "stats",
@@ -24,7 +24,7 @@ module.exports = {
 			ratioFixed = "0.00";
 		}
 
-        var embed = new Discord.MessageEmbed()
+        var embed = new MessageEmbed()
                         .setAuthor(`${args[0]}'s statistics`, `https://minotar.net/helm/${args[0]}`, `https://namemc.com/` + args[0])
                         .addField(`Kills`, `${kills}`, true)
                         .addField(`Deaths`, `${deads}`, true )

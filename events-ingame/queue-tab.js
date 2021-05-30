@@ -1,7 +1,8 @@
 var check = false;
 
 var Discord = require('discord.js');
-var Scriptdb = require('script.db');
+
+var once = false;
 
 var log = require('log-to-file');
 
@@ -60,8 +61,11 @@ module.exports = (bot, client, data) => {
                             .setDescription(s7)
                             .setColor("0xFFCE00");
         
-        var timeQ = new Scriptdb('./data.json')
-        timeQ.set('queueStart', Date.now() + 10000);
+        if(!once) {
+            once = true;
+            var timeQ = new Scriptdb('./data.json')
+            timeQ.set('queueStart', Date.now() + 20000);
+        }
 
         if(!bot.joined) return;
 

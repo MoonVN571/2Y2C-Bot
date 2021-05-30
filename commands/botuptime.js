@@ -1,4 +1,4 @@
-var Discord = require('discord.js');
+var { MessageEmbed } = require('discord.js');
 
 var a = require ('../api');
 var api = new a();
@@ -11,7 +11,7 @@ module.exports = {
     async execute(client, message, args) {
         var format = api.calc(parseInt(process.uptime()));
         
-        var embed = new Discord.MessageEmbed()
+        var embed = new MessageEmbed()
                         .setDescription("Uptime hiện tại: " + format)
                         .setColor(0x000DFF);
         

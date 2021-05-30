@@ -1,9 +1,8 @@
 var Scriptdb = require('script.db');
-var Discord = require('discord.js');
+var { MessageEmbed } = require('discord.js');
 
 module.exports = {
     name: "joindate",
-    description: "joindate command.",
     aliases: ['joindate', 'jd'],
     
     async execute(client, message, args) {
@@ -14,7 +13,7 @@ module.exports = {
 
 		if (firstjoin === undefined) return message.channel.send(client.userNotFound);
 
-        var embed = new Discord.MessageEmbed()
+        var embed = new MessageEmbed()
                         .setDescription(`${args[0]}: ${firstjoin}`)
                         .setColor(0x2EA711);
 

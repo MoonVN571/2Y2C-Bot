@@ -1,4 +1,4 @@
-var Discord = require('discord.js');
+var { MessageEmbed } = require('discord.js');
 var Scriptdb = require('script.db');
 
 var abc = require("../api")
@@ -18,8 +18,8 @@ module.exports = {
 		if (seen == undefined) return message.channel.send(client.userNotFound);
 		
 		var age = api.ageCalc(seen);
-		var embed = new Discord.MessageEmbed()
-                                .setDescription(`Đã thấy ${args[0]} từ ${age} trước.`)
+		var embed = new MessageEmbed()
+                                .setDescription(`Bot đã nhìn thấy **${args[0]}** từ ${age} trước.`)
                                 .setColor(0x2EA711);
 
 		message.channel.send(embed);

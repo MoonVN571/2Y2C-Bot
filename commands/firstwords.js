@@ -1,4 +1,4 @@
-var Discord = require('discord.js');
+var { MessageEmbed } = require('discord.js');
 var Scriptdb = require('script.db');
 
 var a = require("../api")
@@ -19,10 +19,16 @@ module.exports = {
 		if (msgs === undefined || times == undefined) return message.channel.send(client.userNotFound);
 
 		var data = msgs.split(" | ")[msgs.split(" | ").length - 1];
-		var time = times.split(" | ")[times.split(" | ").length - 1];
+		var time;
+        
+        try {
+            time = times.split(" | ")[msgs.split(" | ").length - 1];
+        } catch(e) {
+            time = times;
+        }
 
-        var embed = new Discord.MessageEmbed()
-                            .setDescription("**" +api.ageCalc(time) + " trước**: <" + args[0] + "> " + data)
+        var embed = new MessageEmbed()
+                            .setDescription("**" + api.ageCalc(time) + " trước**: <" + args[0] + "> " + data)
                             .setColor(0x2EA711)
 
         message.channel.send(embed);

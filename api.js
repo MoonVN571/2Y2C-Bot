@@ -1,37 +1,56 @@
 var Scriptdb = require('script.db');
+var log = require('log-to-file');
 
 function API() {
     this.ageCalc = (time) => {
         const date =  new Date();
         const dateSince = new Date(+time);
         
-        var year = dateSince.getFullYear() - date.getFullYear(),
-        month = dateSince.getMonth() - date.getMonth(),
-        day = dateSince.getDate() - date.getDate(),
-        hour = dateSince.getHours() - date.getHours(),
-        minute = dateSince.getMinutes() - date.getMinutes();
+        log(new Date().toLocaleString())
+        log(new Date(+time).toLocaleString());
 
-        if(year.toString().startsWith('-'))
-            year = year.toString().split('-')[1]
-
-        if(month.toString().startsWith('-'))
-            month = month.toString().split('-')[1]
-
-        if(day.toString().startsWith('-'))
-            day = day.toString().split('-')[1]
-
-        if(hour.toString().startsWith('-'))
-            hour = hour.toString().split('-')[1]
-
-        if(minute.toString().startsWith('-'))
-            minute = minute.toString().split('-')[1]
+        var dateYear = date.getFullYear();
+        var dateMonth = date.getMonth() + 1;
+        var dateDay = date.getDate();
+        var dateHour = date.getHours();
+        var dateMin = date.getMinutes();
         
-        // console.log(year, month, day, hour, minute)
-        // year = 0
-        // month = 0
-        // day = 1
-        // hour = 0
-        // minute = 1
+        var sinceYear = dateSince.getFullYear();
+        var sinceMonth = dateSince.getMonth() + 1;
+        var sinceDay = dateSince.getDate();
+        var sinceHour = dateSince.getHours();
+        var sinceMin = dateSince.getMinutes();
+
+        var year = 0, month = 0, day = 0, hour = 0, minute = 0;
+
+        year = dateYear - sinceYear;
+
+        if(dateMonth > sinceMonth) {
+            month = dateMonth - sinceMonth;
+        } else {
+            month = sinceMonth - dateMonth;
+        }
+
+        if(dateDay > sinceDay) {
+            day = dateDay - sinceDay;
+        } else {
+            day = sinceDay - dateDay;
+        }
+
+        if(dateHour > sinceHour) {
+            hour = dateHour - sinceHour;
+        } else {
+            hour = sinceHour - dateHour;
+        }
+
+        if(dateMin > sinceMin) {
+            minute = dateMin - sinceMin;
+        } else {
+            minute = sinceMin - dateMin;
+        }
+
+        log(year, month, day, hour, minute)
+
         var age;
         if(year > 0) {
             if(month > 0) {
@@ -96,11 +115,7 @@ function API() {
             }
         }
 
-        age = age + " ";
-
-        if(year == "NaN" || month == "NaN" || day== "NaN" || hour == "NaN" || minute== "NaN" )
-            age = null;
-
+        log("API is: " + age);
         return age;
     }
 
@@ -147,7 +162,8 @@ function API() {
         hours = parseInt(((temp - day * 86400) / 3600))
         minutes = parseInt(((temp - day * 86400 - hours * 3600)) / 60)
         seconds = parseInt(temp % 60)
-        if(data.get('queueEnd') == undefined) {
+        
+        if(data.get('queueEnd') == undefined || hours == "NaN" || minutes == "NaN" || seconds == "NaN") {
             hours = 0;
             minutes = 0;
             seconds = 0;

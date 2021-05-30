@@ -11,9 +11,7 @@ const log = require('log-to-file');
 module.exports = (bot, client) => {
     if(!bot.oneTime) {
         setInterval(() => {
-            if(!bot.dev) {
-                log("Set topic status repeating.");
-            }
+            log("Run set topic");
 
             var get = new Scriptdb(`./data.json`).get('tab-content');
             if(get == undefined) return;
@@ -23,7 +21,7 @@ module.exports = (bot, client) => {
             client.channels.cache.get(bot.defaultChannel).setTopic(
                 datas + " - Đã vào server từ " + api.uptimeCalc().replace("s", " giây").replace("h", " giờ").replace("m", " phút") + " trước."
                 ).then(() => {
-                    log("Update topic status with all channels")
+                    log("Update topic")
                 });
 
             setTimeout(() => {
@@ -75,7 +73,7 @@ module.exports = (bot, client) => {
                     data.set('queue', queue + " | " + Date.now());
                     data.set('prio', prio + " | " + Date.now());
 
-                    log("Set status queue repeating");
+                    log("Set queue status");
                 }
             });
         }, 1 * 60 * 1000);
@@ -83,14 +81,14 @@ module.exports = (bot, client) => {
         setInterval(() => {
             if(bot.lobby) return;
 
-            log("Trying to anti afk.")
+            log("Anti-AFK")
             
             bot.swingArm("left");
             bot.look(Math.floor(Math.random() * Math.floor("360")), 0, true, null);
         }, 1 * 60 * 1000);
 
         setInterval(() => {
-            log("Bot was send a messages");
+            log("Bot was send a message");
 
             fs.readFile("ads.txt", 'utf8', function (err, data) {
                 if (err) throw err;
@@ -100,10 +98,22 @@ module.exports = (bot, client) => {
                 bot.chat(random);
             });
         },  10 * 60 * 1000);
+
+        setInterval(() => {
+            log("Save playerlist");
+
+            if(bot.lobby) return;
+            var Scriptdb = require('script.db');
+            const data = new Scriptdb(`./data.json`);
+
+            var list = Object.values(bot.players).map(p => p.username);
+
+            data.set('players', list)
+        },  1 * 60 * 1000);
     }
 
     bot.once('spawn', () => { // listen khi bot spawn trong lobby
-        log("Bot started function")
+        log("Bot spawned in server")
 
         const uptime = new Scriptdb(`./data.json`);
 

@@ -2,7 +2,6 @@ var Scriptdb = require("script.db");
 
 module.exports = {
     name: "setup",
-    description: "setup command.",
     aliases: [''],
     
     async execute(client, message, args) {
@@ -10,10 +9,10 @@ module.exports = {
 
         var prefix = client.prefix;
         
-        if(!args[0]) return message.channel.send("Cách dùng: " + prefix + "setup chat <tag hoặc nhập id kênh>");
+        if(!args[0]) return message.channel.send("Cách dùng: " + prefix + "setup chat <Kênh>");
         
         if(args[0] === "chat") {
-            if(!args[1]) return message.channel.send("Cách dùng: " + prefix + "setup chat <tag hoặc nhập id kênh>");
+            if(!args[1]) return message.channel.send("Cách dùng: " + prefix + "setup chat <Kênh>");
 
             var channel;
             channel = message.content.replace(/\D/g,'');
@@ -26,14 +25,10 @@ module.exports = {
             const checkdata = data.get('livechat')
             
             if(checkdata == undefined) {
+                message.channel.send("Bạn đã setup chat tại kênh: <#" + channel + "> thành công!");
                 data.set('livechat', channel);
-                message.channel.send("Bạn đã setup chat tại kênh: " + args[2])
             } else {
-                if(args[1] == 'chat') {
-                    message.channel.send("Đã setup ròi. Cách xoá: " + prefix + "delete chat <Kênh>")
-                } else {
-                    message.channel.send("Đã setup ròi. Cách xoá: " + prefix + "delete chat Kênh>")
-                }
+                message.channel.send("Đã setup ròi. Cách xoá: " + prefix + "delete chat <Kênh>")
             }
         }
 

@@ -8,7 +8,7 @@ module.exports = (bot) => {
         Object.values(bot.players).forEach(player => addPlayTime(player.username));
 
         if(!bot.dev) {
-            log("Playtime count started")
+            log("Save tick all players is online")
         }
 
         function addPlayTime(player) {

@@ -1,15 +1,14 @@
-var Discord = require('discord.js');
+var { MessageEmbed } = require('discord.js');
 
 module.exports = {
     name: "help",
-    description: "help command.",
     aliases: ['help'],
     
     async execute(client, message, args) {
         var prefix = client.prefix;
         var footer = client.footer;
 
-        var noargs = new Discord.MessageEmbed()
+        var noargs = new MessageEmbed()
                             .setDescription( 
                             "**Các loại lệnh:**" + 
                             "\n``discord`` - Xem các lệnh bot về thông số server." +
@@ -26,7 +25,7 @@ module.exports = {
         if (!args[0]) return message.channel.send(noargs);
 
         if (args[0] == "discord") {
-            var helpdiscord = new Discord.MessageEmbed()
+            var helpdiscord = new MessageEmbed()
                                 .setColor(0x000DFF)
                                 .setDescription(
                                     "***Các lệnh discord:**\n" +
@@ -48,7 +47,7 @@ module.exports = {
         }
 
         if (args[0] === "ingame-commands" || args[0] == "ig-cmds" || args[0] == "ic") {
-            var ingamecmd = new Discord.MessageEmbed()
+            var ingamecmd = new MessageEmbed()
                                 .setColor(0x000DFF)
                                 .setDescription(
                                 "***Các lệnh ingame:***\n" 
@@ -83,7 +82,7 @@ module.exports = {
         }
 
         if (args[0] === "check") {
-            var check = new Discord.MessageEmbed()
+            var check = new MessageEmbed()
                             .setColor(0x000DFF)
                             .setDescription("***Các lệnh check ( thông số ):***\n" +
                             prefix + 'kd - ``Xem chỉ số K/D.``'
@@ -100,7 +99,7 @@ module.exports = {
         }
 
         if (args[0] == "all") {
-            var embed = new Discord.MessageEmbed()
+            var embed = new MessageEmbed()
                                 .setColor(0x000DFF)
                                 .addField("*Các lệnh trên discord*", "help*, status, queue, prioqueue, setup, serverstatus, invite, botinfo, botuptime. (prefix discord là $)", false)
                                 .addField("*Kiểm tra thông số tại discord*", "stats, playtime, joindate, seen, uptime, 2bqueue, 2bstats, 2bseen. (prefix vẫn là $)", false)

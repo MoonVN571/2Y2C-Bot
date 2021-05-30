@@ -1,5 +1,5 @@
 const request = require('request');
-var Discord = require('discord.js');
+var { MessageEmbed } = require('discord.js');
 
 module.exports = {
     name: "2bqueue",
@@ -18,7 +18,7 @@ module.exports = {
 					dataq = -1;
 				}
 
-				var queue = new Discord.MessageEmbed()
+				var queue = new MessageEmbed()
 									.setDescription("2B2T | Hàng chờ: " + dataq + " - Ưu tiên: " + datap)
 									.setColor(0x2EA711);
 

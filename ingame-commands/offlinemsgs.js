@@ -13,6 +13,10 @@ module.exports = {
         
         var msg = bot.logger.substr(logger.split(" ")[0].length + 1 + args[0].length + 1);
 
+        var checkValidUser = new Scriptdb(`./data/joindate/${args[0]}.json`);
+
+        if(checkValidUser == undefined) return bot.whisper(username, "> Bạn chắc rằng đã nhập đúng tên chứ ?");
+        
         var data = new Scriptdb(`./offlinemsgs.json`);
 
         data.set(args[0] + '.author', username);

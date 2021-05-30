@@ -12,7 +12,7 @@ module.exports = {
             
         if(!args[0]) return message.channel.send("Cách dùng: " + prefix + "delete chat <tag hoặc nhập id kênh>");
 		
-		if(!args[1] || args[1] !== "chat") return message.channel.send("Cách dùng: " + prefix + "delete <chat hoặc commands> <tag hoặc nhập id kênh>");
+		if(!args[0] || args[0] !== "chat") return message.channel.send("Cách dùng: " + prefix + "delete chat <tag hoặc nhập id kênh>");
 
         if(args[0] === 'chat') {
             var channel;
@@ -24,14 +24,12 @@ module.exports = {
             var guild = message.guild.id;
             const data = new Scriptdb(`./data/guilds/setup-${guild}.json`);
             
-            if(data == null) return message.channel.send("Không tìm thấy kênh đã setup.");
-            if(newdata == data) return message.channel.send("Không tìm thấy kênh.");
 
-            if(channel !== "NaN") {
-                message.channel.send("Bạn đã xoá chat tại channel: " + args[1]);
+            if(channel == "NaN") {
+                message.channel.send("Bạn đã xoá chat tại channel: <#" + args[2] + ">");
                 data.delete('livechat');
             } else {
-                message.channel.send("Bạn đã xoá chat tại channel: " + channel);
+                message.channel.send("Bạn đã xoá chat tại channel: <#" + channel + ">");
                 data.delete('livechat');
             }
         }
