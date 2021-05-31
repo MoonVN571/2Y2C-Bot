@@ -30,6 +30,6 @@ module.exports = {
 
         var tick = new Date(datee).getTime();
 
-        bot.whisper(username, `> ${args[0]}: ${firstjoin} (${api.agecalc(tick)} trước)`);
+        bot.whisper(username, `> ${args[0]}: ${firstjoin} (${api.ageCalc(tick)} trước)`);
     }
 }
