@@ -172,7 +172,11 @@ function API() {
     }
 
 
-    this.calcTime = (hours, minutes) => {
+    this.calcTime = () => {
+        var data = this.uptimeCalc();
+        var hours = data.split(" ")[1].split("h")[0]
+        var minutes = data.split("h ")[1].split("m")[0];
+
         var formatMinutes;
         if(minutes == 0) {
             formatMinutes = "";

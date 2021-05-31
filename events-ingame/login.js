@@ -19,7 +19,7 @@ module.exports = (bot, client) => {
             var datas = get.toString().split("| ")[0];
 
             client.channels.cache.get(bot.defaultChannel).setTopic(
-                datas + " - Đã vào server từ " + api.uptimeCalc().replace("s", " giây").replace("h", " giờ").replace("m", " phút") + " trước."
+                datas + " - Đã vào server từ " + api.calcTime() + " trước."
                 ).then(() => {
                     log("Update topic")
                 });
@@ -36,7 +36,7 @@ module.exports = (bot, client) => {
                         
                         try {
                             if(bot.dev) return;
-                            client.channels.cache.get(checkdata).setTopic(datas + " - Đã vào server từ " + api.uptimeCalc() + " trước.")
+                            client.channels.cache.get(checkdata).setTopic(datas + " - Đã vào server từ " + api.calcTime() + " trước.")
                         } catch(e) {}
                     }
                 }, 200);

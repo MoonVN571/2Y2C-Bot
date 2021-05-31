@@ -68,8 +68,9 @@ module.exports = (bot, client) => {
             }
         }
         
-        const data =   Scriptdb(`./data.json`);
         try{
+            const data = Scriptdb(`./data.json`);
+
             data.delete('queueStart');
             data.delete('queueEnd');
 

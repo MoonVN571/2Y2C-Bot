@@ -44,12 +44,16 @@ module.exports = (bot, client, data) => {
         if(que == undefined) {
             que = "None";
         } else {
-            que = que.split(" | ")[0];
+            if(!que.split(" | ")) {
+                que = 0;
+            } else {
+                que = que.split(" | ")[0];
+            }
         }
 
         if(q == "") return;
         
-        var status = "Trong hàng chờ: " + q + " - Chờ: " + que + " | $help";
+        var status = "Vị trí hàng chờ: " + q + " - Chờ: " + que + " | $help";
 
         if(status === undefined) return;
             client.user.setActivity(status, { type: 'PLAYING' }).then(() => {
