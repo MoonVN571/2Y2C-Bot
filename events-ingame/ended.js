@@ -7,7 +7,7 @@ var waitUntil = require('wait-until');
 var a = require("../api");
 var api = new a();
 
-var log = require('log-to-file');
+var logg = require('log-to-file');
 
 module.exports = (bot, client) => {
     client.user.setActivity("");
@@ -17,7 +17,7 @@ module.exports = (bot, client) => {
 
     bot.totalSeconds = 0;
 
-    log("Bot ended");
+    logg("Bot ended");
 
     setTimeout(() => {
         var log;
@@ -77,7 +77,7 @@ module.exports = (bot, client) => {
             data.delete('uptime');
             data.delete('players');
         } catch(e) {
-            log("failed to delete with error: " + e);
+            logg("failed to delete with error: " + e);
         }
         
         waitUntil(60 * 1000, 50, function condition() {
