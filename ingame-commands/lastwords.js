@@ -15,9 +15,21 @@ module.exports = {
         
         if (msgs === undefined || times == undefined) return bot.whisper(username, "> không tìm thấy người chơi."); 
         
-		var data = msgs.split(" | ")[1];
-		var time = times.split(" | ")[times.split(" | ").length - 1];
+		var data;
+		var time;
         
-        bot.whisper(username, `${api.ageCalc(time)} trước: <${args[0]}> ${data}`);
+        try {
+            data = msgs.split(" | ")[0];
+        } catch(e) {
+            data = mgs;
+        }
+
+        try {
+            time = times.split(" | ")[times.split(" | ").length - 1];
+        } catch(e) {
+            time = times;
+        }
+
+        bot.whisper(username, `> ${args[0]} [${api.ageCalc(time)} trước]: ${data}`);
     }
 }

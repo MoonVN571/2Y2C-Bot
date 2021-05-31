@@ -34,6 +34,7 @@ module.exports = {
                                 prefix + 'prio - ``Xem thông số server.``\n' +
                                 prefix + 'uptime - ``Xem thông số server.``\n' +
                                 prefix + 'setup - ``Cài đặt bot cho livechat.``' +
+                                prefix + 'delete - ``Xoá ivechat.``' +
                                 prefix + 'reload - ``Reload lệnh bot ( dev only ).`` \n' +
                                 prefix + 'serverstatus - ``Xem hàng chờ, ưu tiên và online.`` \n' +
                                 prefix + 'botinfo - ``Xem thông tin bot.`` \n' +
@@ -89,6 +90,16 @@ module.exports = {
                             + prefix + 'joindate - ``Xem ngày người chơi lần đầu tham gia server.`` \n'
                             + prefix + 'playtime - ``Xem thời người chơi đã chơi.`` \n'
                             + prefix + 'seen - ``Xem lần hoạt động gần nhất của người chơi.``\n'
+                            + prefix + 'playerlist - ``Xem người chơi đang online.``\n'
+                            + prefix + 'deaths - ``Xem các lần chết gần đây.``\n'
+                            + prefix + 'kills - ``Xem các lần giết người gần đây.``\n'
+                            + prefix + 'messages - ``Xem các tin nhắn gần đây.``\n'
+                            + prefix + 'firstword - ``Xem tin nhắn đã gửi đầu tiên.``\n'
+                            + prefix + 'lastword - ``Xem tin nhắn đã gửi cuối cùng.``\n'
+                            + prefix + 'firstdeaths - ``Xem lần chết đầu tiên.``\n'
+                            + prefix + 'lastdeaths - ``Xem số lần chết gần nhất.``\n'
+                            + prefix + 'firstkills - ``Xem tin nhắn giết người đầu tiên.``\n'
+                            + prefix + 'lastkills - ``Xem tin nhắn giết người gần đây.``\n'
                             + prefix + '2bstats - ``Xem K/D người chơi 2b2t.``\n'
                             + prefix + '2bseen - ``Xem lần cuối hoạt động người chơi 2b2t.``'
                             )
@@ -101,9 +112,9 @@ module.exports = {
         if (args[0] == "all") {
             var embed = new MessageEmbed()
                                 .setColor(0x000DFF)
-                                .addField("*Các lệnh trên discord*", "help*, status, queue, prioqueue, setup, serverstatus, invite, botinfo, botuptime. (prefix discord là $)", false)
-                                .addField("*Kiểm tra thông số tại discord*", "stats, playtime, joindate, seen, uptime, 2bqueue, 2bstats, 2bseen. (prefix vẫn là $)", false)
-                                .addField("*Các lệnh dùng trong server*", "help, tps, kill, ping, queue, prio, stats, joindate, playtime, seen, 2bqueue, 2bstats, runtime, report, rules, avoid, come, follow, stop, firstwords, lastwords. (prefix là !)", false)
+                                .addField("*Các lệnh trên discord*", "help*, status, queue, prioqueue, setup, serverstatus, invite, botinfo, botuptime, uptime. [Discord: $]", false)
+                                .addField("*Kiểm tra thông số tại discord*", "stats, playtime, joindate, seen, playerlists, messages, deaths, kills, firstwords, lastwords, firstdeaths, lastdeaths, firstkills, lastkills 2bqueue, 2bstats, 2bseen. [Discord: $]", false)
+                                .addField("*Các lệnh dùng trong server*", "help, tps, kill, ping, queue, prio, stats, joindate, playtime, seen, 2bqueue, 2bstats, runtime, report, rules, avoid, come, follow, stop, firstwords, lastwords. [Ingame: !]", false)
                                 .addField("\u200b", '\n\nBạn có thể thêm bot cho discord [tại đây](https://discord.com/api/oauth2/authorize?client_id=768448728125407242&permissions=8&scope=bot).')
                                 .setFooter(footer)
                                 .setTimestamp();

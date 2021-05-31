@@ -5,7 +5,7 @@ var a = require("../api")
 var api = new a();
 
 module.exports = {
-    name: "firstwords",
+    name: "firstword",
     description: "firstwords command.",
     aliases: ['fw'],
     
@@ -28,7 +28,7 @@ module.exports = {
         }
 
         try {
-            time = times.split(" | ")[times.split(" | ").length - 1];
+            time = times.split(" | ")[0];
         } catch(e) {
             time = times;
         }

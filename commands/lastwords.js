@@ -19,15 +19,15 @@ module.exports = {
 
 		var data;
 		var time;
-        
+
         try {
             data = msgs.split(" | ")[0];
         } catch(e) {
-            data = msgs;
+            data = mgs;
         }
-        
+
         try {
-            time = times.split(" | ")[0];
+            time = times.split(" | ")[times.split(" | ").length - 1];
         } catch(e) {
             time = times;
         }
