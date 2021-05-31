@@ -5,8 +5,7 @@ var a = require("../api")
 var api = new a();
 
 module.exports = {
-    name: "firstword",
-    description: "firstwords command.",
+    name: "firstwords",
     aliases: ['fw'],
     
     async execute(client, message, args) {
