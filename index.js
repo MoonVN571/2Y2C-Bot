@@ -26,7 +26,6 @@ const config = {
 };
 
 var dev = true;
-var debug = false;
 
 var oneTime = false;
 var haveJoined = false;
@@ -135,7 +134,6 @@ function createBot() {
 	// Import
 	bot.defaultChannel = defaultChannel; // Kenh mat dinh cua chat
 	bot.dev = dev; // developer mode
-	bot.debug = debug;
 	bot.sendMessage = sendMessage;
 	bot.lobby = lobby;
 	bot.joined = joined;
@@ -198,7 +196,7 @@ function createBot() {
 								.setDescription(setLogger)
 								.setColor(color);
 	
-					if(bot.dev) return;
+					if(dev) return;
 					if(chat == undefined) return;
 	
 					try {
@@ -324,8 +322,6 @@ function createBot() {
 			}
 		}
 
-		if(dev) return;
-
 		if (msg.channel.id == defaultChannel) {
 			if (msg.content.startsWith(">")) return;
 			if (msg.content.startsWith(prefix)) return;
@@ -336,9 +332,14 @@ function createBot() {
 
 			if(content.length > 88) return msg.channel.send("Rút ngắn tin nhắn của bạn lại để có thể gửi.");
 			
+			
 			var str = msg.content.toString().split('\n')[0];
 			var chat = str.charAt(0).toUpperCase() + str.substr(1);
 			
+			var regex = /[a-z]|[A-Z]|[0-9]|à|á|â|ã|è|é|ê|ì|í|ò|ó|ô|õ|ù|ú|ý|ỳ|ỹ|ỷ|ỵ|ự|ử|ữ|ừ|ứ|ư|ụ|ủ|ũ|ợ|ở|ỡ|ờ|ớ|ơ|ộ|ổ|ỗ|ồ|ọ|ỏ|ị|ỉ|ĩ|ệ|ể|ề|ế|ẹ|ẻ|ẽ|ặ|ẳ|ằ|ắ|ă|ậ|ẩ|ẫ|ầ|ấ|ạ|ả|đ|₫/i;
+			
+			if(!content.match(regex)) return msg.channel.send("Ký tự cho phép là A-Z, 0-9 và unicode.");
+
 			if(msg.content.includes("§")) return msg.channel.send("Hiện tại đang có bug với ký tự này, đã huỷ gửi.");
 
 			if(msg.author.bot) return;

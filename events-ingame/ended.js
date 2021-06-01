@@ -1,6 +1,6 @@
 const start = require('../index.js');
 
-var Discord = require('discord.js');
+var { MessageEmbed } = require('discord.js');
 var Scriptdb = require('script.db');
 var waitUntil = require('wait-until');
 
@@ -21,17 +21,17 @@ module.exports = (bot, client) => {
 
     setTimeout(() => {
         var log;
-        if(!api.uptimeCalc().includes("NaN")) {
-            log = new Discord.MessageEmbed()
+        if(!api.queueTime().includes("NaN")) {
+            log = new MessageEmbed()
                             .setDescription("Bot đã mất kết nối đến server. Kết nối lại sau 1 phút." + `\nThời gian ngoài hàng chờ: ${api.queueTime()}.\n Thời gian bot trong server: ${api.uptimeCalc()}.`)
                             .setColor("F71319");
         } else {
-            log = new Discord.MessageEmbed()
+            log = new MessageEmbed()
                             .setDescription("Bot đã mất kết nối đến server. Kết nối lại sau 1 phút." + `\nThời gian bot trong server: ${api.uptimeCalc()}.`)
                             .setColor("F71319");
         }
 
-        var notf = new Discord.MessageEmbed()
+        var notf = new MessageEmbed()
                                 .setDescription("🏮 Bot đã mất kết nối đến server. 🏮")
                                 .setColor("F71319");
         

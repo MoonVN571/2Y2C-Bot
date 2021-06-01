@@ -33,8 +33,8 @@ module.exports = {
                                 prefix + 'queue - ``Xem thông số server.`` \n' +
                                 prefix + 'prio - ``Xem thông số server.``\n' +
                                 prefix + 'uptime - ``Xem thông số server.``\n' +
-                                prefix + 'setup - ``Cài đặt bot cho livechat.``' +
-                                prefix + 'delete - ``Xoá ivechat.``' +
+                                prefix + 'setup - ``Cài đặt bot cho livechat.``\n' +
+                                prefix + 'delete - ``Xoá ivechat.``\n' +
                                 prefix + 'reload - ``Reload lệnh bot ( dev only ).`` \n' +
                                 prefix + 'serverstatus - ``Xem hàng chờ, ưu tiên và online.`` \n' +
                                 prefix + 'botinfo - ``Xem thông tin bot.`` \n' +
