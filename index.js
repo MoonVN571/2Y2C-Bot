@@ -67,7 +67,7 @@ client.on('ready', () => {
 
 	createBot();
 
-	const data = Scriptdb(`./data.json`);
+	const data = new Scriptdb(`./data.json`);
 
 	data.set('queueStart', null);
 	data.set('queueEnd', null);
@@ -238,7 +238,7 @@ function createBot() {
 			|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
 	
 		if(cmdName == "reload") {
-			if(username == "MoonVN" || username == "MoonZ" || username == "MoonOnTop" || username == "MoonX") {
+			if(username == "MoonVN" || username == "MoonZ" || username == "MoonOnTop" || username == "MoonX" || username == bot.username) {
 				if(!args[0]) return bot.whisper(username, "> Nhập tên lệnh cần reload.")
 	
 				const cmd = require(`./ingame-commands/${args[0]}.js`);

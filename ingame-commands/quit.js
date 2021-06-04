@@ -4,7 +4,11 @@ module.exports = {
     aliases: ['quit', 'leave'],
     
     async execute(bot, username, args) {
-        if(!bot.dev) return;
-        setTimeout(() => { bot.quit() }, 5*1000)
+        if(bot.dev) {
+            bot.quit();
+        }
+        if(username == bot.username) {
+            bot.quit();
+        }
     }
 }

@@ -5,6 +5,7 @@ var a = require('../api');
 var api = new a();
 
 const mc = require("minecraft-protocol");
+const log = require('log-to-file');
 
 module.exports = (bot, client) => {
     setInterval(() => {

@@ -91,12 +91,10 @@ module.exports = (bot, client, message) => {
 					.setDescription(`Trong hàng chờ được ${api.queueTime()}.`)
 					.setColor(0xeeee00);
 
-		if(!api.queueTime().includes("NaN")) {
-			if(bot.dev) {
-				client.channels.cache.get("807045720699830273").send(quetime);
-			} else {
-				client.channels.cache.get("806881615623880704").send(quetime);
-			}
+		if(bot.dev) {
+			client.channels.cache.get("807045720699830273").send(quetime);
+		} else {
+			client.channels.cache.get("806881615623880704").send(quetime);
 		}
 
 		var fully = new Discord.MessageEmbed()

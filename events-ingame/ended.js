@@ -20,16 +20,9 @@ module.exports = (bot, client) => {
     logg("Bot ended");
 
     setTimeout(() => {
-        var log;
-        if(!api.queueTime().includes("NaN")) {
-            log = new MessageEmbed()
-                            .setDescription("Bot đã mất kết nối đến server. Kết nối lại sau 1 phút." + `\nThời gian ngoài hàng chờ: ${api.queueTime()}.\n Thời gian bot trong server: ${api.uptimeCalc()}.`)
-                            .setColor("F71319");
-        } else {
-            log = new MessageEmbed()
+        var log = new MessageEmbed()
                             .setDescription("Bot đã mất kết nối đến server. Kết nối lại sau 1 phút." + `\nThời gian bot trong server: ${api.uptimeCalc()}.`)
                             .setColor("F71319");
-        }
 
         var notf = new MessageEmbed()
                                 .setDescription("🏮 Bot đã mất kết nối đến server. 🏮")
@@ -68,7 +61,7 @@ module.exports = (bot, client) => {
             }
         }
         
-        const data = Scriptdb(`./data.json`);
+        const data = new Scriptdb(`./data.json`);
 
         data.set('queueStart', null);
         data.set('queueEnd', null);
