@@ -145,7 +145,7 @@ function API() {
         hours = parseInt(((temp - day * 86400) / 3600))
         minutes = parseInt(((temp - day * 86400 - hours * 3600)) / 60)
         seconds = parseInt(temp % 60)
-        if(uptime === undefined) {
+        if(uptime === null) {
             hours = 0;
             minutes = 0;
             seconds = 0;
@@ -156,6 +156,8 @@ function API() {
     this.queueTime = () => {
         const data = new Scriptdb(`./data.json`);
         let ticks = data.get('queueEnd') - data.get('queueStart');
+
+        if(ticks <= 0) return '0h 0m 0s';
 
         var temp = ticks / 1000;
         var day = hours = 0, minutes = 0, seconds = 0;

@@ -15,20 +15,14 @@ module.exports = {
         const kd = new Scriptdb(`./data/kd/${args[0]}.json`);
         let die = kd.get('deaths');
         let kills = kd.get('kills');
+        
+		if (kills == undefined && deads == undefined) return message.channel.send(client.userNotFound);
 
         var ratio = kills / die;
         var ratioFixed = ratio.toFixed(2);
 
         if (ratioFixed === "NaN" || ratioFixed === "Infinity") {
             ratioFixed = "0.00";
-        }
-
-        if (die === undefined) {
-            die = 0;
-        }
-
-        if (kills === undefined) {
-            kills = 0;
         }
 
         bot.whisper(username, `> ${args[0]}: [K: ${kills} - D: ${die} - K/D: ${ratioFixed}]`);

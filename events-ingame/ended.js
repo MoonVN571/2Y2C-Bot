@@ -68,18 +68,14 @@ module.exports = (bot, client) => {
             }
         }
         
-        try{
-            const data = Scriptdb(`./data.json`);
+        const data = Scriptdb(`./data.json`);
 
-            data.delete('queueStart');
-            data.delete('queueEnd');
+        data.set('queueStart', null);
+        data.set('queueEnd', null);
 
-            data.delete('tab-content');
-            data.delete('uptime');
-            data.delete('players');
-        } catch(e) {
-            logg("failed to delete with error: " + e);
-        }
+        data.set('tab-content', null);
+        data.set('uptime', null);
+        data.set('players', null);
         
         waitUntil(60 * 1000, 50, function condition() {
             try {

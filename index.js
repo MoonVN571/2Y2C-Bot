@@ -27,7 +27,6 @@ const config = {
 
 var dev = true;
 
-var oneTime = false;
 var haveJoined = false;
 
 if (dev) {
@@ -68,21 +67,14 @@ client.on('ready', () => {
 
 	createBot();
 
-	try {
-		var data = new Scriptdb('./data.json');
-		data.delete('queueStart');
-		data.delete('queueEnd');
+	const data = Scriptdb(`./data.json`);
 
-		data.delete('tab-content');
-		data.delete('uptime');
-		data.delete('players');
+	data.set('queueStart', null);
+	data.set('queueEnd', null);
 
-		data.delete('uptime');
-		data.delete('bot-uptime');
-
-	} catch(e) {
-		log("failed to delete with error: " + e);
-	}
+	data.set('tab-content', null);
+	data.set('uptime', null);
+	data.set('players', null);
 });
 
 async function sendMessage(channel, content) {
@@ -110,6 +102,7 @@ function createBot() {
     bot.loadPlugin(tpsPlugin);
 	bot.loadPlugin(pathfinder);
 
+	const autoEvent = require('./events-ingame/auto.js');
 	const msgEvent = require(`./events-ingame/msg.js`);
 	const joinedEvent = require(`./events-ingame/join.js`);
 	const leftEvent = require(`./events-ingame/left.js`);
@@ -138,10 +131,10 @@ function createBot() {
 	bot.lobby = lobby;
 	bot.joined = joined;
 	bot.countPlayers = countPlayers;
-	bot.oneTime = oneTime;
 	bot.haveJoined = haveJoined;
 	
 	bot.on('windowOpen', verifyEvent.bind(null, bot));
+	bot.on('windowOpen', autoEvent.bind(null, bot, client));
 
 	bot.once('login', JoinedServerEvent.bind(null, bot, client));
 	bot.once('login', playtimeEvent.bind(null, bot));
