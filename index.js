@@ -329,9 +329,9 @@ function createBot() {
 			var str = msg.content.toString().split('\n')[0];
 			var chat = str.charAt(0).toUpperCase() + str.substr(1);
 			
-			var regex = /[a-z]|[A-Z]|[0-9]|à|á|â|ã|è|é|ê|ì|í|ò|ó|ô|õ|ù|ú|ý|ỳ|ỹ|ỷ|ỵ|ự|ử|ữ|ừ|ứ|ư|ụ|ủ|ũ|ợ|ở|ỡ|ờ|ớ|ơ|ộ|ổ|ỗ|ồ|ọ|ỏ|ị|ỉ|ĩ|ệ|ể|ề|ế|ẹ|ẻ|ẽ|ặ|ẳ|ằ|ắ|ă|ậ|ẩ|ẫ|ầ|ấ|ạ|ả|đ|₫/i;
+			var regex = /[a-z]|[A-Z]|[0-9]|!|@|#|$|%|^|&|*|(|)||{|}|[|]|<|>|?|\/|\\|\||;|;|"|'|-|_|+|-|=|à|á|â|ã|è|é|ê|ì|í|ò|ó|ô|õ|ù|ú|ý|ỳ|ỹ|ỷ|ỵ|ự|ử|ữ|ừ|ứ|ư|ụ|ủ|ũ|ợ|ở|ỡ|ờ|ớ|ơ|ộ|ổ|ỗ|ồ|ọ|ỏ|ị|ỉ|ĩ|ệ|ể|ề|ế|ẹ|ẻ|ẽ|ặ|ẳ|ằ|ắ|ă|ậ|ẩ|ẫ|ầ|ấ|ạ|ả|đ|₫/i;
 			
-			if(!content.match(regex)) return msg.channel.send("Ký tự cho phép là A-Z, 0-9 và unicode.");
+			if(!content.match(regex)) return msg.channel.send("Ký tự cho phép là A-Z, 0-9, !,@,#,..., và unicode.");
 
 			if(msg.content.includes("§")) return msg.channel.send("Hiện tại đang có bug với ký tự này, đã huỷ gửi.");
 
