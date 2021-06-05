@@ -1,10 +1,11 @@
-module.exports = (bot) => {
+module.exports = async (bot, window) => {
     var v = process.env.PIN;
-    
-    bot.clickWindow(v.split(" ")[0], 0, 0, null)
-    bot.clickWindow(v.split(" ")[1], 0, 0, null) 
-    bot.clickWindow(v.split(" ")[2], 0, 0, null)
-    bot.clickWindow(v.split(" ")[3], 0, 0, null)
+    window.requiresConfirmation = false;
+
+    await bot.clickWindow(v.split(" ")[0], 0, 0, null)
+    await bot.clickWindow(v.split(" ")[1], 0, 0, null) 
+    await bot.clickWindow(v.split(" ")[2], 0, 0, null)
+    await bot.clickWindow(v.split(" ")[3], 0, 0, null)
     
     setTimeout(() => { bot.chat('/2y2c'); }, 15*1000);
 

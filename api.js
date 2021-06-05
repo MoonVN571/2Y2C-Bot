@@ -159,7 +159,7 @@ function API() {
         var start = data.get('queueStart')
         let ticks = end - start;
 
-        if(ticks <= 0 || end || start) return '0h 0m 0s';
+        if(ticks <= 0 || end == null || start == null) return '0h 0m 0s';
 
         var temp = ticks / 1000;
         var day = hours = 0, minutes = 0, seconds = 0;
