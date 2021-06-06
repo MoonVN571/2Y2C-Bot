@@ -114,7 +114,7 @@ module.exports = {
                                 .setColor(0x000DFF)
                                 .addField("*Các lệnh trên discord*", "help*, status, queue, prioqueue, setup, serverstatus, invite, botinfo, botuptime, uptime. [Discord: $]", false)
                                 .addField("*Kiểm tra thông số tại discord*", "stats, playtime, joindate, seen, playerlists, messages, deaths, kills, firstwords, lastwords, firstdeaths, lastdeaths, firstkills, lastkills 2bqueue, 2bstats, 2bseen. [Discord: $]", false)
-                                .addField("*Các lệnh dùng trong server*", "help, tps, kill, ping, queue, prio, stats, joindate, playtime, seen, 2bqueue, 2bstats, runtime, report, rules, avoid, come, follow, stop, firstwords, lastwords. [Ingame: !]", false)
+                                .addField("*Các lệnh dùng trong server*", "help, tps, ping, queue, prio, stats, joindate, playtime, seen, 2bqueue, 2bstats, runtime, report, rules, avoid, come, follow, stop, firstwords, lastwords. [Ingame: !]", false)
                                 .addField("\u200b", '\n\nBạn có thể thêm bot cho discord [tại đây](https://discord.com/api/oauth2/authorize?client_id=768448728125407242&permissions=8&scope=bot).')
                                 .setFooter(footer)
                                 .setTimestamp();

@@ -16,10 +16,10 @@ module.exports = {
         let die = kd.get('deaths');
         let kills = kd.get('kills');
         
-		if (kills == undefined && deads == undefined) return message.channel.send(client.userNotFound);
+		if (kills == undefined && die == undefined) return message.channel.send(client.userNotFound);
 
         if(kills == undefined) kills = 0;
-        if(die == undefined) deads = 0;
+        if(die == undefined) die = 0;
 
         var ratio = kills / die;
         var ratioFixed = ratio.toFixed(2);

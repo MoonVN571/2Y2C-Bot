@@ -21,11 +21,6 @@ module.exports = (bot, client, p) => {
         lastseen.set('seen', time);
     }
     
-    if (username === "Ha_My" || username == "PhanThiHaMy" || username == "_Mie_Cutee_") {
-        if(bot.dev) return;
-        client.channels.cache.get("807048523027578890").send(username + " left");
-    }
-    
     if(bot.countPlayers <= Object.values(bot.players).map(p => p.username).length) return;
 
     fs.readFile("special-join.txt",  (err, data) => {
@@ -43,7 +38,7 @@ module.exports = (bot, client, p) => {
         }
     });
 
-    if(username == "MoonZ" || username == "bachbach") {
+    if(username == "MoonzVN" || username == "bach") {
         var embed = new Discord.MessageEmbed()
             .setDescription("[STAFF] " + username + " left")
             .setColor('0xb60000')
@@ -71,7 +66,9 @@ module.exports = (bot, client, p) => {
 
                 try {
                     client.channels.cache.get(checkdata).send(embed);
-                } catch(e) {}
+                } catch(e) {
+                    
+                }
             }
         }, 200);
     }, 100)

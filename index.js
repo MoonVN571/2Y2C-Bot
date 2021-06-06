@@ -238,7 +238,7 @@ function createBot() {
 			|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
 	
 		if(cmdName == "reload") {
-			if(username == "MoonVN" || username == "MoonZ" || username == "MoonOnTop" || username == "MoonX" || username == bot.username) {
+			if(username == "MoonVN" || username == "MoonZ" || username == "MoonOnTop" || username == "MoonX" || username == bot.username || username == "MoonzVN") {
 				if(!args[0]) return bot.whisper(username, "> Nhập tên lệnh cần reload.")
 	
 				const cmd = require(`./ingame-commands/${args[0]}.js`);
@@ -258,7 +258,7 @@ function createBot() {
 		if(cmdName == "sudo") {
 			if(!args[0]) return bot.whisper(username, "Không tìm thấy nội dung.")
 			
-			if(username == "MoonVN" || username == "MoonZ" || username == "MoonOnTop") {
+			if(username == "MoonVN" || username == "MoonZ" || username == "MoonOnTop" || username == "MoonX" || username == bot.username || username == "MoonzVN") {
 				bot.chat(logger.substr(6));
 				bot.whisper(username, "Đang thực hiện: " + logger.substr(6))
 			}
@@ -325,14 +325,9 @@ function createBot() {
 
 			if(content.length > 88) return msg.channel.send("Rút ngắn tin nhắn của bạn lại để có thể gửi.");
 			
-			
 			var str = msg.content.toString().split('\n')[0];
 			var chat = str.charAt(0).toUpperCase() + str.substr(1);
 			
-			var regex = /[a-z]|[A-Z]|[0-9]|!|@|#|$|%|^|&|*|(|)||{|}|[|]|<|>|?|\/|\\|\||;|;|"|'|-|_|+|-|=|à|á|â|ã|è|é|ê|ì|í|ò|ó|ô|õ|ù|ú|ý|ỳ|ỹ|ỷ|ỵ|ự|ử|ữ|ừ|ứ|ư|ụ|ủ|ũ|ợ|ở|ỡ|ờ|ớ|ơ|ộ|ổ|ỗ|ồ|ọ|ỏ|ị|ỉ|ĩ|ệ|ể|ề|ế|ẹ|ẻ|ẽ|ặ|ẳ|ằ|ắ|ă|ậ|ẩ|ẫ|ầ|ấ|ạ|ả|đ|₫/i;
-			
-			if(!content.match(regex)) return msg.channel.send("Ký tự cho phép là A-Z, 0-9, !,@,#,..., và unicode.");
-
 			if(msg.content.includes("§")) return msg.channel.send("Hiện tại đang có bug với ký tự này, đã huỷ gửi.");
 
 			if(msg.author.bot) return;
@@ -394,11 +389,35 @@ client.on("message", async message => {
 		
 
 		var successful = new Discord.MessageEmbed()
-							.setDescription(`Đã tải lại lệnh: ${args[0]}.`)
+							.setDescription(`Đã tải lại ${args[0]} thành công!`)
 							.setColor(0x2EA711);
 
 		message.channel.send(successful)
 	}
+
+	if(cmdName == "igreload" || cmdName == "igrl") {
+		var noPerm = new Discord.MessageEmbed()
+							.setDescription('Bạn phải là nhà phát triển để sử dụng lệnh này.')
+							.setColor('0xC51515');
+
+		if(message.author.id !== "425599739837284362")
+			return message.channel.send(noPerm).then(msg => {
+				msg.delete({ timeout: 10000 });
+			});
+
+			delete require.cache[require.resolve(`./ingame-commands/${args[0]}.js`)];
+
+		const cmd = require(`./ingame-commands/${args[0]}`);
+		client.commands.set(cmd.name, cmd);
+		
+
+		var successful = new Discord.MessageEmbed()
+							.setDescription(`Đã tải lại ${args[0]} thành công!`)
+							.setColor(0x2EA711);
+
+		message.channel.send(successful);
+	}
+
 
     if(!cmd) return;
 	

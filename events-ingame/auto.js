@@ -7,8 +7,15 @@ var api = new a();
 const mc = require("minecraft-protocol");
 const log = require('log-to-file');
 
-module.exports = (bot, client) => {
-    setInterval(() => {
+module.exports = (bot, client, window) => { 
+    window.requiresConfirmation = false;
+	var a,b,c,d;
+	clearInterval(a);
+    clearInterval(b);
+	clearInterval(c);
+	clearInterval(d);
+
+    a = setInterval(() => {
         log("Run set topic");
 
         var get = new Scriptdb(`./data.json`).get('tab-content');
@@ -41,7 +48,7 @@ module.exports = (bot, client) => {
         }, 300);
     }, 5 * 60 * 1000);
 
-    setInterval(() => {
+    b = setInterval(() => {
         mc.ping({ "host": "2y2c.org" }, (err, result) => {
             if (result) {
                 try {
@@ -76,7 +83,7 @@ module.exports = (bot, client) => {
         });
     }, 1 * 60 * 1000);
 
-    setInterval(() => {
+     c = setInterval(() => {
         if(bot.lobby) return;
 
         log("Anti-AFK")
@@ -97,7 +104,7 @@ module.exports = (bot, client) => {
         });
     },  10 * 60 * 1000);
 
-    setInterval(() => {
+    d = setInterval(() => {
         log("Save playerlist");
 
         if(bot.lobby) return;
