@@ -16,7 +16,7 @@ module.exports = {
         let die = kd.get('deaths');
         let kills = kd.get('kills');
         
-		if (kills == undefined && die == undefined) return message.channel.send(client.userNotFound);
+		if (kills == undefined && die == undefined) return bot.whisper(username, bot.userNotFound);
 
         if(kills == undefined) kills = 0;
         if(die == undefined) die = 0;

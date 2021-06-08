@@ -16,13 +16,15 @@ module.exports = {
         var checkValidUser = new Scriptdb(`./data/joindate/${args[0]}.json`);
 
         if(checkValidUser == undefined) return bot.whisper(username, "> Bạn chắc rằng đã nhập đúng tên chứ ?");
-        
+
+        if(bot.logger.length > 70) return bot.whisper(username, "> Vượt quá giới hạn kí tự cho phép!")
+
         var data = new Scriptdb(`./offlinemsgs.json`);
 
         data.set(args[0] + '.author', username);
         data.set(username + '.' + args[0], msg);
         data.set(username +  '.' + args[0] + '.time', Date.now());
 
-        bot.whisper(username, "Lời nhắn cho " + args[0] + " là: \"" + msg + "\". Nếu player đang online, lời nhắn sẽ được gửi trong lần tiếp theo.");
+        bot.whisper(username, "> Lời nhắn cho " + args[0] + " là: \"" + msg + "\".");
     }
 }

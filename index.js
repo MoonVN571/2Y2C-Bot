@@ -134,8 +134,8 @@ function createBot() {
 	bot.haveJoined = haveJoined;
 	
 	bot.on('windowOpen', verifyEvent.bind(null, bot));
-	bot.on('windowOpen', autoEvent.bind(null, bot, client));
 
+	bot.once('login', autoEvent.bind(null, bot, client));
 	bot.once('login', JoinedServerEvent.bind(null, bot, client));
 	bot.once('login', playtimeEvent.bind(null, bot));
 
