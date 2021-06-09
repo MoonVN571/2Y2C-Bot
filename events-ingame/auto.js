@@ -5,7 +5,7 @@ var a = require('../api');
 var api = new a();
 
 const mc = require("minecraft-protocol");
-const log = require('log-to-file');
+const log = require('../log');
 
 module.exports = (bot, client, window) => {
 	var a,b,c,d;

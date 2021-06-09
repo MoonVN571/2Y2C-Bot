@@ -4,7 +4,7 @@ var Discord = require('discord.js');
 
 var once = false;
 
-var log = require('log-to-file');
+var log = require('../log');
 
 module.exports = (bot, client, data) => {
     if(check) return;

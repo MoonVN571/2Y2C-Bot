@@ -1,5 +1,5 @@
 var Scriptdb = require('script.db');
-var log = require('log-to-file');
+var log = require('../log');
 
 module.exports = (bot) => {
     setInterval(() => {

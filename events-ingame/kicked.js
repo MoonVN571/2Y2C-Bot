@@ -1,6 +1,6 @@
-var Discord = require('discord.js');
+var { MessageEmbed } = require('discord.js');
 
-var log = require('log-to-file');
+const log = require('../log');
 
 module.exports = (bot, client, reason, loggedIn) => {
     console.log(reason, loggedIn);
@@ -13,7 +13,7 @@ module.exports = (bot, client, reason, loggedIn) => {
 
     var r =  reason.toString().replace(/\{"extra":\[{"text":"|"},{"color":"gold","text":"|"}\],"text":""|{"text":"|"}}/ig).toString().replace(/}|undefined|"|{color:gold,text:/ig, '').toString().replace(/{|color:gold,text:/ig, "");
 
-    var embed = new Discord.MessageEmbed()
+    var disconnected = new MessageEmbed()
                         .setDescription(`Bot mất kết nối: ` + r)
                         .setColor("F71319");
 
@@ -22,6 +22,6 @@ module.exports = (bot, client, reason, loggedIn) => {
     log('Bot disconnected with: ' + reason)
 
     if(bot.joined) {
-        client.channels.cache.get(bot.defaultChannel).send(embed);
+        client.channels.cache.get(bot.defaultChannel).send(disconnected);
     }
 }

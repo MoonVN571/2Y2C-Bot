@@ -82,8 +82,6 @@ module.exports = (bot, client, message) => {
 	}
 
 	if(logger == "Đang vào 2y2c") {
-		bot.haveJoined = true;
-
         var timeQ = new Scriptdb('./data.json')
         timeQ.set('queueEnd', Date.now());
 
@@ -103,7 +101,7 @@ module.exports = (bot, client, message) => {
 
 		setTimeout(() => {
 			var guild = client.guilds.cache.map(guild => guild.id);
-			setInterval(() => {
+			var i = setInterval(() => {
 				if (guild[0]) {
 					const line = guild.pop()
 					const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
@@ -115,7 +113,8 @@ module.exports = (bot, client, message) => {
 						if(bot.dev) return;
 						client.channels.cache.get(checkdata).send(fully);
 					} catch(e) {}
-				}
+				} else
+				clearInterval(i);
 			}, 200);
 
 			client.channels.cache.get(bot.defaultChannel).send(fully);
@@ -165,7 +164,7 @@ module.exports = (bot, client, message) => {
 			if(!bot.dev) {
 				setTimeout(() => {
 					var guild = client.guilds.cache.map(guild => guild.id);
-					setInterval(() => {
+					var i = setInterval(() => {
 						if (guild[0]) {
 							const line = guild.pop()
 							const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
@@ -176,7 +175,8 @@ module.exports = (bot, client, message) => {
 							try {
 								client.channels.cache.get(checkdata).send(embedNotf);
 							} catch(e) {}
-						}
+						} else
+						clearInterval(i);
 					}, 200);
 				}, 100);
 			}

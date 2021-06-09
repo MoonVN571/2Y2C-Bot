@@ -10,19 +10,12 @@ module.exports = {
 
         var playerArray = db.get('players');
 
-        if(playerArray == undefined) return message.channel.send("Bot chưa vào server hoặc server không hoạt động.");
+        if(playerArray == null) return message.channel.send("Bot chưa vào server hoặc server không hoạt động.");
 
         var count = playerArray.length;
 
         message.channel.send("Đang tính toán...").then(msg => {
-            var ping = (msg.createdTimestamp - message.createdTimestamp);
-
-            var embed = new MessageEmbed()
-                            .setTitle("Player list")
-                            .setDescription("Đã tải trong " + ping + "ms")
-                            .addField('Trực tuyến', count, false)
-                            .addField('Người chơi', '``' + playerArray.join(', ') + "``", false);
-            msg.edit(embed);
-        })
+            msg.edit("**PLAYER LIST**\n\nTrực tuyến: " + count + "\n\n**Players:** \n" + playerArray.join(', ')).then(msg => { msg.delete(60000); });
+        });
     }
 }

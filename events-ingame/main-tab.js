@@ -1,7 +1,7 @@
 var check = false;
 
 var Scriptdb = require('script.db');
-var log = require('log-to-file');
+var log = require('../log');
 
 module.exports = (bot, client, data) => {
     if(check) return;
@@ -54,5 +54,4 @@ module.exports = (bot, client, data) => {
     
     client.user.setActivity(status, { type: 'PLAYING' });
     log("Set user status on main server");
-
 }

@@ -43,6 +43,6 @@ module.exports = (bot, client, data) => {
 
     dataa.set('tab-content', status + " | " + Date.now());
 
-    var log = require('log-to-file');
+    var log = require('../log');
     log("Set tab content discord");
 }

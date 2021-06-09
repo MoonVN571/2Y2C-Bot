@@ -7,7 +7,7 @@ var waitUntil = require('wait-until');
 var a = require("../api");
 var api = new a();
 
-var logg = require('log-to-file');
+const log = require('../log');
 
 module.exports = (bot, client) => {
     client.user.setActivity("");
@@ -17,47 +17,47 @@ module.exports = (bot, client) => {
 
     bot.totalSeconds = 0;
 
-    logg("Bot ended");
+    log("Bot ended");
 
     setTimeout(() => {
-        var log = new MessageEmbed()
-                            .setDescription("Bot đã mất kết nối đến server. Kết nối lại sau 1 phút." + `\nThời gian bot trong server: ${api.uptimeCalc()}.`)
-                            .setColor("F71319");
-
-        var notf = new MessageEmbed()
+        if(bot.joined) {
+            var disconnected = new MessageEmbed()
                                 .setDescription("🏮 Bot đã mất kết nối đến server. 🏮")
                                 .setColor("F71319");
-        
-                                
-        if(bot.joined) {
+
             setTimeout(() => {
-                client.channels.cache.get(bot.defaultChannel).send(notf);
+                client.channels.cache.get(bot.defaultChannel).send(disconnectedLog);
             
                 if(!bot.dev) {
                     setTimeout(() => {
-                        var guild = client.guilds.cache.map(guild => guild.id);
-                            setInterval(() => {
-                                if (guild[0]) {
-                                    const line = guild.pop()
-                                    const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
-                                    const checkdata = data.get('livechat');
+                        let guild = client.guilds.cache.map(guild => guild.id);
+                        var i = setInterval(() => {
+                            if (guild[0]) {
+                                const line = guild.pop()
+                                const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
+                                const checkdata = data.get('livechat');
 
-                                    if(checkdata == undefined || guild == undefined) return;
+                                if(checkdata == undefined || guild == undefined) return;
 
-                                    try {
-                                        client.channels.cache.get(checkdata).send(notf);
-                                    } catch(e) {}
-                                }
-                            }, 200);
+                                try {
+                                    client.channels.cache.get(checkdata).send(disconnected);
+                                } catch(e) {}
+                            } else
+                            clearInterval(i);
+                        }, 200);
                     }, 1*100);
                 }
                 bot.joined = false;
             }, 3*1000);
 
+            var disconnectedLog = new MessageEmbed()
+                                    .setDescription("Bot đã mất kết nối đến server. Kết nối lại sau 1 phút." + `\nThời gian bot trong server: ${api.uptimeCalc()}.`)
+                                    .setColor("F71319");
+
             if(bot.dev) {
-                client.channels.cache.get("807045720699830273").send(log);
+                client.channels.cache.get("807045720699830273").send(disconnectedLog);
             } else {
-                client.channels.cache.get("806881615623880704").send(log);
+                client.channels.cache.get("806881615623880704").send(disconnectedLog);
             }
         }
         

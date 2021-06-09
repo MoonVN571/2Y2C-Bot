@@ -4,7 +4,8 @@ var fs=  require('fs');
 
 var ap = require('../api');
 var api = new ap();
-const log = require('log-to-file');
+
+const log = require('../log');
 
 module.exports = (bot, client, p) => {
     bot.countPlayers++;
@@ -85,7 +86,7 @@ module.exports = (bot, client, p) => {
     if(bot.dev) return;
     setTimeout(() => {
         var guild = client.guilds.cache.map(guild => guild.id);
-        setInterval(() => {
+        var i = setInterval(() => {
             if (guild[0]) {
                 const line = guild.pop()
                 const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
@@ -100,7 +101,8 @@ module.exports = (bot, client, p) => {
                 } catch(e) {
                     
                 }
-            }
+            } else
+            clearInterval(i);
         }, 200);
     }, 100);
 }

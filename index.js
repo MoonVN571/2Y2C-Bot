@@ -27,11 +27,7 @@ const config = {
 
 var dev = true;
 
-var haveJoined = false;
-
-if (dev) {
-	prefix = "dev$";
-}
+if (dev) refix = "dev$";
 
 var defaultChannel;
 var devuser = "mo0nbot";
@@ -43,7 +39,8 @@ if (dev) {
 	defaultChannel = '795135669868822528';
 	devuser = "mo0nbot";
 }
-const log = require('log-to-file');
+
+const log = require('./log');
 
 /*
  *				READY
@@ -127,11 +124,9 @@ function createBot() {
 	// Import
 	bot.defaultChannel = defaultChannel; // Kenh mat dinh cua chat
 	bot.dev = dev; // developer mode
-	bot.sendMessage = sendMessage;
 	bot.lobby = lobby;
 	bot.joined = joined;
 	bot.countPlayers = countPlayers;
-	bot.haveJoined = haveJoined;
 	
 	bot.on('windowOpen', verifyEvent.bind(null, bot));
 
@@ -173,7 +168,7 @@ function createBot() {
 		var setLogger = `**<${api.removeFormat(username)}>** ${api.removeFormat(logger)}`;
 		setTimeout(() => {
 			var guild = client.guilds.cache.map(guild => guild.id);
-			setInterval(() => {
+			var i = setInterval(() => {
 				if (guild[0]) {
 					const line = guild.pop()
 					const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
@@ -196,7 +191,8 @@ function createBot() {
 						client.channels.cache.get(checkdata).send(chat)
 						color = "0x797979";
 					} catch(e) {}
-				}
+				} else
+					clearInterval(i);
 			}, 100);
 		}, 100)
 	
@@ -294,6 +290,8 @@ function createBot() {
 	bot._client.on('error',err => console.log(err));
 
 	client.on('message', msg => {
+		var message = msg;
+		
 		if (msg.author.bot) return;
 
 		if (msg.channel.id === '797426761142632450') { // main
@@ -327,18 +325,19 @@ function createBot() {
 			
 			var str = msg.content.toString().split('\n')[0];
 			var chat = str.charAt(0).toUpperCase() + str.substr(1);
-			
-			if(msg.content.includes("§")) return msg.channel.send("Hiện tại đang có bug với ký tự này, đã huỷ gửi.");
+
+			var fixes = content.charAt(0).toLowerCase();
+
+			if(msg.content.includes("§" || !fixes && fixes == "")) return msg.channel.send("bug text");
 
 			if(msg.author.bot) return;
 
-			var chatnew = chat;
-			if(!chatnew.endsWith(".")) {
-				chatnew = chatnew + ".";
+			if(!chat.endsWith(".")) {
+				chat = chat + ".";
 			}
 
 			setTimeout(() => {
-				bot.chat(`> [${msg.author.tag}]  ${chatnew}`);
+				bot.chat(`> [${msg.author.tag}]  ${chat}`);
 			}, 1 * 1000);
 
 			const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");
@@ -366,6 +365,8 @@ client.on("message", async message => {
 
 	if(dev && message.guild.id !== "794912016237985802") return message.channel.send("Lệnh đã bị tắt tại nhóm này.");
 	
+	if(dev && message.author.id !== "425599739837284362") return message.channel.send("Chỉ developer mới có thể sử dụng bot này.");
+
     const args = message.content.slice(prefix.length).split(/ +/);
     const cmdName = args.shift().toLowerCase();
 
@@ -431,7 +432,6 @@ client.on("message", async message => {
 	client.prefix = prefix;
 
 	client.ping = client.ws.ping;
-	client.sendMessage = sendMessage;
 	
     try{
         cmd.execute(client, message, args);

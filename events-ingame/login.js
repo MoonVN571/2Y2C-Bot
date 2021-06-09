@@ -1,12 +1,10 @@
 var Scriptdb = require('script.db');
-var Discord = require('discord.js');
+var { MessageEmbed } = require('discord.js');
 
-var a = require('../api');
-
-const log = require('log-to-file');
+const log = require('../log');
 
 module.exports = (bot, client) => {
-    bot.once('spawn', () => { // listen khi bot spawn trong lobby
+    bot.once('spawn', () => {
         log("Bot spawned in server")
 
         const uptime = new Scriptdb(`./data.json`);
@@ -14,16 +12,18 @@ module.exports = (bot, client) => {
         var d = new Date();
         uptime.set(`uptime`, d.getTime());
 
-        const queuejoined = new Discord.MessageEmbed()
+        const queuejoined = new MessageEmbed()
                             .setDescription(`Bot đang vào server..`)
                             .setColor(0x15ff00);
 
 
-        const joinedd = new Discord.MessageEmbed()
+        const joinedd = new MessageEmbed()
                             .setDescription(`☘️ Đang vào server.. ☘️`)
                             .setColor(0x15ff00);
 
+        
         bot.joined = true;
+        
         if(bot.dev) {
             client.channels.cache.get(bot.defaultChannel).send(joinedd);
             client.channels.cache.get("807045720699830273").send(queuejoined); // bot log
@@ -32,7 +32,7 @@ module.exports = (bot, client) => {
             
             setTimeout(() => {
                 var guild = client.guilds.cache.map(guild => guild.id);
-                setInterval(() => {
+                var i = setInterval(() => {
                     if (guild[0]) {
                         const line = guild.pop()
                         const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
@@ -43,7 +43,8 @@ module.exports = (bot, client) => {
                         try {
                             client.channels.cache.get(checkdata).send(joinedd);
                         } catch(e) {}
-                    }
+                    } else
+					clearInterval(i);
                 }, 200);
             }, 100)
 
