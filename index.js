@@ -1,3 +1,20 @@
+/**
+ * 						MOON BOT 2Y2C
+ * 
+ * Mã nguồn cde được viết dựa trên cảm hứng từ server 2B2T. Ban đầu là
+ * bot chỉ dự định dùng để xem hàng chờ của 2b2t. Bot minecraft được tạo
+ * vào ngày 6/1/2021. Tất cả data của người chơi mà bot có thể đọc được đã
+ * được lưu trên 1 VPS và chính là VPS chính để host bot.
+ * 
+ * Dự án này hiện tại không công khai. Tuy nhiên vẫn có 1-2 người có thể xem
+ * được toàn bộ mã nguồn này.
+ * 
+ * Tuỳ thuộc vào dev. Nếu như không tiếp tục phát triển nữa thì có thể sẽ
+ * public mã nguồn của bot.
+ * 
+ * Copyright © 2020 - 2021 Moon Bot
+ */
+
 const Discord = require("discord.js");
 const client = new Discord.Client();
 
@@ -27,7 +44,7 @@ const config = {
 
 var dev = true;
 
-if (dev) refix = "dev$";
+if (dev) prefix = "dev$";
 
 var defaultChannel;
 var devuser = "mo0nbot";
