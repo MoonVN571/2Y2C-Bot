@@ -12,6 +12,6 @@ module.exports = {
 
         if(queue == undefined || prio == undefined) return bot.whisper(username, "> Không tìm thấy dữ liệu.");
                 
-        bot.whisper(username, `> Hàng chờ: ${queue.split(" | ")[0]} - Ưu tiên: ${prio.split(" | ")[0]}`);
+        bot.whisper(username, `> Hàng chờ: ${queue} - Ưu tiên: ${prio}`);
     }
 }

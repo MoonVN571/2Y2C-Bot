@@ -12,6 +12,6 @@ module.exports = {
 
         if (prio.split(" | ")[0] == 0) return bot.whisper(username, `> Không có bất kì hàng chờ ưu tiên nào.`);
 
-        bot.whisper(username, `> Ưu tiên: ${prio.split(" | ")[0]}`);
+        bot.whisper(username, `> Ưu tiên: ${prio}`);
     }
 }

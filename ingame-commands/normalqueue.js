@@ -10,7 +10,7 @@ module.exports = {
         var queue = data.get('queue');
         if(queue == undefined) return bot.whisper(username, "> Không tìm thấy dữ liệu.");
 
-        if (queue.toString().split(" | ") == 0) return bot.whisper(username, `> Không có bất kì hàng chờ nào.`);
+        if (queue == 0) return bot.whisper(username, `> Không có bất kì hàng chờ nào.`);
 
         bot.whisper(username, `> Hàng chờ: ${queue}`);
     }
