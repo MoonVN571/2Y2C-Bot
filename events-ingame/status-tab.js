@@ -2,7 +2,7 @@ var check = false;
 
 var Scriptdb = require('script.db');
 
-module.exports = (bot, client, data) => {
+module.exports = (bot, data) => {
     var header = data.header;
     if(header.toString().includes("2YOUNG")) {
         bot.lobby = false;
@@ -11,7 +11,7 @@ module.exports = (bot, client, data) => {
     if(check) return;
     check = true;
 
-    setTimeout(() => { check = false }, 3 * 60 * 1000)
+    setTimeout(() => { check = false }, 45 * 1000)
 
     if(bot.lobby) return;
 

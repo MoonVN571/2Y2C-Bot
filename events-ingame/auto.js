@@ -7,7 +7,7 @@ var api = new a();
 const mc = require("minecraft-protocol");
 const log = require('../log');
 
-module.exports = (bot, client, window) => {
+module.exports = (bot, client) => {
 	var a,b,c,d;
 	clearInterval(a);
     clearInterval(b);
@@ -73,9 +73,9 @@ module.exports = (bot, client, window) => {
                 var Scriptdb = require('script.db');
                 const data = new Scriptdb(`./data.json`);
 
-                data.set('status', status + " | " + Date.now());
-                data.set('queue', queue + " | " + Date.now());
-                data.set('prio', prio + " | " + Date.now());
+                data.set('status', status);
+                data.set('queue', queue);
+                data.set('prio', prio);
 
                 log("Set queue status");
             }

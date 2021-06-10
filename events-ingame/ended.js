@@ -25,30 +25,22 @@ module.exports = (bot, client) => {
                                 .setDescription("🏮 Bot đã mất kết nối đến server. 🏮")
                                 .setColor("F71319");
 
-            setTimeout(() => {
-                client.channels.cache.get(bot.defaultChannel).send(disconnectedLog);
+                client.channels.cache.get(bot.defaultChannel).send(disconnected);
+        
+            if(!bot.dev) {
+                client.guilds.cache.forEach((guild) => {
+                    const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+                    const checkdata = data.get('livechat');
+
+                    if(checkdata == undefined || guild == undefined) return;
+
+                    try {
+                        client.channels.cache.get(checkdata).send(disconnected);
+                    } catch(e) {}
+                });
+            }
             
-                if(!bot.dev) {
-                    setTimeout(() => {
-                        let guild = client.guilds.cache.map(guild => guild.id);
-                        var i = setInterval(() => {
-                            if (guild[0]) {
-                                const line = guild.pop()
-                                const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
-                                const checkdata = data.get('livechat');
-
-                                if(checkdata == undefined || guild == undefined) return;
-
-                                try {
-                                    client.channels.cache.get(checkdata).send(disconnected);
-                                } catch(e) {}
-                            } else
-                            clearInterval(i);
-                        }, 200);
-                    }, 1*100);
-                }
-                bot.joined = false;
-            }, 3*1000);
+            bot.joined = false;
 
             var disconnectedLog = new MessageEmbed()
                                     .setDescription("Bot đã mất kết nối đến server. Kết nối lại sau 1 phút." + `\nThời gian bot trong server: ${api.uptimeCalc()}.`)

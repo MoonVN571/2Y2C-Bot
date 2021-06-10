@@ -30,23 +30,16 @@ module.exports = (bot, client) => {
         } else {
             client.channels.cache.get(bot.defaultChannel).send(joinedd);
             
-            setTimeout(() => {
-                var guild = client.guilds.cache.map(guild => guild.id);
-                var i = setInterval(() => {
-                    if (guild[0]) {
-                        const line = guild.pop()
-                        const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
-                        const checkdata = data.get('livechat');
+            client.guilds.cache.forEach((guild) => {
+                const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+                const checkdata = data.get('livechat');
 
-                        if(checkdata == undefined || guild == undefined) return;
-
-                        try {
-                            client.channels.cache.get(checkdata).send(joinedd);
-                        } catch(e) {}
-                    } else
-					clearInterval(i);
-                }, 200);
-            }, 100)
+                if(checkdata == undefined || guild == undefined) return;
+                
+                try {
+                    client.channels.cache.get(checkdata).send(joinedd);
+                } catch(e) {}
+            });
 
             client.channels.cache.get("806881615623880704").send(queuejoined); // devlog
         }

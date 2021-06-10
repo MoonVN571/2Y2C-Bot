@@ -72,29 +72,22 @@ module.exports = (bot, client, data) => {
         }
 
         if(!bot.joined) return;
-
         if(embed == undefined) return;
-
         if(bot.haveJoined) return;
         
         client.channels.cache.get(bot.defaultChannel).send(embed)
 
         if(bot.dev) return;
-        setTimeout(() => {
-            var guild = client.guilds.cache.map(guild => guild.id);
-            setInterval(() => {
-                if (guild[0]) {
-                    const line = guild.pop()
-                    const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
-                    const checkdata = data.get('livechat');
+        
+        client.guilds.cache.forEach((guild) => {
+            const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+            const checkdata = data.get('livechat');
 
-                    if(guild == undefined || checkdata == undefined) return;
-                    
-                    try {
-                        client.channels.cache.get(checkdata).send(embed);
-                    } catch(e) {}
-                }
-            }, 100);
-        }, 100)
+            if(checkdata == undefined || guild == undefined) return;
+                        
+            try {
+                client.channels.cache.get(checkdata).send(embed);
+            } catch(e) {}
+        })
     }, 20 * 1000);
 }

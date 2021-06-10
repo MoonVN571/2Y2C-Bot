@@ -1,4 +1,4 @@
-var Discord = require('discord.js');
+var { MessageEmbed } = require('discord.js');
 var Scriptdb = require('script.db');
 var fs=  require('fs');
 
@@ -69,7 +69,7 @@ module.exports = (bot, client, p) => {
     });
     
     if(username == "MoonzVN" || username == "bach") {
-        var embed = new Discord.MessageEmbed()
+        var embed = new MessageEmbed()
             .setDescription("[STAFF] " + username + " joined")
             .setColor('0xb60000')
 
@@ -77,32 +77,26 @@ module.exports = (bot, client, p) => {
             client.channels.cache.get("826280327998996480").send(embed);
     }
     
-    var embed = new Discord.MessageEmbed()
+    var embed = new MessageEmbed()
                         .setDescription(api.removeFormat(username) + " joined")
                         .setColor('0xb60000');
 
     client.channels.cache.get(bot.defaultChannel).send(embed);
     
     if(bot.dev) return;
-    setTimeout(() => {
-        var guild = client.guilds.cache.map(guild => guild.id);
-        var i = setInterval(() => {
-            if (guild[0]) {
-                const line = guild.pop()
-                const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
-                const checkdata = data.get('livechat');
+    
+    client.guilds.cache.forEach((guild) => {
+        const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+        const checkdata = data.get('livechat');
 
-                if(guild == undefined || checkdata == undefined) return;
+        if(checkdata == undefined || guild == undefined) return;
 
-                try {
-                    if(embed !== undefined) {
-                        client.channels.cache.get(checkdata).send(embed);
-                    }
-                } catch(e) {
-                    
-                }
-            } else
-            clearInterval(i);
-        }, 200);
-    }, 100);
+        try {
+            if(embed !== undefined) {
+                client.channels.cache.get(checkdata).send(embed);
+            }
+        } catch(e) {
+            
+        }
+    });
 }
