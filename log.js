@@ -1,3 +1,12 @@
+/**
+ *        MODULE INFO
+ *    Đây là một module độc lập nhưng được làm lại
+ * để hoạt động theo ý mình.
+ * 
+ * Tên module là log-to-file
+ */
+
+
 const fs = require('fs');
 
 function appendZeroToLength(value, length) {
@@ -18,17 +27,14 @@ function appendZeroToLength(value, length) {
 
 function logToFile(text, file) {
   var d = new Date();
-    var dataFormat = [d.getDate(),
-          d.getMonth()+1,
-          d.getFullYear()].join('-');
+  var dataFormat = [d.getDate(),
+  d.getMonth()+1,
+  d.getFullYear()].join('-');
          
-  // Define log text.
   const logText = "[" + getDateAsText() + '] '  + text + '\r\n';
 
   fs.appendFile('./logs/' + dataFormat + '.log', logText, 'utf8', function (error) {
-    if (error) {
-      console.log("[" + getDateAsText() + '] ' + error);
-    }
+    if (error) throw console.log("[" + getDateAsText() + '] ' + error);
   });
 }
 
