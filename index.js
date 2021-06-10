@@ -1,5 +1,5 @@
 /**
- * 						MOON BOT 2Y2C
+ * 			MOON BOT 2Y2C
  * 
  * Mã nguồn cde được viết dựa trên cảm hứng từ server 2B2T. Ban đầu là
  * bot chỉ dự định dùng để xem hàng chờ của 2b2t. Bot minecraft được tạo
@@ -15,34 +15,43 @@
  * Copyright © 2020 - 2021 Moon Bot
  */
 
+// Discord client
 const Discord = require("discord.js");
 const client = new Discord.Client();
 
-var mineflayer = require('mineflayer') // bot minecraft
-var tpsPlugin = require('mineflayer-tps')(mineflayer) // mineflayer plugin
+// bot
+var mineflayer = require('mineflayer');
+var tpsPlugin = require('mineflayer-tps')(mineflayer);
+const pathfinder = require('mineflayer-pathfinder').pathfinder;
 
+// Node module
 var fs = require('fs');
 var Scriptdb = require('script.db');
 
+// Module
+const log = require('./log');
 var abc = require("./api");
 var api = new abc();
 
-const pathfinder = require('mineflayer-pathfinder').pathfinder
-
-const footer = "moonbot 2021";
-client.footer = footer;
-
-var prefix = "$";
-client.prefix = prefix;
-
+// env file
 require('dotenv').config();
-
 const config = {
 	token: process.env.TOKEN,
 	ip: process.env.IP
 };
 
-var dev = true;
+// Var
+const footer = "moonbot 2021";
+client.footer = footer;
+
+const prefix = "$";
+client.prefix = prefix;
+
+// Value
+let cooldown = new Set();
+let antiSpam = new Set();
+
+const dev = true;
 
 if (dev) prefix = "dev$";
 
@@ -56,8 +65,6 @@ if (dev) {
 	defaultChannel = '795135669868822528';
 	devuser = "mo0nbot";
 }
-
-const log = require('./log');
 
 /*
  *				READY
@@ -116,6 +123,7 @@ function createBot() {
     bot.loadPlugin(tpsPlugin);
 	bot.loadPlugin(pathfinder);
 
+	const tpsEvent = require('./events-ingame/server-tps.js');
 	const autoEvent = require('./events-ingame/auto.js');
 	const msgEvent = require(`./events-ingame/msg.js`);
 	const joinedEvent = require(`./events-ingame/join.js`);
@@ -150,6 +158,7 @@ function createBot() {
 	bot.once('login', autoEvent.bind(null, bot, client));
 	bot.once('login', JoinedServerEvent.bind(null, bot, client));
 	bot.once('login', playtimeEvent.bind(null, bot));
+	bot.once('login', tpsEvent.bind(null, client));
 
 	bot.on('message', msg => {
 		if (!(msg.toString().startsWith("<"))) return;
@@ -173,46 +182,36 @@ function createBot() {
 			bp = "!";   
 		}
 		
-		if (username === "Ha_My" || username == "PhanThiHaMy" || username == "_Mie_Cutee_") {
-			if(bot.dev) return;
-			client.channels.cache.get("839115042405482576").send("**<" + api.removeFormat(username) + ">** " + api.removeFormat(logger));
-		}
-		
 		var chat2 = new Discord.MessageEmbed()
 						.setDescription(`**<${api.removeFormat(username)}>** ${api.removeFormat(logger)}`)
 						.setColor(color2);
 	
 		var setLogger = `**<${api.removeFormat(username)}>** ${api.removeFormat(logger)}`;
-		setTimeout(() => {
-			var guild = client.guilds.cache.map(guild => guild.id);
-			var i = setInterval(() => {
-				if (guild[0]) {
-					const line = guild.pop()
-					const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
-					const checkdata = data.get('livechat');
+		
+		
+		client.guilds.cache.forEach((guild) => {
+			const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+			const checkdata = data.get('livechat');
 	
-					if(checkdata == undefined || guild == undefined) return;
+			if(checkdata == undefined || guild == undefined) return;
 					
-					if(setLogger.split(" ")[1].startsWith(">")) {
-						color = "2EA711";
-					}
-	
-					var chat = new Discord.MessageEmbed()
-								.setDescription(setLogger)
-								.setColor(color);
-	
-					if(dev) return;
-					if(chat == undefined) return;
-	
-					try {
-						client.channels.cache.get(checkdata).send(chat)
-						color = "0x797979";
-					} catch(e) {}
-				} else
-					clearInterval(i);
-			}, 100);
-		}, 100)
-	
+			if(setLogger.split(" ")[1].startsWith(">")) {
+				color = "2EA711";
+			}
+
+			var chat = new Discord.MessageEmbed()
+						.setDescription(setLogger)
+						.setColor(color);
+
+			if(dev) return;
+			if(chat == undefined) return;
+
+			try {
+				client.channels.cache.get(checkdata).send(chat)
+				color = "0x797979";
+			} catch(e) {}
+		});
+		
 		if(chat2 !== undefined) {
 			client.channels.cache.get(bot.defaultChannel).send(chat2);
 			color2 = "0x797979";
@@ -296,7 +295,7 @@ function createBot() {
 	bot.on("playerJoined", joinedEvent.bind(null, bot, client));
 	bot.on("playerLeft", leftEvent.bind(null, bot, client));
 
-	bot._client.on("playerlist_header", ServerStatusEvent.bind(null, bot, client));
+	bot._client.on("playerlist_header", ServerStatusEvent.bind(null, bot));
 	bot._client.on("playerlist_header", mainEvent.bind(null, bot, client));
 	bot._client.on("playerlist_header", queueEvent.bind(null, bot, client));
 
@@ -310,6 +309,8 @@ function createBot() {
 		var message = msg;
 		
 		if (msg.author.bot) return;
+
+		if(cooldown.has("active")) return message.channel.send("Bạn cần chờ một chút chat tiếp tục.");
 
 		if (msg.channel.id === '797426761142632450') { // main
 			if (msg.author == client.user) return;
@@ -338,6 +339,15 @@ function createBot() {
 			
 			if(!content) return;
 
+			// tranh lap lai content
+			if(antiSpam.has(content)) {
+				antiSpam.add(message.author.id);
+
+				setTimeout(() => antiSpam.delete(message.author.id), 5 * 60 * 1000);
+			}
+
+			if(antiSpam.has(message.author.id)) return message.channel.send("Bạn đã tạm thời bị mute.");
+
 			if(content.length > 88) return msg.channel.send("Rút ngắn tin nhắn của bạn lại để có thể gửi.");
 			
 			var str = msg.content.toString().split('\n')[0];
@@ -355,6 +365,19 @@ function createBot() {
 
 			setTimeout(() => {
 				bot.chat(`> [${msg.author.tag}]  ${chat}`);
+
+				// cooldown
+				cooldown.add("active");
+				antiSpam.add(content);
+
+				setTimeout(() => {
+					cooldown.delete("active");
+				}, 5 * 1000);
+
+				setTimeout(() => {
+					antiSpam.delete(content);
+				}, 1 * 60 * 1000);
+
 			}, 1 * 1000);
 
 			const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");

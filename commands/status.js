@@ -18,7 +18,7 @@ module.exports = {
         var tab = data.get('tab-content');
         if(tab == null) return message.channel.send("Bot chưa kết nối đến server hoặc server không hoạt động.");
 
-		var uptime = tab.split(' - ')[3].split(" | ")[0].split("restart từ")[1].split("trước")[0];
+		var uptime = tab.split(' - ')[3].split("restart từ")[1].split("trước")[0];
 		var tps = tab.split(' ')[1];
 		var players = tab.split(' ')[4];
 		var ping = tab.split(" - ")[2].split(" ping")[0];
@@ -61,11 +61,11 @@ module.exports = {
                     },
                     {
                         name: 'Hàng chờ',
-                        value: "Bình thường: " + queue.split(" | ")[0] + " - Ưu tiên: " + prio.split(" | ")[0],
+                        value: "Bình thường: " + queue+ " - Ưu tiên: " + prio,
                         inline: true
                     }
                     )
-                .setFooter('Update ' + api.ageCalc(timepassed) + " trước.", 'https://cdn.discordapp.com/avatars/768448728125407242/f18ec971961b23db96e6cf0f3f79ec1c.png?size=256')
+                .setFooter('Cập nhật ' + api.ageCalc(timepassed) + " trước.", 'https://cdn.discordapp.com/avatars/768448728125407242/f18ec971961b23db96e6cf0f3f79ec1c.png?size=256')
                 .setColor(0x000DFF)
                 .setTimestamp();
 

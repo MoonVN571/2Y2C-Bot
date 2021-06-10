@@ -1,4 +1,4 @@
-var Discord = require('discord.js');
+var { MessageEmbed } = require('discord.js');
 var Scriptdb = require("script.db");
 
 var a = require('../api');
@@ -55,7 +55,7 @@ module.exports = (bot, client, message) => {
 	}
 
 	if(logger == "2y2c đã full") {
-		var fully = new Discord.MessageEmbed()
+		var fully = new MessageEmbed()
 					.setDescription("2y2c đã full")
 					.setColor(0xb60000);
 		
@@ -85,7 +85,7 @@ module.exports = (bot, client, message) => {
         var timeQ = new Scriptdb('./data.json')
         timeQ.set('queueEnd', Date.now());
 
-		var quetime = new Discord.MessageEmbed()
+		var quetime = new MessageEmbed()
 					.setDescription(`Trong hàng chờ được ${api.queueTime()}.`)
 					.setColor(0xeeee00);
 
@@ -95,7 +95,7 @@ module.exports = (bot, client, message) => {
 			client.channels.cache.get("806881615623880704").send(quetime);
 		}
 
-		var fully = new Discord.MessageEmbed()
+		var fully = new MessageEmbed()
 					.setDescription("Đang vào 2y2c")
 					.setColor(0xb60000);
 
@@ -149,7 +149,7 @@ module.exports = (bot, client, message) => {
 	if(notfMsg !== undefined) {
 		var notf = api.removeFormat(notfMsg)
 
-		var embedNotf = new Discord.MessageEmbed()
+		var embedNotf = new MessageEmbed()
 							.setDescription(notf)
 							.setColor(colorNotf);
 
@@ -162,40 +162,33 @@ module.exports = (bot, client, message) => {
 			client.channels.cache.get(bot.defaultChannel).send(embedNotf);
 
 			if(!bot.dev) {
-				setTimeout(() => {
-					var guild = client.guilds.cache.map(guild => guild.id);
-					var i = setInterval(() => {
-						if (guild[0]) {
-							const line = guild.pop()
-							const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
-							const checkdata = data.get('livechat');
+				
+				client.guilds.cache.forEach((guild) => {
+					const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+					const checkdata = data.get('livechat');
+			
+					if(checkdata == undefined || guild == undefined) return;
 
-							if(checkdata == undefined || guild == undefined) return;
-
-							try {
-								client.channels.cache.get(checkdata).send(embedNotf);
-							} catch(e) {}
-						} else
-						clearInterval(i);
-					}, 200);
-				}, 100);
+					try {
+						client.channels.cache.get(checkdata).send(embedNotf);
+					} catch(e) {}
+				});
 			}
 		}
 	}
 
 	var deathMsg;
 
-	if(logger.startsWith("nhắn cho")) return;
-	if(checkWhisper == "nhắn:") return;
+	if(logger.startsWith("nhắn cho")
+	|| checkWhisper == "nhắn:") return;
 
-	if (logger === '2y2c đã full') return;
-	if (logger === 'Đang vào 2y2c') return;
-	if (logger === 'đang vào 2y2c...') return;
-	if (logger === undefined || logger == "null") return;
+	if (logger === '2y2c đã full'
+	|| logger === 'Đang vào 2y2c'
+	|| logger === 'đang vào 2y2c...') return;
 
-	if (logger === "Donate để duy trì server admin đang đói chết con *ĩ *ẹ." || logger.startsWith("[Server]")
-			|| logger.startsWith("[Broadcast]") || logger == "Những ai muốn xài hack của bản 1.12 cho server hãy đọc phần #cách-chơi-cơ-bản trong discord 2y2c.") return;
+	if (logger === undefined || logger == null) return;
 
+	if (logger.startsWith("[Server]") || logger.startsWith("[Broadcast]")) return;
 
 	if (logger.includes('chết cháy khi đánh với')) {
 		var str = logger;
@@ -370,28 +363,22 @@ module.exports = (bot, client, message) => {
 
 	if(deathMsg == undefined) return;
 	
-	var embedDeath = new Discord.MessageEmbed()
-							.setDescription(api.removeFormat(deathMsg))
-							.setColor(newcolor);
+	var embedDeath = new MessageEmbed()
+				.setDescription(api.removeFormat(deathMsg))
+				.setColor(newcolor);
 
 	if(embedDeath == undefined) return;
 	if(!bot.dev) {
-		setTimeout(() => {
-			var guild = client.guilds.cache.map(guild => guild.id);
-			setInterval(() => {
-				if (guild[0]) {
-					const line = guild.pop()
-					const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
-					const checkdata = data.get('livechat');
-					
-                    if(guild == undefined || checkdata == undefined) return;
+		client.guilds.cache.forEach((guild) => {
+			const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+			const checkdata = data.get('livechat');
 
-					try {
-						client.channels.cache.get(checkdata).send(embedDeath);
-					} catch(e) {}
-				}
-			}, 200);
-		}, 200)
+			if(checkdata == undefined || guild == undefined) return;
+
+			try {
+				client.channels.cache.get(checkdata).send(embedDeath);
+			} catch(e) {}
+		});
 	}
 	client.channels.cache.get(bot.defaultChannel).send(embedDeath);
 }
