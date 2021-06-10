@@ -60,7 +60,7 @@ module.exports = (bot, client, p) => {
         if(data.toString().split("\r\n").indexOf(username) > -1) {
             log("Oldfag name " + username + " joined.");
             if(bot.dev) return;
-            var embed = new Discord.MessageEmbed()
+            var embed = new MessageEmbed()
                 .setDescription(api.removeFormat(username) + " joined")
                 .setColor('0xb60000');
 
