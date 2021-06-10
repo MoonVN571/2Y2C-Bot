@@ -17,16 +17,13 @@ module.exports = {
             let deads = data.deaths
             let kills = data.kills
 
-            if (kills === undefined) { kills = 0 }
-
-            if (deads === undefined) { deads = 0 }
+            if (kills == undefined) kills = 0;
+            if (deads == undefined) deads = 0;
 
             var ratio = kills / deads;
             var ratioFixed = ratio.toFixed(2);
 
-            if (ratioFixed === "NaN" || ratioFixed === "Infinity") {
-                ratioFixed = "0.00";
-            }
+            if (ratioFixed === "NaN" || ratioFixed === "Infinity") ratioFixed = "0.00";
 
             var embed = new MessageEmbed()
                             .setAuthor(`${args[0]}'s statistics`, `https://minotar.net/helm/${args[0]}`, `https://namemc.com/${args[0]}`)
@@ -37,7 +34,7 @@ module.exports = {
                             .addField(`Leaves`, `${leaves}`, true)
                             .setThumbnail(`https://minotar.net/armor/bust/${args[0]}`)
                             .setColor(0x2EA711)
-                            .setFooter("API by LoLRiTTeR Bot", 'https://images-ext-2.discordapp.net/external/OWsrCus2cCb9txmasSQQ8UqxrkbIxM2f1VotLB8aX14/https/cdn.discordapp.com/avatars/521791765989031957/6e34a1a33d255339aa45c731637a51f8.png')
+                            .setFooter(client.footer, 'https://images-ext-2.discordapp.net/external/OWsrCus2cCb9txmasSQQ8UqxrkbIxM2f1VotLB8aX14/https/cdn.discordapp.com/avatars/521791765989031957/6e34a1a33d255339aa45c731637a51f8.png')
                             .setTimestamp();
 
             message.channel.send(embed);
