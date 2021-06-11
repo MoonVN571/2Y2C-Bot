@@ -377,9 +377,11 @@ function createBot() {
 
 module.exports = { createBot };
 
-/*
-*				COMMAND_DISCORD
-*/
+
+
+
+
+
 client.commandss = new Discord.Collection();
 
 const cmdss = fs.readdirSync(`./commands`).filter(file => file.endsWith('.js'));
@@ -394,8 +396,6 @@ client.on("message", async message => {
 
 	if(dev && message.guild.id !== "794912016237985802") return message.channel.send("Lệnh đã bị tắt tại nhóm này.");
 	
-	if(dev && message.author.id !== config.author) return message.channel.send("Chỉ developer mới có thể sử dụng bot này.");
-
     const args = message.content.slice(prefixSet.length).split(/ +/);
     const cmdName = args.shift().toLowerCase();
 
@@ -416,7 +416,6 @@ client.on("message", async message => {
 
 		const cmd = require(`./commands/${args[0]}`);
 		client.commandss.set(cmd.name, cmd);
-		
 
 		var successful = new Discord.MessageEmbed()
 							.setDescription(`Đã tải lại ${args[0]} thành công!`)
@@ -473,5 +472,4 @@ client.login(config.token).catch(err => console.log(err));
 client.on("error", (e) => {
 	console.error(e);
 	var error = err.toString();
-	
 });

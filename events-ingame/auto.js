@@ -8,13 +8,10 @@ const mc = require("minecraft-protocol");
 const log = require('../log');
 
 module.exports = (bot, client) => {
-	var a,b,c,d;
-	clearInterval(a);
-    clearInterval(b);
-	clearInterval(c);
-	clearInterval(d);
+    if (bot.lobby) return;
+    if (!bot.joined) return;
 
-    a = setInterval(() => {
+    setInterval(() => {
         log("Run set topic");
 
         var get = new Scriptdb(`./data.json`).get('tab-content');
@@ -23,31 +20,25 @@ module.exports = (bot, client) => {
         var datas = get.toString().split("| ")[0];
 
         client.channels.cache.get(bot.defaultChannel).setTopic(
-            datas + " - Đã vào server từ " + api.calcTime() + " trước."
-            ).then(() => {
-                log("Update topic")
-            });
+        datas + " - Đã vào server từ " + api.calcTime() + " trước."
+        ).then(() => {
+            log("Update topic")
+        });
 
-        setTimeout(() => {
-            var guild = client.guilds.cache.map(guild => guild.id);
-            setInterval(() => {
-                if (guild[0]) {
-                    const line = guild.pop()
-                    const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
-                    const checkdata = data.get('livechat');
+        client.guilds.cache.forEach((guild) => {
+            const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+            const checkdata = data.get('livechat');
 
-                    if(guild == undefined || checkdata == undefined) return;
-                    
-                    try {
-                        if(bot.dev) return;
-                        client.channels.cache.get(checkdata).setTopic(datas + " - Đã vào server từ " + api.calcTime() + " trước.")
-                    } catch(e) {}
-                }
-            }, 200);
-        }, 300);
+            if(checkdata == undefined || guild == undefined) return;
+            
+            try {
+                if(bot.dev) return;
+                client.channels.cache.get(checkdata).setTopic(datas + " - Đã vào server từ " + api.calcTime() + " trước.")
+            } catch(e) {}
+        }); 
     }, 5 * 60 * 1000);
 
-    b = setInterval(() => {
+    setInterval(() => {
         mc.ping({ "host": "2y2c.org" }, (err, result) => {
             if (result) {
                 try {
@@ -82,7 +73,7 @@ module.exports = (bot, client) => {
         });
     }, 1 * 60 * 1000);
 
-     c = setInterval(() => {
+    setInterval(() => {
         if(bot.lobby) return;
 
         log("Anti-AFK")
@@ -103,7 +94,7 @@ module.exports = (bot, client) => {
         });
     },  10 * 60 * 1000);
 
-    d = setInterval(() => {
+    setInterval(() => {
         log("Save playerlist");
 
         if(bot.lobby) return;

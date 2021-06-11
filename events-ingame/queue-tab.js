@@ -38,7 +38,7 @@ module.exports = (bot, client, data) => {
         var Scriptdb = require('script.db');
         const dataa = new Scriptdb(`./data.json`);
 
-        var q = currentQueue + "/" + dataa.get('queue').split(" | ")[0];			
+        var q = currentQueue + "/" + dataa.get('queue');			
 
         var que = dataa.get('queue');
         if(que == undefined) {
@@ -47,7 +47,7 @@ module.exports = (bot, client, data) => {
             if(!que.split(" | ")) {
                 que = 0;
             } else {
-                que = que.split(" | ")[0];
+                que = que;
             }
         }
 
