@@ -394,7 +394,7 @@ client.on("message", async message => {
 
 	if(dev && message.guild.id !== "794912016237985802") return message.channel.send("Lệnh đã bị tắt tại nhóm này.");
 	
-	if(dev && message.author.id !== author) return message.channel.send("Chỉ developer mới có thể sử dụng bot này.");
+	if(dev && message.author.id !== config.author) return message.channel.send("Chỉ developer mới có thể sử dụng bot này.");
 
     const args = message.content.slice(prefixSet.length).split(/ +/);
     const cmdName = args.shift().toLowerCase();
