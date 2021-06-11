@@ -36,7 +36,6 @@ module.exports = (bot, client, data) => {
         tps = data.replace("*", "")
     }
 
-
     var dataa = new Scriptdb('./data.json');
     var queue = dataa.get('queue');
     var prio = dataa.get('prio');
@@ -49,7 +48,7 @@ module.exports = (bot, client, data) => {
         prio = "None";
     }
 
-    var status = "TPS: " + tps + " - Chờ: " + queue.toString().split(" | ")[0] + " - Ưu Tiên: " + prio.toString().split(" | ")[0] + " | $help";
+    var status = "TPS: " + tps + " - Chờ: " + queue + " - Ưu Tiên: " + prio + " | $help";
     if(status.startsWith("§6Donate")) return;
     
     client.user.setActivity(status, { type: 'PLAYING' });

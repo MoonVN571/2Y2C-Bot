@@ -36,7 +36,7 @@ module.exports = (bot, data) => {
         status = " " + status.substr(1);
     }
     
-    if(status.split(" ")[0] !== "") {
+    if(status !== "") {
         status = " " + status;
     }
     const dataa = new Scriptdb(`./data.json`);
