@@ -4,7 +4,9 @@ const { MessageEmbed } = require('discord.js');
 
 const log = require('../log');
 
-module.exports = (client) => {
+module.exports = (bot, client) => {
+    if(bot.dev) return;
+
     setInterval(checkLag, 15000)
 
     let isLagging = false
@@ -37,7 +39,7 @@ module.exports = (client) => {
         tps = parseFloat(tps)
         if(tps > 0 && tps <= 14 || tps > 20){
             if(isLagging == false){
-                var embedLag = new MessageEmbed().setColor(0xCC3333).setDescription("2Y2C bắt đầu lag: " + tps);
+                var embedLag = new MessageEmbed().setColor(0xCC3333).setDescription("2Y2C bắt đầu lag với " + tps + " tps.");
                 msgAll("852158457624657941", embedLag);
                 log("2Y2C has started lagging. TPS: " + tps)
                 lagStartTime = Date.now()
@@ -84,8 +86,6 @@ module.exports = (client) => {
 
                 let lagEmbed = new MessageEmbed()
                 .setColor('#CC3333')
-                .setTitle('Lag Information')
-                .setURL('https://discord.gg/G2w7DQQ')
                 .setAuthor('Moon Bot', 'https://cdn.discordapp.com/avatars/768448728125407242/f18ec971961b23db96e6cf0f3f79ec1c.png?size=256')
                 .setDescription('Tính toán thời gian server tps.')
                 .addFields(

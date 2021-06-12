@@ -7,9 +7,7 @@ module.exports = (bot) => {
         if (!bot.joined) return;
         Object.values(bot.players).forEach(player => addPlayTime(player.username));
 
-        if(!bot.dev) {
-            log("Save tick all players is online")
-        }
+        log("Save tick all players is online");
 
         function addPlayTime(player) {
             let pt = new Scriptdb(`./data/playtime/${player}.json`);

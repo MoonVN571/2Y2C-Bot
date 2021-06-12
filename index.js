@@ -105,6 +105,26 @@ client.on('ready', () => {
 	data.set('players', null);
 
 	createBot();
+
+	// blacklist guild
+	setInterval(() => {
+		client.guilds.cache.forEach((guild) => {
+			fs.readFile("blacklists.txt",  (err, data) => {
+				// console.log(data.toString().split("\r\n"))
+
+				if(guild.id == data.toString().split("\r\n")) {
+					const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+					const checkdata = data.get('livechat');
+
+					if(checkdata == undefined || guild == undefined) return;
+					
+					try {
+						client.channels.cache.get(checkdata).send("Guild của bạn là blacklist.");
+					} catch(e) {}
+				}
+			});
+		});
+	}, 5 * 60 * 1000);
 });
 
 
@@ -152,7 +172,7 @@ function createBot() {
 	bot.once('login', playtimeEvent.bind(null, bot));
 
 	const tpsEvent = require('./events-ingame/server-tps.js');
-	bot.once('login', tpsEvent.bind(null, client));
+	bot.once('login', tpsEvent.bind(null, bot, client));
 
 	bot.on('message', msg => {
 		if (!(msg.toString().startsWith("<"))) return;
@@ -299,8 +319,6 @@ function createBot() {
 		
 		if (msg.author.bot) return;
 
-		if(cooldown.has("active")) return message.channel.send("Bạn cần chờ một chút chat tiếp tục.");
-
 		if (msg.channel.id === '797426761142632450') { // main
 			if (msg.author == client.user) return;
 			if(!dev) {
@@ -327,6 +345,8 @@ function createBot() {
 			var content = msg.content;
 			
 			if(!content) return;
+
+			if(cooldown.has("active")) return message.channel.send("Bạn cần chờ một chút chat tiếp tục.");
 
 			// tranh lap lai content
 			if(antiSpam.has(content)) {
