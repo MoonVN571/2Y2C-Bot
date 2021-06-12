@@ -106,6 +106,21 @@ client.on('ready', () => {
 
 	createBot();
 
+	// started notify
+    client.guilds.cache.forEach((guild) => {
+        const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+        const checkdata = data.get('livechat');
+
+        if(checkdata == undefined || guild == undefined) return;
+
+        try {
+            client.channels.cache.get(checkdata).send({embed: {
+				description: "Đang đồng bộ livechat",
+				color: 0x15ff00
+			}});
+        } catch(e) {}
+    });
+
 	// blacklist guild
 	setInterval(() => {
 		client.guilds.cache.forEach((guild) => {
