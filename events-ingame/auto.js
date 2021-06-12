@@ -14,11 +14,9 @@ module.exports = (bot, client) => {
     setInterval(() => {
         log("Run set topic");
 
-        var get = new Scriptdb(`./data.json`).get('tab-content');
-        if(get == undefined) return;
+        var datas = new Scriptdb(`./data.json`).get('tab-content');
+        if(datas == undefined) return;
         
-        var datas = get.toString().split("| ")[0];
-
         client.channels.cache.get(bot.defaultChannel).setTopic(
         datas + " - Đã vào server từ " + api.calcTime() + " trước."
         ).then(() => {
