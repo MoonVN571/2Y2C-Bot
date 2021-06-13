@@ -182,8 +182,8 @@ function createBot() {
 	const autoEvent = require('./events-ingame/auto.js');
 	const JoinedServerEvent = require('./events-ingame/login.js');
 	const playtimeEvent = require('./events-ingame/playtime.js');
-	bot.once('login', autoEvent.bind(null, bot, client));
-	bot.once('login', JoinedServerEvent.bind(null, bot, client));
+	bot.once('spawn', autoEvent.bind(null, bot, client));
+	bot.once('spawn', JoinedServerEvent.bind(null, bot, client));
 	bot.once('login', playtimeEvent.bind(null, bot));
 
 	const tpsEvent = require('./events-ingame/server-tps.js');
@@ -280,15 +280,6 @@ function createBot() {
 				bot.whisper(username, "> Reload thành công: " + args[0])
 			} else {
 				bot.whisper(username, "> Không thể sử dụng lệnh này.")
-			}
-		}
-	
-		if(cmdName == "sudo") {
-			if(!args[0]) return bot.whisper(username, "Không tìm thấy nội dung.")
-			
-			if(username == "MoonVN" || username == "MoonZ" || username == "MoonOnTop" || username == "MoonX" || username == bot.username || username == "MoonzVN") {
-				bot.chat(logger.substr(6));
-				bot.whisper(username, "Đang thực hiện: " + logger.substr(6))
 			}
 		}
 		
