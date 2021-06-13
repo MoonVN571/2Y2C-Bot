@@ -8,11 +8,8 @@ const mc = require("minecraft-protocol");
 const log = require('../log');
 
 module.exports = (bot, client) => {
-    if (bot.lobby) return;
-    if (!bot.joined) return;
-
     setInterval(() => {
-        log("Run set topic");
+        log("Interval: Topic");
 
         var datas = new Scriptdb(`./data.json`).get('tab-content');
         if(datas == undefined) return;
@@ -20,7 +17,7 @@ module.exports = (bot, client) => {
         client.channels.cache.get(bot.defaultChannel).setTopic(
         datas + " - Đã vào server từ " + api.calcTime() + " trước."
         ).then(() => {
-            log("Update topic")
+            log("Update topic successful")
         });
 
         client.guilds.cache.forEach((guild) => {
@@ -37,6 +34,7 @@ module.exports = (bot, client) => {
     }, 5 * 60 * 1000);
 
     setInterval(() => {
+        log("Server data, anti-afk")
         mc.ping({ "host": "2y2c.org" }, (err, result) => {
             if (result) {
                 try {
@@ -65,23 +63,25 @@ module.exports = (bot, client) => {
                 data.set('status', status);
                 data.set('queue', queue);
                 data.set('prio', prio);
-
-                log("Set queue status");
             }
         });
-    }, 1 * 60 * 1000);
-
-    setInterval(() => {
+        
+        // main server
         if(bot.lobby) return;
 
-        log("Anti-AFK")
-        
         bot.swingArm("left");
         bot.look(Math.floor(Math.random() * Math.floor("360")), 0, true, null);
+
+        var Scriptdb = require('script.db');
+        const data = new Scriptdb(`./data.json`);
+
+        var list = Object.values(bot.players).map(p => p.username);
+
+        data.set('players', list)
     }, 1 * 60 * 1000);
 
     setInterval(() => {
-        log("Bot was send a message");
+        log("Send message");
 
         fs.readFile("ads.txt", 'utf8', function (err, data) {
             if (err) throw err;
@@ -91,16 +91,4 @@ module.exports = (bot, client) => {
             bot.chat(random);
         });
     },  10 * 60 * 1000);
-
-    setInterval(() => {
-        log("Save playerlist");
-
-        if(bot.lobby) return;
-        var Scriptdb = require('script.db');
-        const data = new Scriptdb(`./data.json`);
-
-        var list = Object.values(bot.players).map(p => p.username);
-
-        data.set('players', list)
-    },  1 * 60 * 1000);
 }
