@@ -125,8 +125,6 @@ client.on('ready', () => {
 	setInterval(() => {
 		client.guilds.cache.forEach((guild) => {
 			fs.readFile("blacklists.txt",  (err, data) => {
-				// console.log(data.toString().split("\r\n"))
-
 				if(guild.id == data.toString().split("\r\n")) {
 					const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
 					const checkdata = data.get('livechat');
@@ -252,36 +250,18 @@ function createBot() {
 		const args = logger.slice(bp.length).split(/ +/);
 		const cmdName = args.shift().toLowerCase();
 	
-		client.commands = new Discord.Collection();
+		bot.commands = new Discord.Collection();
 	
 		const cmds = require('fs').readdirSync(`./ingame-commands/`).filter(file => file.endsWith('.js'));
 	
 		for(const file of cmds){
 			const cmd = require(`./ingame-commands/${file}`);
 			
-			client.commands.set(cmd.name, cmd);
+			bot.commands.set(cmd.name, cmd);
 		}
 	
-		const cmd = client.commands.get(cmdName)
-			|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
-	
-		if(cmdName == "reload") {
-			if(username == "MoonVN" || username == "MoonZ" || username == "MoonOnTop" || username == "MoonX" || username == bot.username || username == "MoonzVN") {
-				if(!args[0]) return bot.whisper(username, "> Nhập tên lệnh cần reload.")
-	
-				const cmd = require(`./ingame-commands/${args[0]}.js`);
-	
-				delete require.cache[require.resolve(`./ingame-commands/${args[0]}.js`)];
-	
-				if(!cmd) return bot.whisper(username, "> Không tìm thấy tên lệnh này.")
-				client.commands.delete(args[0])
-				client.commands.set(args[0], cmd);
-				
-				bot.whisper(username, "> Reload thành công: " + args[0])
-			} else {
-				bot.whisper(username, "> Không thể sử dụng lệnh này.")
-			}
-		}
+		const cmd = bot.commands.get(cmdName)
+			|| bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
 		
 		if(!cmd) return;
 	
@@ -318,9 +298,8 @@ function createBot() {
 	bot.on('end', endedEvent.bind(null, bot, client));
 
 	bot.on('error', err => { console.log(err)});
-	bot._client.on('error',err => console.log(err));
 
-	client.on('message', msg => {
+	client.on('message', async msg => {
 		var message = msg;
 		
 		if (msg.author.bot) return;
@@ -408,70 +387,26 @@ module.exports = { createBot };
 
 
 
-client.commandss = new Discord.Collection();
+client.commands = new Discord.Collection();
 
-const cmdss = fs.readdirSync(`./commands`).filter(file => file.endsWith('.js'));
-for (const file of cmdss) {
+const cmds = fs.readdirSync(`./commands`).filter(file => file.endsWith('.js'));
+for (const file of cmds) {
 	const cmd = require(`./commands/${file}`);
 
-	client.commandss.set(cmd.name, cmd);
+	client.commands.set(cmd.name, cmd);
 }
 
 client.on("message", async message => {
-	if(message.author.bot|| !message.content.startsWith(prefixSet) || message.author == client.user || message.channel.type == "dm") return;
+	if(message.author.bot || !message.content.startsWith(prefixSet) || message.author == client.user || message.channel.type == "dm") return;
 
+	// shop
 	if(dev && message.guild.id !== "794912016237985802") return message.channel.send("Lệnh đã bị tắt tại nhóm này.");
 	
     const args = message.content.slice(prefixSet.length).split(/ +/);
     const cmdName = args.shift().toLowerCase();
 
-    const cmd = client.commandss.get(cmdName)
-        || client.commandss.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
-
-	if(cmdName == "reload") {
-		var noPerm = new Discord.MessageEmbed()
-							.setDescription('Bạn phải là nhà phát triển để sử dụng lệnh này.')
-							.setColor('0xC51515');
-
-		if(message.author.id !== config.author)
-		return message.channel.send(noPerm).then(msg => {
-			msg.delete({ timeout: 10000 });
-		});
-
-		delete require.cache[require.resolve(`./commands/${args[0]}.js`)];
-
-		const cmd = require(`./commands/${args[0]}`);
-		client.commandss.set(cmd.name, cmd);
-
-		var successful = new Discord.MessageEmbed()
-							.setDescription(`Đã tải lại ${args[0]} thành công!`)
-							.setColor(0x2EA711);
-
-		message.channel.send(successful)
-	}
-
-	if(cmdName == "igreload" || cmdName == "igrl") {
-		var noPerm = new Discord.MessageEmbed()
-							.setDescription('Bạn phải là nhà phát triển để sử dụng lệnh này.')
-							.setColor('0xC51515');
-
-		if(message.author.id !== config.author)
-		return message.channel.send(noPerm).then(msg => {
-			msg.delete({ timeout: 10000 });
-		});
-
-		delete require.cache[require.resolve(`./ingame-commands/${args[0]}.js`)];
-
-		const cmd = require(`./ingame-commands/${args[0]}`);
-		client.commands.set(cmd.name, cmd);
-		
-
-		var successful = new Discord.MessageEmbed()
-							.setDescription(`Đã tải lại ${args[0]} thành công!`)
-							.setColor(0x2EA711);
-
-		message.channel.send(successful);
-	}
+    const cmd = client.commands.get(cmdName)
+        || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
 
     if(!cmd) return;
 	
