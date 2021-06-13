@@ -89,7 +89,7 @@ module.exports = (bot, client) => {
                 .setAuthor('Moon Bot', 'https://cdn.discordapp.com/avatars/768448728125407242/f18ec971961b23db96e6cf0f3f79ec1c.png?size=256')
                 .setDescription('Tính toán thời gian server tps.')
                 .addFields(
-                    { name: 'TPS trung bình', value: tpsAvg },
+                    { name: 'TPS trung bình', value: tpsAvg.toFixed(2) },
                     { name: 'Thời gian lag', value: hours + 'h ' + minutes + 'm ' + seconds + 's.'},
                     { name: 'TPS thấp nhất', value: minTps },
                     { name: 'Điểm ước tính', value: (totalPoints / 4)},
