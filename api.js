@@ -135,17 +135,12 @@ function API() {
     this.uptimeCalc = () => {
         const uptime = new Scriptdb(`./data.json`);
         let ut = uptime.get('uptime');
-        
-        const data = new Scriptdb(`./data.json`);
-        var end = data.get('queueEnd');
-        var start = data.get('queueStart')
-        let timeInQ = end - start;
 
         var d = new Date();
         var timenow = d.getTime();
 
         var ticks = timenow - ut;
-        var temp = ticks - timeInQ / 1000;
+        var temp = ticks / 1000;
         var day = hours = 0, minutes = 0, seconds = 0;
         hours = parseInt(((temp - day * 86400) / 3600))
         minutes = parseInt(((temp - day * 86400 - hours * 3600)) / 60)

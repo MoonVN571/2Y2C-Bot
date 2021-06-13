@@ -41,7 +41,7 @@ module.exports = (bot, data) => {
     }
     const dataa = new Scriptdb(`./data.json`);
 
-    dataa.set('tab-content', status + " | " + Date.now());
+    dataa.set('tab-content', status);
 
     var log = require('../log');
     log("Set tab content discord");
