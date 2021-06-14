@@ -21,10 +21,12 @@ module.exports = {
 
         var data = new Scriptdb(`./offlinemsgs.json`);
 
-        data.set(args[0] + '.author', username);
-        data.set(username + '.' + args[0], msg);
-        data.set(username +  '.' + args[0] + '.time', Date.now());
-
+        if(!bot.dev) {
+            data.set(args[0] + '.author', username);
+            data.set(username + '.' + args[0], msg);
+            data.set(username +  '.' + args[0] + '.time', Date.now());
+        }
+        
         bot.whisper(username, "> Lời nhắn cho " + args[0] + " là: \"" + msg + "\".");
     }
 }

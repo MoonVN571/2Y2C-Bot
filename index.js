@@ -16,17 +16,17 @@
  */
 
 // Discord client
-const Discord = require("discord.js");
-const client = new Discord.Client();
+const { Client, MessageEmbed, Collection } = require("discord.js");
+const client = new Client();
 
 // bot
-var mineflayer = require('mineflayer');
-var tpsPlugin = require('mineflayer-tps')(mineflayer);
+const mineflayer = require('mineflayer');
+const tpsPlugin = require('mineflayer-tps')(mineflayer);
 const pathfinder = require('mineflayer-pathfinder').pathfinder;
 
 // Node module
-var fs = require('fs');
-var Scriptdb = require('script.db');
+const { readFile, readdirSync } = require('fs');
+const Scriptdb = require('script.db');
 
 // Module
 const log = require('./log');
@@ -79,6 +79,7 @@ const prefixSet = config.prefix;
 client.prefix = prefixSet;
 
 
+
 client.on('ready', () => {
 	client.user.setActivity("RESTARTING", { type: 'PLAYING' });
 	
@@ -104,6 +105,8 @@ client.on('ready', () => {
 	data.set('uptime', null);
 	data.set('players', null);
 
+	data.set('started', false);
+
 	createBot();
 
 	// started notify
@@ -124,7 +127,7 @@ client.on('ready', () => {
 	// blacklist guild
 	setInterval(() => {
 		client.guilds.cache.forEach((guild) => {
-			fs.readFile("blacklists.txt",  (err, data) => {
+			readFile("blacklists.txt",  (err, data) => {
 				if(guild.id == data.toString().split("\r\n")) {
 					const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
 					const checkdata = data.get('livechat');
@@ -144,7 +147,7 @@ client.on('ready', () => {
 
 
 
-function createBot() {
+async function createBot() {
 	console.log('------------------------');
 	log("Bot function started");
 	
@@ -180,7 +183,7 @@ function createBot() {
 	const autoEvent = require('./events-ingame/auto.js');
 	const JoinedServerEvent = require('./events-ingame/login.js');
 	const playtimeEvent = require('./events-ingame/playtime.js');
-	bot.once('spawn', autoEvent.bind(null, bot, client));
+	bot.once('login', autoEvent.bind(null, bot, client));
 	bot.once('spawn', JoinedServerEvent.bind(null, bot, client));
 	bot.once('login', playtimeEvent.bind(null, bot));
 
@@ -198,7 +201,7 @@ function createBot() {
 		var bp = config.ingamePrefix;
 		if (dev) bp = config.ingamePrefixDev;
 		
-		var chat = new Discord.MessageEmbed()
+		var chat = new MessageEmbed()
 						.setDescription(`**<${api.removeFormat(username)}>** ${api.removeFormat(logger)}`)
 						.setColor(color2);
 	
@@ -218,7 +221,7 @@ function createBot() {
 					
 			if(setLogger.split(" ")[1].startsWith(">")) color = config.chatColorHighlight;
 
-			let embedChat = new Discord.MessageEmbed()
+			let embedChat = new MessageEmbed()
 						.setDescription(setLogger)
 						.setColor(color);
 
@@ -250,7 +253,7 @@ function createBot() {
 		const args = logger.slice(bp.length).split(/ +/);
 		const cmdName = args.shift().toLowerCase();
 	
-		bot.commands = new Discord.Collection();
+		bot.commands = new Collection();
 	
 		const cmds = require('fs').readdirSync(`./ingame-commands/`).filter(file => file.endsWith('.js'));
 	
@@ -387,9 +390,9 @@ module.exports = { createBot };
 
 
 
-client.commands = new Discord.Collection();
+client.commands = new Collection();
 
-const cmds = fs.readdirSync(`./commands`).filter(file => file.endsWith('.js'));
+const cmds = readdirSync(`./commands`).filter(file => file.endsWith('.js'));
 for (const file of cmds) {
 	const cmd = require(`./commands/${file}`);
 
@@ -410,7 +413,7 @@ client.on("message", async message => {
 
     if(!cmd) return;
 	
-	client.userNotFound = new Discord.MessageEmbed()
+	client.userNotFound = new MessageEmbed()
 					.setDescription('Không tìm thấy người chơi.')
 					.setColor('0xC51515');
 	
