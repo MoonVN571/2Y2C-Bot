@@ -423,7 +423,9 @@ client.on("message", async message => {
 	
     try{
         cmd.execute(client, message, args);
+		console.log(cmdName);
     }catch(err) {
+		console.log(cmdName);
         console.log(err);
 		console.log(err.toString());
     }

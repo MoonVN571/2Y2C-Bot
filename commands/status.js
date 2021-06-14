@@ -16,7 +16,7 @@ module.exports = {
         var prio = data.get('prio');
 
         var tab = data.get('tab-content');
-        if(tab == null) return message.channel.send("Bot chưa kết nối đến server hoặc server không hoạt động.");
+        if(tab == null) return message.channel.send("Bot chưa kết nối đến server.");
 
 		var uptime = tab.split(' - ')[3].split("restart từ")[1].split("trước")[0];
 		var tps = tab.split(' ')[1];
