@@ -79,7 +79,9 @@ module.exports = (bot, client) => {
                 const data = new Scriptdb(`./data.json`);
                 var motdSaved = result.description.text.split("\n")[0].split("§6")[1];
 
-                appendFile('./motd.txt', '\n' + motdSaved, 'utf8', (err) => console.log(err));
+                appendFile('./motd.txt', '\n' + motdSaved, 'utf8', (err) => {
+                    if(err) console.log(err)
+                });
 
                 data.set('status', status);
                 data.set('queue', queue);
