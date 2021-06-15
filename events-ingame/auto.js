@@ -1,4 +1,4 @@
-var fs = require('fs');
+var { readFile, writeFile, appendFile } = require('fs');
 var Scriptdb = require('script.db');
 
 var a = require('../api');
@@ -77,6 +77,9 @@ module.exports = (bot, client) => {
 
                 var Scriptdb = require('script.db');
                 const data = new Scriptdb(`./data.json`);
+                var motdSaved = result.description.text.split("\n")[0].split("§6")[1];
+
+                appendFile('./motd.txt', '\n' + motdSaved, 'utf8', (err) => console.log(err));
 
                 data.set('status', status);
                 data.set('queue', queue);
@@ -88,10 +91,12 @@ module.exports = (bot, client) => {
     setInterval(async() => {
         log("Send message");
 
-        fs.readFile("ads.txt", 'utf8', function (err, data) {
+        readFile("ads.txt", 'utf8', function (err, data) {
             if (err) throw err;
             const lines = data.split('\n');
             var random = lines[Math.floor(Math.random() * lines.length)];
+
+            if(random == "") return;
 
             bot.chat(random);
         });
