@@ -62,7 +62,7 @@ module.exports = (bot, client) => {
         data.set('uptime', null);
         data.set('players', null);
         
-        waitUntil(60 * 1000, 50, function condition() {
+        waitUntil(120 * 1000, 50, function condition() {
             try {
                 start.createBot();
                 return true;
