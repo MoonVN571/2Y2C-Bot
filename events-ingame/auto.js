@@ -42,6 +42,17 @@ module.exports = (bot, client) => {
 
     setInterval(async() => {
         log("Server data, anti-afk")
+                
+        var Scriptdb = require('script.db');
+        const data = new Scriptdb(`./data.json`);
+
+        var list = Object.values(bot.players).map(p => p.username);
+
+        data.set('players', list)
+
+        bot.swingArm("left");
+        bot.look(Math.floor(Math.random() * Math.floor("360")), 0, true, null);
+        
         mc.ping({ "host": "2y2c.org" }, (err, result) => {
             if (result) {
                 try {
@@ -72,19 +83,6 @@ module.exports = (bot, client) => {
                 data.set('prio', prio);
             }
         });
-        
-        // main server
-        if(bot.lobby) return;
-
-        bot.swingArm("left");
-        bot.look(Math.floor(Math.random() * Math.floor("360")), 0, true, null);
-
-        var Scriptdb = require('script.db');
-        const data = new Scriptdb(`./data.json`);
-
-        var list = Object.values(bot.players).map(p => p.username);
-
-        data.set('players', list)
     }, 1 * 60 * 1000);
 
     setInterval(async() => {

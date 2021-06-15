@@ -7,6 +7,7 @@ const log = require('../log');
 module.exports = (bot, client) => {
     if(bot.dev) return;
 
+    let db = new Scriptdb('./data.json');
     let started = db.get('started');
     if(started) return;
 

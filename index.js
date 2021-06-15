@@ -135,7 +135,9 @@ client.on('ready', () => {
 					if(checkdata == undefined || guild == undefined) return;
 					
 					try {
-						client.channels.cache.get(checkdata).send("Guild của bạn là blacklist.");
+						client.channels.cache.get(checkdata).send("Guild của bạn là blacklist.").then(() => {
+							client.guilds.cache.get(guild.id).leave();
+						});
 					} catch(e) {}
 				}
 			});
@@ -143,7 +145,9 @@ client.on('ready', () => {
 	}, 5 * 60 * 1000);
 });
 
-
+client.on('guildCreate', (guild) => {
+	console.log(guild.name);
+});
 
 
 
@@ -301,6 +305,12 @@ async function createBot() {
 	bot.on('end', endedEvent.bind(null, bot, client));
 
 	bot.on('error', err => { console.log(err)});
+
+	
+    const db = new Scriptdb('./data.json');
+
+    let started = db.get('started');
+    if(started) return;
 
 	client.on('message', async msg => {
 		var message = msg;
