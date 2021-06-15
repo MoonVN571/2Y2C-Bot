@@ -421,12 +421,12 @@ client.on("message", async message => {
 	client.dev = dev;
 	client.color = config.botEmbedColor;
 	client.prefix = prefix;
+	client.config = config;
 
 	client.ping = client.ws.ping;
 	
-    try{
+    try {
         cmd.execute(client, message, args);
-		console.log(cmdName);
     }catch(err) {
 		console.log(cmdName);
         console.log(err);
@@ -438,4 +438,5 @@ client.login(config.token).catch(err => console.log(err));
 client.on("error", (e) => {
 	console.error(e);
 	var error = err.toString();
+	console.log('\n\n' + error);
 });

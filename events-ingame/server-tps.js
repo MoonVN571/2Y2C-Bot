@@ -7,6 +7,11 @@ const log = require('../log');
 module.exports = (bot, client) => {
     if(bot.dev) return;
 
+    let started = db.get('started');
+    if(started) return;
+
+    db.set('started', true);
+
     setInterval(checkLag, 15000)
 
     let isLagging = false

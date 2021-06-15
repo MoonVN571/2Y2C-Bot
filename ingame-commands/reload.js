@@ -1,7 +1,6 @@
 module.exports = {
-    name: "",
-    description: "command.",
-    aliases: [''],
+    name: "reload",
+    aliases: ['rl'],
     
     async execute(bot, username, args) {
         if(username == "MoonVN" || username == "MoonZ" || username == "MoonOnTop" || username == "MoonX" || username == bot.username || username == "MoonzVN") {
@@ -16,8 +15,6 @@ module.exports = {
             bot.commands.set(args[0], cmd);
             
             bot.whisper(username, "> Reload thành công: " + args[0])
-        } else {
-            bot.whisper(username, "> Không thể sử dụng lệnh này.")
-        }      
+        }
     }
 }

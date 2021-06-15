@@ -17,9 +17,9 @@ module.exports = {
         delete require.cache[require.resolve(`../commands/${args[0]}.js`)];
 
         const cmd = require(`../commands/${args[0]}`);
-        client.commandss.set(cmd.name, cmd);
+        client.commands.set(cmd.name, cmd);
 
-        var successful = new Discord.MessageEmbed()
+        var successful = new MessageEmbed()
                 .setDescription(`Đã tải lại ${args[0]} thành công!`)
                 .setColor(0x2EA711);
 
