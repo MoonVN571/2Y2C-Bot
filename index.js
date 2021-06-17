@@ -312,7 +312,7 @@ async function createBot() {
     let started = db.get('started');
     if(started) return;
 
-	client.on('message', async (msg) => {
+	client.on('message', msg => {
 		var message = msg;
 		
 		if (msg.author.bot) return;
