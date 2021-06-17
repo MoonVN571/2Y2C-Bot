@@ -11,9 +11,9 @@ module.exports = {
     async execute(client, message, args) {
         return message.channel.send({embed: {
             description: "Lệnh đã bị tắt!",
-            color: client.config.embedColor
+            color: client.config.botEmbedColor
         }});
-        
+
         if (!args[0]) return message.channel.send(client.userNotFound);
 
 		let fj = new Scriptdb(`./data/joindate/${args}.json`);
