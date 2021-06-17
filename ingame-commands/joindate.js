@@ -9,6 +9,8 @@ module.exports = {
     aliases: ['jd', 'joindate'],
     
     async execute(bot, username, args) {
+
+        return bot.whisper(username, "> Lệnh đã bị tắt!");
         if(!args[0]) return;
         if(!args[0].match(bot.regex)) return;
 
