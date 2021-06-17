@@ -15,7 +15,7 @@ module.exports = (bot, client) => {
 
     db.set('started', true);
 
-    setInterval(async() => {
+    setInterval(() => {
         log("Interval: Topic");
 
         var datas = new Scriptdb(`./data.json`).get('tab-content');
@@ -40,7 +40,7 @@ module.exports = (bot, client) => {
         }); 
     }, 5 * 60 * 1000);
 
-    setInterval(async() => {
+    setInterval(() => {
         log("Server data, anti-afk")
                 
         var Scriptdb = require('script.db');
@@ -85,7 +85,7 @@ module.exports = (bot, client) => {
         });
     }, 1 * 60 * 1000);
 
-    setInterval(async() => {
+    setInterval(() => {
         log("Send message");
 
         readFile("ads.txt", 'utf8', function (err, data) {

@@ -106,6 +106,8 @@ client.on('ready', () => {
 	data.set('players', null);
 
 	data.set('started', false);
+	data.set('startedClient', false);
+	data.set('startedTPS', false);
 
 	createBot();
 
@@ -309,8 +311,10 @@ async function createBot() {
 	
     const db = new Scriptdb('./data.json');
 
-    let started = db.get('started');
+    let started = db.get('startedClient');
     if(started) return;
+
+	db.set('startedClient', true);
 
 	client.on('message', msg => {
 		var message = msg;
@@ -372,6 +376,9 @@ async function createBot() {
 
 			setTimeout(() => {
 				bot.chat(`> [${msg.author.tag}]  ${chat}`);
+				
+				const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");
+				msg.react(send);
 
 				// cooldown
 				cooldown.add("active");
@@ -386,9 +393,6 @@ async function createBot() {
 				}, 1 * 60 * 1000);
 
 			}, 1 * 1000);
-
-			const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");
-			msg.react(send);
 		}
 	});
 }

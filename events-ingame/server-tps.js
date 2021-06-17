@@ -5,13 +5,13 @@ const { MessageEmbed } = require('discord.js');
 const log = require('../log');
 
 module.exports = (bot, client) => {
-    if(bot.dev) return;
+    // if(bot.dev) return;
 
     let db = new Scriptdb('./data.json');
-    let started = db.get('started');
+    let started = db.get('startedTPS');
     if(started) return;
 
-    db.set('started', true);
+    db.set('startedTPS', true);
 
     setInterval(checkLag, 15000)
 
