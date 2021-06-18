@@ -33,6 +33,9 @@ const log = require('./log');
 var abc = require("./api");
 var api = new abc();
 
+var d = require("./gotEvent");
+var event = new d();
+
 // env file need to hide
 require('dotenv').config();
 
@@ -105,9 +108,7 @@ client.on('ready', () => {
 	data.set('uptime', null);
 	data.set('players', null);
 
-	data.set('started', false);
-	data.set('startedClient', false);
-	data.set('startedTPS', false);
+	event.started();
 
 	createBot();
 
@@ -146,12 +147,6 @@ client.on('ready', () => {
 		});
 	}, 5 * 60 * 1000);
 });
-
-client.on('guildCreate', (guild) => {
-	console.log(guild.name);
-});
-
-
 
 async function createBot() {
 	console.log('------------------------');
@@ -307,14 +302,6 @@ async function createBot() {
 	bot.on('end', endedEvent.bind(null, bot, client));
 
 	bot.on('error', err => { console.log(err)});
-
-	
-    const db = new Scriptdb('./data.json');
-
-    let started = db.get('startedClient');
-    if(started) return;
-
-	db.set('startedClient', true);
 
 	client.on('message', msg => {
 		var message = msg;

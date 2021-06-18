@@ -7,13 +7,12 @@ var api = new a();
 const mc = require("minecraft-protocol");
 const log = require('../log');
 
+var e = require('../gotEvent');
+
+var event = new e();
+
 module.exports = (bot, client) => {
-    let db = new Scriptdb('./data.json');
-
-    let started = db.get('started');
-    if(started) return;
-
-    db.set('started', true);
+    if(event.getAuto()) return;
 
     setInterval(() => {
         log("Interval: Topic");

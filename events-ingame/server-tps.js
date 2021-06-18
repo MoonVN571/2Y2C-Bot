@@ -4,14 +4,14 @@ const { MessageEmbed } = require('discord.js');
 
 const log = require('../log');
 
+var e = require('../gotEvent');
+
+var event = new e();
+
 module.exports = (bot, client) => {
-    // if(bot.dev) return;
+    if(bot.dev) return;
 
-    let db = new Scriptdb('./data.json');
-    let started = db.get('startedTPS');
-    if(started) return;
-
-    db.set('startedTPS', true);
+    if(event.getTPS()) return;
 
     setInterval(checkLag, 15000)
 
@@ -29,7 +29,7 @@ module.exports = (bot, client) => {
     function readTPS(){
         try{
             var a = new Scriptdb('./data.json');
-            let tps = a.get('tab-content').split(" ")[1];
+            let tps = a.get('tab-content').split(" ")[2];
             return tps;
         } catch(error){}
     }
