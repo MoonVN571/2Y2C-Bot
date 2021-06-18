@@ -17,11 +17,13 @@ function event() {
     
     this.getTPS = () => {
         log('set tps');
+        data.set('startedTPS', true);
         return tps;
     }
     
     this.getAuto = () => {
         log('set auto');
+        data.set('startedAuto', true);
         return auto;
     }
 }
