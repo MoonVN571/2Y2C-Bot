@@ -82,8 +82,10 @@ module.exports = (bot, client, message) => {
 	}
 
 	if(logger == "Đang vào 2y2c") {
-        var timeQ = new Scriptdb('./data.json')
-        timeQ.set('queueEnd', Date.now());
+        var data = new Scriptdb('./data.json')
+        data.set('queueEnd', Date.now());
+
+		data.set(`uptime`, new Date().getTime());
 
 		var quetime = new MessageEmbed()
 					.setDescription(`Trong hàng chờ được ${api.queueTime()}.`)
@@ -120,13 +122,7 @@ module.exports = (bot, client, message) => {
 			client.channels.cache.get(bot.defaultChannel).send(fully);
 		}, 1500);
 	}
-
-	if(logger == "Could not connect to a default or fallback server, please try again later: io.netty.channel.AbstractChannel$AnnotatedConnectException"
-	|| logger == "Exception Connecting:ReadTimeoutException : null") {
-		bot.quit()
 	
-	}
-
 	if (logger == "đang vào 2y2c..."
 	|| logger.startsWith("[Server]")
 	|| logger.startsWith("[AutoRestart]")

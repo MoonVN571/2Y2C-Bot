@@ -15,8 +15,6 @@ module.exports = (bot, client) => {
     console.log('      Bot Ended');
 	console.log('------------------------');
 
-    bot.totalSeconds = 0;
-
     log("Bot ended");
 
     setTimeout(() => {
@@ -52,15 +50,8 @@ module.exports = (bot, client) => {
                 client.channels.cache.get("806881615623880704").send(disconnectedLog);
             }
         }
-        
-        const data = new Scriptdb(`./data.json`);
 
-        data.set('queueStart', null);
-        data.set('queueEnd', null);
-
-        data.set('tab-content', null);
-        data.set('uptime', null);
-        data.set('players', null);
+        api.clean();
         
         waitUntil(120 * 1000, 50, function condition() {
             try {

@@ -20,7 +20,6 @@ module.exports = (bot, client) => {
     let lagStartTime
     let tpsAvg
     let tpsCount
-    let totalPoints
 
     function msgAll(channelName, msg){
         client.channels.cache.get(channelName).send(msg);
@@ -53,10 +52,6 @@ module.exports = (bot, client) => {
                 tpsAvg = tps
                 tpsCount = 1
                 isLagging = true
-                totalPoints = 0
-                if(tps<=2){
-                    totalPoints = (1 / Math.sqrt(tpsAvg/tpsCount))
-                }
                 return
             }
 
@@ -93,12 +88,11 @@ module.exports = (bot, client) => {
                 let lagEmbed = new MessageEmbed()
                 .setColor('#CC3333')
                 .setAuthor('Moon Bot', 'https://cdn.discordapp.com/avatars/768448728125407242/f18ec971961b23db96e6cf0f3f79ec1c.png?size=256')
-                .setDescription('Tính toán thời gian server tps.')
+                .setDescription('Thông báo mức TPS giao động từ dưới 14 và ổn định ở mức 16 trở lên.')
                 .addFields(
                     { name: 'TPS trung bình', value: tpsAvg.toFixed(2) },
                     { name: 'Thời gian lag', value: hours + 'h ' + minutes + 'm ' + seconds + 's.'},
                     { name: 'TPS thấp nhất', value: minTps },
-                    { name: 'Điểm ước tính', value: (totalPoints / 4)},
                 )
                 msgAll('852158457624657941', lagEmbed);
             }

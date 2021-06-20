@@ -6,10 +6,7 @@ const log = require('../log');
 module.exports = (bot, client) => {
     log("Bot spawned in server")
 
-    const uptime = new Scriptdb(`./data.json`);
-
-    var d = new Date();
-    uptime.set(`uptime`, d.getTime());
+    setTimeout(() => { if(bot.lobby) bot.quit(); }, 5 * 60 * 1000);
 
     const queuejoined = new MessageEmbed()
                         .setDescription(`Bot đang vào server..`)

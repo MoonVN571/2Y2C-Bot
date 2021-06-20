@@ -99,14 +99,7 @@ client.on('ready', () => {
 	
 	log("Ready to create bot");
 
-	const data = new Scriptdb(`./data.json`);
-
-	data.set('queueStart', null);
-	data.set('queueEnd', null);
-
-	data.set('tab-content', null);
-	data.set('uptime', null);
-	data.set('players', null);
+	api.clean();
 
 	event.started();
 
@@ -121,7 +114,7 @@ client.on('ready', () => {
 
         try {
             client.channels.cache.get(checkdata).send({embed: {
-				description: "Đang đồng bộ livechat",
+				description: "Đang khởi động lại bot.",
 				color: 0x15ff00
 			}});
         } catch(e) {}

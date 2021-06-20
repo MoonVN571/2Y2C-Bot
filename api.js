@@ -8,21 +8,33 @@ function API() {
 
         var year = 0, month = 0, day = 0, hour = 0, minute = 0;
 
-        var d = new Date(new Date().getTime() - +time).toLocaleString();
-        var y =(+d.split("/")[2] - 1970);
-        
+        var up = new Date(new Date().getTime() - +time);
+        var d = up.toLocaleDateString();
+        var t = up.toLocaleTimeString();
+
+        log(t);
         log(d);
 
-        var dt = d.split(d.substr(d.length - 5))[0] + "/"+ y;
-        log(dt)
-        year = parseInt(dt.split("/")[2]);
-        month = parseInt(dt.split("/")[1] - 1);
-        day = parseInt(dt.split("/")[0].split(" ")[1] - 1);
+        var dstr = d.split("/")[1];
+        var mstr = d.split("/")[0];
+        var ystr = d.split("/")[2];
 
-        hour = parseInt(dt.split(":")[0]);
-        minute = parseInt(dt.split(":")[1]);
+        if(dstr >= 1) dstr--;
+        if(mstr >= 1) mstr--;
+        if(ystr == 1970) ystr = ystr - 1970;
         
-        log(`${year} ${month} ${day} ${hour} ${minute}`)
+        var hstr = parseInt(t.split(":")[0]);
+        var minstr = parseInt(t.split(":")[1]);
+
+        if(d.split("/")[0] == 1) hstr = hstr - 8;
+
+        log(dstr, mstr, ystr, hstr, minstr);
+
+        var year = ystr;
+        var month = mstr;
+        var day = dstr;
+        var hour = hstr;
+        var minute = minstr;
 
         var age;
         if(year > 0) {
@@ -107,8 +119,10 @@ function API() {
  
     this.uptimeCalc = () => {
         const uptime = new Scriptdb(`./data.json`);
+        uptime.sync();
+        
         let ut = uptime.get('uptime');
-
+        
         var d = new Date();
         var timenow = d.getTime();
 
@@ -118,6 +132,9 @@ function API() {
         hours = parseInt(((temp - day * 86400) / 3600))
         minutes = parseInt(((temp - day * 86400 - hours * 3600)) / 60)
         seconds = parseInt(temp % 60)
+
+        if(hours > 24) return "0h 0m 0s";
+
         if(uptime === null) {
             hours = 0;
             minutes = 0;
@@ -204,6 +221,18 @@ function API() {
                 }
             }
         return string;
+    }
+
+    this.clean = () => {
+        const data = new Scriptdb(`./data.json`);
+        data.sync();        
+
+        data.set('queueStart', null);
+        data.set('queueEnd', null);
+
+        data.set('tab-content', null);
+        data.set('uptime', null);
+        data.set('players', null);
     }
 
     this.removeFormat = (data) => {

@@ -40,17 +40,20 @@ module.exports = (bot, client) => {
     }, 5 * 60 * 1000);
 
     setInterval(() => {
-        log("Server data, anti-afk")
-                
-        var Scriptdb = require('script.db');
+        log("Saved player is online.")
         const data = new Scriptdb(`./data.json`);
-
         var list = Object.values(bot.players).map(p => p.username);
+        data.set('players', list);
+    }, 60 * 1000);
 
-        data.set('players', list)
-
+    setInterval(() => {
+        log("try to anti-afk.");
         bot.swingArm("left");
         bot.look(Math.floor(Math.random() * Math.floor("360")), 0, true, null);
+    }, 60 * 1000);
+
+    setInterval(() => {
+        log("Set server data.")
         
         mc.ping({ "host": "2y2c.org" }, (err, result) => {
             if (result) {
