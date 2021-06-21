@@ -139,6 +139,17 @@ client.on('ready', () => {
 			});
 		});
 	}, 5 * 60 * 1000);
+
+	// guild count
+	client.channels.cache.get('856516410750664764').setName('Total Guilds: ' +  client.guilds.cache.size);
+	client.channels.cache.get('856517492372668426').setName('Total Channels: ' +  client.channels.cache.size);
+	client.channels.cache.get('856517721122406430').setName('Total Users: ' + client.guilds.cache.reduce((a, g) => a + g.memberCount, 0));
+	setInterval(() => {
+		if(dev) return;
+		client.channels.cache.get('856516410750664764').setName('Total Guilds: ' +  client.guilds.cache.size);
+		client.channels.cache.get('856517492372668426').setName('Total Channels: ' +  client.channels.cache.size);
+		client.channels.cache.get('856517721122406430').setName('Total Users: ' +  client.guilds.cache.reduce((a, g) => a + g.memberCount, 0));
+	}, 1 * 60 * 60 * 1000);
 });
 
 async function createBot() {

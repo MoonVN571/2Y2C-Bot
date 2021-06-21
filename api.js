@@ -145,6 +145,8 @@ function API() {
 
     this.queueTime = () => {
         const data = new Scriptdb(`./data.json`);
+        data.sync();
+
         var end = data.get('queueEnd');
         var start = data.get('queueStart')
         let ticks = end - start;
