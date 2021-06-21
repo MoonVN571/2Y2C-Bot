@@ -175,7 +175,7 @@ function API() {
         if(minutes == 0) {
             formatMinutes = "";
         } else {
-            formatMinutes = minutes + " phút ";
+            formatMinutes = minutes + " phút";
         }
 
         var format;
@@ -186,7 +186,7 @@ function API() {
         }
 
         if(minutes == 0 && hours == 0) {
-            format = "vài giây ";
+            format = "vài giây";
         }
         return format;
     }
