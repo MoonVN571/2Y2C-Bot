@@ -227,7 +227,7 @@ function API() {
 
     this.clean = () => {
         const data = new Scriptdb(`./data.json`);
-        data.sync();        
+        data.sync();
 
         data.set('queueStart', null);
         data.set('queueEnd', null);
@@ -235,6 +235,7 @@ function API() {
         data.set('tab-content', null);
         data.set('uptime', null);
         data.set('players', null);
+        data.sync();
     }
 
     this.removeFormat = (data) => {

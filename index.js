@@ -150,6 +150,16 @@ client.on('ready', () => {
 		client.channels.cache.get('856517492372668426').setName('Total Channels: ' +  client.channels.cache.size);
 		client.channels.cache.get('856517721122406430').setName('Total Users: ' +  client.guilds.cache.reduce((a, g) => a + g.memberCount, 0));
 	}, 1 * 60 * 60 * 1000);
+
+	// restart since
+    var today = new Date()
+    let day = ("00" + today.getDate()).slice(-2)
+    let month = ("00" + (today.getMonth() + 1)).slice(-2)
+    let hours = ("00" + today.getHours()).slice(-2)
+    let min = ("00" + today.getMinutes()).slice(-2)
+
+    var date = hours + ':' + min + " " + day + '/' + month;
+	client.channels.cache.get('856522329672515614').setName('Restart At: ' + date);
 });
 
 async function createBot() {
