@@ -7,7 +7,7 @@ module.exports = event;
 function event() {
     var data = new Scriptdb('./data.json');
 
-    this.started = () => {
+    this.setup = () => {
         data.set('startedTPS', false);
         data.set('startedAuto', false);
     }

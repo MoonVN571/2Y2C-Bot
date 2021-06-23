@@ -101,7 +101,7 @@ client.on('ready', () => {
 
 	api.clean();
 
-	event.started();
+	event.setup();
 
 	createBot();
 
@@ -191,6 +191,8 @@ async function createBot() {
 
 	var countPlayers = 0; // Join spam fix
 	bot.countPlayers = countPlayers;
+
+	bot.client = client;
 	
 	const verifyEvent = require('./events-ingame/verify.js');
 	bot.on('windowOpen', verifyEvent.bind(null, bot));
@@ -198,7 +200,7 @@ async function createBot() {
 	const autoEvent = require('./events-ingame/auto.js');
 	const JoinedServerEvent = require('./events-ingame/login.js');
 	const playtimeEvent = require('./events-ingame/playtime.js');
-	bot.once('login', autoEvent.bind(null, bot, client));
+	bot.once('login', autoEvent.bind(null, bot));
 	bot.once('spawn', JoinedServerEvent.bind(null, bot, client));
 	bot.once('login', playtimeEvent.bind(null, bot));
 

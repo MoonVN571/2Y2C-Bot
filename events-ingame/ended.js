@@ -19,6 +19,10 @@ module.exports = (bot, client) => {
 
     setTimeout(() => {
         if(bot.joined) {
+            if(bot.lobby) {
+                var d = new Scriptdb('./data.json');
+                d.set('queueEnd', Date.now())
+            }
             var disconnected = new MessageEmbed()
                                 .setDescription("🏮 Bot đã mất kết nối đến server. 🏮")
                                 .setColor("F71319");
@@ -49,20 +53,19 @@ module.exports = (bot, client) => {
             } else {
                 client.channels.cache.get("806881615623880704").send(disconnectedLog);
             }
-        }
 
-        api.clean();
+            api.clean();
+        }
         
         waitUntil(120 * 1000, 50, function condition() {
             try {
                 start.createBot();
+                console.log('Reconected to the server.');
                 return true;
             } catch (error) {
                 console.log("Error: " + error);
                 return false;
             }
-        }, function done(result) {
-            console.log('Reconected to the server.');
-        });
+        }, () => {});
     }, 2 * 1000);
 }

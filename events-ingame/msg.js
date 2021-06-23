@@ -85,7 +85,7 @@ module.exports = (bot, client, message) => {
         var data = new Scriptdb('./data.json')
         data.set('queueEnd', Date.now());
 
-		data.set(`uptime`, new Date().getTime());
+		data.set(`uptime`, new Date().getTime()); // server uptime
 
 		var quetime = new MessageEmbed()
 					.setDescription(`Trong hàng chờ được ${api.queueTime()}.`)
@@ -101,26 +101,19 @@ module.exports = (bot, client, message) => {
 					.setDescription("Đang vào 2y2c")
 					.setColor(0xb60000);
 
-		setTimeout(() => {
-			var guild = client.guilds.cache.map(guild => guild.id);
-			var i = setInterval(() => {
-				if (guild[0]) {
-					const line = guild.pop()
-					const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
-					const checkdata = data.get('livechat');
-	
-					if(guild == undefined || checkdata == undefined) return;
-	
-					try {
-						if(bot.dev) return;
-						client.channels.cache.get(checkdata).send(fully);
-					} catch(e) {}
-				} else
-				clearInterval(i);
-			}, 200);
+		client.channels.cache.get(bot.defaultChannel).send(fully);
 
-			client.channels.cache.get(bot.defaultChannel).send(fully);
-		}, 1500);
+		client.guilds.cache.forEach((guild) => {
+			const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+			const checkdata = data.get('livechat');
+	
+			if(checkdata == undefined || guild == undefined) return;
+	
+			try {
+				if(bot.dev) return;
+				client.channels.cache.get(checkdata).send(fully);
+			} catch(e) {}
+		});
 	}
 	
 	if (logger == "đang vào 2y2c..."
@@ -149,27 +142,24 @@ module.exports = (bot, client, message) => {
 							.setDescription(notf)
 							.setColor(colorNotf);
 
-		if(embedNotf !== undefined) {
-			if(logger.startsWith("[Broadcast]") && logger.includes("vừa")) { // donators
-				if(bot.dev) return;
-				setTimeout(() => {  client.channels.cache.get("838711105278705695").send(embedNotf); }, 150)
-			}
+		if(logger.startsWith("[Broadcast]") && logger.includes("vừa")) { // donators
+			if(bot.dev) return;
+			setTimeout(() => {  client.channels.cache.get("838711105278705695").send(embedNotf); }, 150)
+		}
 
-			client.channels.cache.get(bot.defaultChannel).send(embedNotf);
+		client.channels.cache.get(bot.defaultChannel).send(embedNotf);
 
-			if(!bot.dev) {
-				
-				client.guilds.cache.forEach((guild) => {
-					const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
-					const checkdata = data.get('livechat');
-			
-					if(checkdata == undefined || guild == undefined) return;
+		if(!bot.dev) {
+			client.guilds.cache.forEach((guild) => {
+				const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+				const checkdata = data.get('livechat');
+		
+				if(checkdata == undefined || guild == undefined) return;
 
-					try {
-						client.channels.cache.get(checkdata).send(embedNotf);
-					} catch(e) {}
-				});
-			}
+				try {
+					client.channels.cache.get(checkdata).send(embedNotf);
+				} catch(e) {}
+			});
 		}
 	}
 
@@ -362,19 +352,19 @@ module.exports = (bot, client, message) => {
 	var embedDeath = new MessageEmbed()
 				.setDescription(api.removeFormat(deathMsg))
 				.setColor(newcolor);
-
-	if(embedDeath == undefined) return;
-	if(!bot.dev) {
-		client.guilds.cache.forEach((guild) => {
-			const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
-			const checkdata = data.get('livechat');
-
-			if(checkdata == undefined || guild == undefined) return;
-
-			try {
-				client.channels.cache.get(checkdata).send(embedDeath);
-			} catch(e) {}
-		});
-	}
+	
 	client.channels.cache.get(bot.defaultChannel).send(embedDeath);
+
+	if(!bot.dev) return;
+	
+	client.guilds.cache.forEach((guild) => {
+		const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+		const checkdata = data.get('livechat');
+
+		if(checkdata == undefined || guild == undefined) return;
+
+		try {
+			client.channels.cache.get(checkdata).send(embedDeath);
+		} catch(e) {}
+	});
 }

@@ -11,7 +11,7 @@ module.exports = (bot, data) => {
     if(check) return;
     check = true;
 
-    setTimeout(() => { check = false }, 45 * 1000)
+    setTimeout(() => { check = false }, 60 * 1000)
 
     if(bot.lobby) return;
 

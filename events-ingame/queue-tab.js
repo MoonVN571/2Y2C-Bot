@@ -1,6 +1,6 @@
 var check = false;
 
-var Discord = require('discord.js');
+var { MessageEmbed } = require('discord.js');
 
 var once = false;
 
@@ -68,7 +68,7 @@ module.exports = (bot, client, data) => {
         if(!once) {
             once = true;
             var timeQ = new Scriptdb('./data.json')
-            timeQ.set('queueStart', Date.now() + 20000);
+            timeQ.set('queueStart', Date().getTime());
         }
 
         if(!bot.joined) return;
