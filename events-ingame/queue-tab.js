@@ -61,14 +61,14 @@ module.exports = (bot, client, data) => {
             })
     
         if(s7 == null || s7 == "" || s7.includes("2YOUNG")) return;
-        var embed = new Discord.MessageEmbed()
+        var embed = new MessageEmbed()
                             .setDescription(s7)
                             .setColor("0xFFCE00");
         
         if(!once) {
             once = true;
             var timeQ = new Scriptdb('./data.json')
-            timeQ.set('queueStart', Date().getTime());
+            timeQ.set('queueStart', new Date().getTime());
         }
 
         if(!bot.joined) return;
