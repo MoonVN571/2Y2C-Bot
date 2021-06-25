@@ -293,7 +293,9 @@ module.exports = (bot, client, message) => {
 	|| logger.includes('bóp')
 	|| logger.includes('đang')
 	|| logger.includes('cứ')
-	|| logger.includes('tưởng')) {
+	|| logger.includes('tưởng')
+	|| logger.includes('Đập')
+	|| logger.includes('chết')) {
 		var user = logger.split(" ")[0];
 
 		saveDead(user, logger);

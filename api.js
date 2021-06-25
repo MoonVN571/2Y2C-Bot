@@ -116,12 +116,11 @@ function API() {
 
         return days + "d " + hours + "h " + minutes + "m " + seconds + "s";
     }
- 
-    this.uptimeCalc = () => {
-        const uptime = new Scriptdb(`./data.json`);
-        uptime.sync();
-        
-        let ut = uptime.get('uptime');
+
+    const data = new Scriptdb('./data.json');
+
+    this.uptimeCalc = () => {        
+        let ut = data.get('uptime');
         
         var d = new Date();
         var timenow = d.getTime();
@@ -144,11 +143,8 @@ function API() {
     }
 
     this.queueTime = () => {
-        const data = new Scriptdb(`./data.json`);
-        data.sync();
-
         var end = data.get('queueEnd');
-        var start = data.get('queueStart')
+        var start = data.get('queueStart');
         let ticks = end - start;
 
         if(ticks <= 0 || end == null || start == null) return '0h 0m 0s';
@@ -187,9 +183,7 @@ function API() {
             format = hours + " giờ " + formatMinutes;
         }
 
-        if(minutes == 0 && hours == 0) {
-            format = "vài giây";
-        }
+        if(minutes == 0 && hours == 0) format = "vài giây";
         return format;
     }
 
@@ -226,8 +220,6 @@ function API() {
     }
 
     this.clean = () => {
-        const data = new Scriptdb(`./data.json`);
-
         data.set('queueStart', null);
         data.set('queueEnd', null);
 
