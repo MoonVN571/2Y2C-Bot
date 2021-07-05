@@ -26,6 +26,8 @@ function API() {
         var hstr = parseInt(t.split(":")[0]);
         var minstr = parseInt(t.split(":")[1]);
 
+        if(t.split(" ")[1] == "PM") hstr = hstr + 12;
+
         if(d.split("/")[0] == 1) hstr = hstr - 8;
 
         log(dstr, mstr, ystr, hstr, minstr);
@@ -117,9 +119,9 @@ function API() {
         return days + "d " + hours + "h " + minutes + "m " + seconds + "s";
     }
 
-    const data = new Scriptdb('./data.json');
-
     this.uptimeCalc = () => {        
+        var data = new Scriptdb('./data.json');
+
         let ut = data.get('uptime');
         
         var d = new Date();
@@ -134,7 +136,7 @@ function API() {
 
         if(hours > 24) return "0h 0m 0s";
 
-        if(uptime === null) {
+        if(ut == undefined) {
             hours = 0;
             minutes = 0;
             seconds = 0;
@@ -143,6 +145,8 @@ function API() {
     }
 
     this.queueTime = () => {
+        var data = new Scriptdb('./data.json');
+
         var end = data.get('queueEnd');
         var start = data.get('queueStart');
         let ticks = end - start;
@@ -165,9 +169,9 @@ function API() {
 
 
     this.calcTime = () => {
-        var data = this.uptimeCalc();
-        var hours = data.split("h")[0]
-        var minutes = data.split("h ")[1].split("m")[0];
+        var d = this.uptimeCalc();
+        var hours = d.split("h")[0]
+        var minutes = d.split("h ")[1].split("m")[0];
 
         var formatMinutes;
         if(minutes == 0) {
@@ -220,6 +224,8 @@ function API() {
     }
 
     this.clean = () => {
+        var data = new Scriptdb('./data.json');
+         
         data.set('queueStart', null);
         data.set('queueEnd', null);
 

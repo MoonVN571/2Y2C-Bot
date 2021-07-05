@@ -11,7 +11,7 @@ module.exports = {
         var prio = data.get('prio');
 
         if(queue == undefined || prio == undefined) return bot.whisper(username, "> Không tìm thấy dữ liệu.");
-                
+
         bot.whisper(username, `> Hàng chờ: ${queue} - Ưu tiên: ${prio}`);
     }
 }

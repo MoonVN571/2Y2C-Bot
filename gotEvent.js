@@ -9,6 +9,7 @@ function event() {
 
     this.setup = () => {
         data.set('startedTPS', false);
+        data.set('startedME', false);
         data.set('startedAuto', false);
     }
     
@@ -17,6 +18,13 @@ function event() {
         var tps = data.get('startedTPS');
         setTimeout(() => { data.set('startedTPS', true) }, 5000);
         return tps;
+    }
+
+    this.getME = () => {
+        log('set msg event');
+        var me = data.get('startedME');
+        setTimeout(() => { data.set('startedME', true) }, 5000);
+        return me;
     }
     
     this.getAuto = () => {

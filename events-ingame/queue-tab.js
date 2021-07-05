@@ -6,18 +6,20 @@ var once = false;
 
 var log = require('../log');
 
-module.exports = (bot, client, data) => {
-    if(check) return;
-    check = true;
 
-    setTimeout(() => {
-        check = false;
-    }, 20 * 1000);
+module.exports = {
+	name: 'playerlist_header',
+	once: false,
+    other: true,
+	execute(bot, client, data) {
+        if(check) return;
+        check = true;
 
-    if(!bot.lobby) return;
+        setTimeout(() => {
+            check = false;
+        }, 20 * 1000);
 
-    setTimeout(() => {
-        check = false; 
+        if(!bot.lobby) return;
 
         var header = data.header;
         if(header.includes("2YOUNG")) return;
@@ -68,14 +70,14 @@ module.exports = (bot, client, data) => {
         if(!once) {
             once = true;
             var timeQ = new Scriptdb('./data.json')
-            timeQ.set('queueStart', new Date().getTime());
+            timeQ.set('queueStart', Date.now());
         }
 
         if(!bot.joined) return;
         if(embed == undefined) return;
         if(bot.haveJoined) return;
         
-        client.channels.cache.get(bot.defaultChannel).send(embed)
+        client.channels.cache.get(bot.defaultChannel).send(embed);
 
         if(bot.dev) return;
         
@@ -88,6 +90,6 @@ module.exports = (bot, client, data) => {
             try {
                 client.channels.cache.get(checkdata).send(embed);
             } catch(e) {}
-        })
-    }, 20 * 1000);
+        });
+    }
 }
