@@ -170,9 +170,11 @@ function API() {
 
     this.calcTime = () => {
         var d = this.uptimeCalc();
-        var hours = d.split("h")[0]
-        var minutes = d.split("h ")[1].split("m")[0];
-
+        var h = d.split("h")[0]
+        var m = d.split("h ")[1].split("m")[0];
+        var hours = +h;
+        var minutes = +m;
+        
         var formatMinutes;
         if(minutes == 0) {
             formatMinutes = "";
