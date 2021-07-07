@@ -19,7 +19,7 @@
 const { Client, Collection, MessageEmbed } = require("discord.js");
 const client = new Client();
 
-const { readdirSync } = require('fs');
+const { readdirSync, unlink } = require('fs');
 
 var abc = require("./api");
 var api = new abc();
@@ -37,7 +37,11 @@ var antiSpam = new Set();
 
 const log = require('./log');
 
+const top = require('top.gg-core');
+
 require('dotenv').config();
+
+const topgg = new top.Client(process.env.TOPGGTOKEN);
 
 const config = {
 	token: process.env.TOKEN,
@@ -54,7 +58,9 @@ const config = {
 	chatColorHighlight: process.env.COLOR2LAI,
 	botEmbedColor: process.env.BOTCOLOR,
 	author: process.env.AUTHOR,
-	dev: process.env.DEV
+	dev: process.env.DEV,
+    tggtoken: process.env.TOPGGTOKEN,
+    authtoken: process.env.TOPGGAUTH
 };
 
 client.config = config;
@@ -75,8 +81,58 @@ if (config.dev == "true") prefixSet = config.devPrefix;
 client.prefixSet = prefixSet;
 
 //§
+/*
+const sM = new ShardingManager("./index.js", {
+    token: process.env.TOKEN,
+    totalShards: 'auto'
+});
+
+// Trying to spawn the required shards.
+sM.spawn().catch(error => console.error(`[ERROR/SHARD] Shard failed to spawn.`));
+
+sM.on("shardCreate", shard => {
+    // Listeing for the ready event on shard.
+    shard.on("ready", () => {
+        console.log(`[DEBUG/SHARD] Shard ${shard.id} connected to Discord's Gateway.`)
+        // Sending the data to the shard.
+        shard.send({type: "shardId", data: {shardId: shard.id}});
+    });
+}); */
+
+const Topgg = require('@top-gg/sdk')
+const { AutoPoster } = require('topgg-autoposter')
+const express = require('express')
+
 
 client.on('ready', () => {
+    const app = express() // Your express app
+    
+    const webhook = new Topgg.Webhook(config.authtoken) // add your Top.gg webhook authorization (not bot token)
+    
+    AutoPoster(config.tggtoken, client).on('posted', () => console.log('Posted stats to Top.gg!'));
+
+    app.post('/dblwebhook', webhook.listener(vote => {
+        // vote is your vote object
+        var user = client.users.cache.find(user => user.id === vote.user);
+
+        client.channels.cache.get('861767070106255360').send("**" + user.tag + "** đã vote bot!");
+    })) // attach the middleware
+    
+    app.listen(3000) // your port
+    /*
+    topgg.post({ servers: client.guilds.cache.size }).then(console.log); //post only server count | returning: boolean
+    
+    topgg.post({
+        servers: client.guilds.cache.size,
+        shard: {
+            id: client.shard.ids,
+            count: client.shard.count
+        }
+    }).then(console.log) //with shard info | returning: boolean
+    
+    topgg.on('posted', data =>console.log(data)); */
+
+    
 	client.user.setActivity("RESTARTING", { type: 'PLAYING' });
 	
 	setTimeout(() => client.user.setActivity("Idling", { type: 'PLAYING' }), 10 * 1000);
@@ -93,6 +149,8 @@ client.on('ready', () => {
 	console.log('Developer: ' + client.dev.toString().replace(/t/, "T").replace(/f/, "F"));
 	
 	log("Ready!");
+
+    unlink('./data.json', (err) => console.log(err));
 
 	api.clean();
 
@@ -272,10 +330,10 @@ function createBot() {
             if(!chat.endsWith(".")) chat = chat + ".";
 
             setTimeout(() => {
-                bot.chat(`> [${msg.author.tag}]  ${chat}`);
+                bot.chat(`[${msg.author.tag}]  ${chat}`);
                 
                 const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");
-                msg.react(send);
+                msg.react(send).catch();
 
                 // cooldown
                 cooldown.add("active");
