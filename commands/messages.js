@@ -9,8 +9,6 @@ module.exports = {
     aliases: ['msgs'],
     
     async execute(client, message, args) {
-		if(client.enabled && !client.dev) return message.channel.send("Lệnh đã tắt!");
-
         if (!args[0]) return message.channel.send(client.userNotFound)
 
 		let quotes = new Scriptdb(`./data/quotes/${args[0]}.json`)

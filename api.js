@@ -123,11 +123,8 @@ function API() {
         var data = new Scriptdb('./data.json');
 
         let ut = data.get('uptime');
-        
-        var d = new Date();
-        var timenow = d.getTime();
 
-        var ticks = timenow - ut;
+        var ticks = Date.now() - ut;
         var temp = ticks / 1000;
         var day = hours = 0, minutes = 0, seconds = 0;
         hours = parseInt(((temp - day * 86400) / 3600))

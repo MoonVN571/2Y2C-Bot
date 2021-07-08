@@ -5,8 +5,8 @@ var a = require("../api")
 var api = new a();
 
 module.exports = {
-    name: "firstwords",
-    aliases: ['fw'],
+    name: "firstword",
+    aliases: [''],
     
     async execute(client, message, args) {
 		if (!args[0]) return message.channel.send(client.userNotFound)

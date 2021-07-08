@@ -16,18 +16,14 @@
  */
 
 // Discord client
-const { Client, Collection, MessageEmbed } = require("discord.js");
+const { Client, Collection } = require("discord.js");
 const client = new Client();
 
-const { readdirSync, unlink } = require('fs');
-
-var abc = require("./api");
-var api = new abc();
+const { readdirSync  } = require('fs');
 
 var d = require("./gotEvent");
 var event = new d();
 
-var Scriptdb = require('script.db');
 var mineflayer = require('mineflayer');
 var tpsPlugin = require('mineflayer-tps')(mineflayer);
 var {pathfinder} = require('mineflayer-pathfinder');
@@ -37,11 +33,7 @@ var antiSpam = new Set();
 
 const log = require('./log');
 
-const top = require('top.gg-core');
-
 require('dotenv').config();
-
-const topgg = new top.Client(process.env.TOPGGTOKEN);
 
 const config = {
 	token: process.env.TOKEN,
@@ -80,120 +72,12 @@ if (config.dev == "true") prefixSet = config.devPrefix;
 
 client.prefixSet = prefixSet;
 
-//§
-/*
-const sM = new ShardingManager("./index.js", {
-    token: process.env.TOKEN,
-    totalShards: 'auto'
-});
 
-// Trying to spawn the required shards.
-sM.spawn().catch(error => console.error(`[ERROR/SHARD] Shard failed to spawn.`));
-
-sM.on("shardCreate", shard => {
-    // Listeing for the ready event on shard.
-    shard.on("ready", () => {
-        console.log(`[DEBUG/SHARD] Shard ${shard.id} connected to Discord's Gateway.`)
-        // Sending the data to the shard.
-        shard.send({type: "shardId", data: {shardId: shard.id}});
-    });
-}); */
-
-const Topgg = require('@top-gg/sdk')
-const { AutoPoster } = require('topgg-autoposter')
-const express = require('express')
-
-
+// module.exports.run = () => {
+//     createBot(client);
+// }
 client.on('ready', () => {
-    const app = express() // Your express app
-    
-    const webhook = new Topgg.Webhook(config.authtoken) // add your Top.gg webhook authorization (not bot token)
-    
-    AutoPoster(config.tggtoken, client).on('posted', () => console.log('Posted stats to Top.gg!'));
-
-    app.post('/dblwebhook', webhook.listener(vote => {
-        // vote is your vote object
-        var user = client.users.cache.find(user => user.id === vote.user);
-
-        client.channels.cache.get('861767070106255360').send("**" + user.tag + "** đã vote bot!");
-    })) // attach the middleware
-    
-    app.listen(3000) // your port
-    /*
-    topgg.post({ servers: client.guilds.cache.size }).then(console.log); //post only server count | returning: boolean
-    
-    topgg.post({
-        servers: client.guilds.cache.size,
-        shard: {
-            id: client.shard.ids,
-            count: client.shard.count
-        }
-    }).then(console.log) //with shard info | returning: boolean
-    
-    topgg.on('posted', data =>console.log(data)); */
-
-    
-	client.user.setActivity("RESTARTING", { type: 'PLAYING' });
-	
-	setTimeout(() => client.user.setActivity("Idling", { type: 'PLAYING' }), 10 * 1000);
-
-	console.log('------------------------');
-	console.log('       Moon Bot         ')
-	console.log('------------------------');
-	console.log('Guilds: ' + client.guilds.cache.size);
-	console.log('Channels: ' + client.channels.cache.size);
-	console.log('Total users: ' + client.guilds.cache.reduce((a, g) => a + g.memberCount, 0));
-	console.log('------------------------');
-
-	console.log('Bot started!');
-	console.log('Developer: ' + client.dev.toString().replace(/t/, "T").replace(/f/, "F"));
-	
-	log("Ready!");
-
-    unlink('./data.json', (err) => console.log(err));
-
-	api.clean();
-
-	event.setup();
-
-	createBot();
-
-	// started notify
-	client.guilds.cache.forEach((guild) => {
-		const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
-		const checkdata = data.get('livechat');
-
-		if(checkdata == undefined || guild == undefined) return;
-
-		try {
-			client.channels.cache.get(checkdata).send({embed: {
-				description: "Đang khởi động lại bot.",
-				color: 0x15ff00
-			}});
-		} catch(e) {}
-	});
-
-    if(config.dev == "true") return;
-
-	// guild count
-	client.channels.cache.get('856516410750664764').setName('Total Guilds: ' +  client.guilds.cache.size);
-	client.channels.cache.get('856517492372668426').setName('Total Channels: ' +  client.channels.cache.size);
-	client.channels.cache.get('856517721122406430').setName('Total Users: ' + client.guilds.cache.reduce((a, g) => a + g.memberCount, 0));
-	setInterval(() => {
-		client.channels.cache.get('856516410750664764').setName('Total Guilds: ' +  client.guilds.cache.size);
-		client.channels.cache.get('856517492372668426').setName('Total Channels: ' +  client.channels.cache.size);
-		client.channels.cache.get('856517721122406430').setName('Total Users: ' +  client.guilds.cache.reduce((a, g) => a + g.memberCount, 0));
-	}, 1 * 60 * 60 * 1000);
-
-	// restart since
-    var today = new Date()
-    let day = ("00" + today.getDate()).slice(-2)
-    let month = ("00" + (today.getMonth() + 1)).slice(-2)
-    let hours = ("00" + today.getHours()).slice(-2)
-    let min = ("00" + today.getMinutes()).slice(-2)
-
-    var date = hours + ':' + min + " " + day + '/' + month;
-	client.channels.cache.get('856522329672515614').setName('Restart At: ' + date);
+    setTimeout(createBot, 5 * 1000);
 });
 
 function createBot() {
@@ -352,60 +236,30 @@ function createBot() {
     });
 }
 
-module.exports = {createBot};
 
+module.exports = {createBot };
+
+// event handler
+const eventFiles = readdirSync('./events').filter(file => file.endsWith('.js'));
+
+for (const file of eventFiles) {
+    const event = require(`./events/${file}`);
+    
+    if (event.once) {
+        client.once(event.name, (...args) => event.execute(client, ...args));
+    } else {
+        client.on(event.name, (...args) => event.execute(client, ...args));
+    }
+}
+  
 client.commands = new Collection();
 
 const cmds = readdirSync(`./commands`).filter(file => file.endsWith('.js'));
 for (const file of cmds) {
-	const cmd = require(`./commands/${file}`);
+    const cmd = require(`./commands/${file}`);
 
-	client.commands.set(cmd.name, cmd);
+    client.commands.set(cmd.name, cmd);
 }
 
-client.on('message', message => {
-	if(message.author.bot || !message.content.startsWith(prefixSet) || message.author == client.user || message.channel.type == "dm") return;
-
-	const args = message.content.slice(prefixSet.length).split(/ +/);
-	const cmdName = args.shift().toLowerCase();
-
-	const cmd = client.commands.get(cmdName)
-		|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
-
-	if(!cmd) return;
-	
-	client.userNotFound = new MessageEmbed()
-					.setDescription('Không tìm thấy người chơi.')
-					.setColor('0xC51515');
-	
-	client.footer = config.footer;
-	client.color = config.botEmbedColor;
-	client.prefix = config.prefix;
-
-	client.ping = client.ws.ping;
-	
-	try {
-		cmd.execute(client, message, args);
-	}catch(err) {
-		console.log(cmdName);
-		console.log(err);
-		console.log(err.toString());
-	}
-});
-
-client.on("error", (e) => {
-	console.log(e);
-	var error = err.toString();
-	console.log('\n\n' + error);
-});
-
-client.on("guildCreate", function(guild){
-    console.log(guild.name + " joined");
-    log(guild.name + " joined");
-});
-client.on("guildDelete", function(guild){
-    console.log(guild.name + " left");
-    log(guild.name + " left");
-});
 
 client.login(config.token).catch(err => console.log(err));

@@ -5,8 +5,8 @@ var a = require("../api")
 var api = new a();
 
 module.exports = {
-    name: "firstdeaths",
-    aliases: ['fd'],
+    name: "firstkill",
+    aliases: [''],
     
     async execute(client, message, args) {
 		if (!args[0]) return message.channel.send(client.userNotFound)
@@ -21,11 +21,17 @@ module.exports = {
 		var time;
 
         try {
+            data = msgs.split(" | ")[msgs.split(" | ").length - 1];
+        } catch(e) {
+            data = msgs;
+        }
+
+        try {
             time = times.split(" | ")[times.split(" | ").length - 1]
         } catch(e) {
             time = times;
         }
-
+        
         var embed = new MessageEmbed()
                             .setDescription("**" +api.ageCalc(time) + " trước**: " + data)
                             .setColor(0x2EA711)

@@ -61,7 +61,7 @@ module.exports = {
                 bot.joined = false;
 
                 var disconnectedLog = new MessageEmbed()
-                                        .setDescription("Bot đã mất kết nối đến server. Kết nối lại sau 1 phút." + `\nThời gian trong hàng chờ là ${api.queueTime()}. Thời gian trong server là ${api.uptimeCalc()}.`)
+                                        .setDescription("Bot đã mất kết nối đến server. Kết nối lại sau 2 phút." + `\nThời gian trong hàng chờ là ${api.queueTime()}. Thời gian trong server là ${api.uptimeCalc()}.`)
                                         .setColor("F71319");
 
                 if(bot.dev) {

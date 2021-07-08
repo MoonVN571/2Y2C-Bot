@@ -41,7 +41,7 @@ module.exports = {
 
             log("Got TPS: " + tps)
             tps = parseFloat(tps)
-            if(tps > 0 && tps <= 14 || tps > 20){
+            if(tps > 0 && tps <= 8 || tps > 20){
                 if(isLagging == false){
                     var embedLag = new MessageEmbed().setColor(0xCC3333).setDescription("Server đã bắt đầu lag với **" + tps + "** tps.");
                     client.channels.cache.get("852158457624657941").send(embedLag);
@@ -72,7 +72,7 @@ module.exports = {
                 }
             }
 
-            if(tps > 14 && tps <= 20){
+            if(tps > 16 && tps <= 20){
                 if(!isLagging) return;
                 log("2Y2C has stopped lagging.");
 
@@ -87,7 +87,7 @@ module.exports = {
                     let lagEmbed = new MessageEmbed()
                     .setColor('#CC3333')
                     .setAuthor('Moon Bot', 'https://cdn.discordapp.com/avatars/768448728125407242/f18ec971961b23db96e6cf0f3f79ec1c.png?size=256')
-                    .setDescription('Thông báo mức TPS giao động từ dưới 14.')
+                    .setDescription('Thông báo mức TPS giao động từ dưới 8.')
                     .addFields(
                         { name: 'TPS trung bình', value: tpsAvg.toFixed(2) },
                         { name: 'Thời gian lag', value: hours + ' giờ ' + minutes + ' phút ' + seconds + ' giây'},

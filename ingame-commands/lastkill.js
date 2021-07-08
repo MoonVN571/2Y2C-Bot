@@ -5,27 +5,29 @@ var api = new a();
 
 module.exports = {
     name: "lastwords",
-    description: "lastwords command.",
     aliases: ['lw'],
     
     async execute(bot, username, args) {
-		let quote = new Scriptdb(`./data/quotes/${args[0]}.json`)
-		let msgs = quote.get('messages')
+        if(!args[0]) return bot.whisper(username, '> Không tìm thấy người chơi.');
+        if(!args[0].match(bot.regex)) return;
+
+		let quote = new Scriptdb(`./data/kills/${args[0]}.json`)
+		let msgs = quote.get('deaths')
 		let times = quote.get('times')
-        
-        if (msgs === undefined || times == undefined) return bot.whisper(username, "> không tìm thấy người chơi."); 
-        
+		
+		if (msgs === undefined || times == undefined) return bot.whisper(username, '> Không tìm thấy người chơi.');
+
 		var data;
 		var time;
-        
+
         try {
             data = msgs.split(" | ")[0];
         } catch(e) {
-            data = mgs;
+            data = msgs;
         }
 
         try {
-            time = times.split(" | ")[times.split(" | ").length - 1];
+            time = times.split(" | ")[0];
         } catch(e) {
             time = times;
         }
