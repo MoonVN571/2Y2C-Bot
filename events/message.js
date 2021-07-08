@@ -5,7 +5,7 @@ module.exports = {
 	name: 'message',
 	once: false,
 	execute(client, message) {
-        if(message.author.bot || !message.content.startsWith(client.prefixSet) || message.author == client.user || message.channel.type == "dm") return;
+        if(message.author.bot || !message.content.startsWith(client.config.prefix) || message.author == client.user || message.channel.type == "dm") return;
 
         const args = message.content.slice(client.prefixSet.length).split(/ +/);
         const cmdName = args.shift().toLowerCase();
@@ -18,10 +18,6 @@ module.exports = {
         client.userNotFound = new MessageEmbed()
                         .setDescription('Không tìm thấy người chơi.')
                         .setColor('0xC51515');
-        
-        client.footer = config.footer;
-        client.color = config.botEmbedColor;
-        client.prefix = config.prefix;
     
         client.ping = client.ws.ping;
         

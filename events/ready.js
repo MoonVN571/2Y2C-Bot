@@ -75,7 +75,7 @@ module.exports = {
         api.clean();
         event.setup();
         // main.run();
-    
+        
         // started notify
         client.guilds.cache.forEach((guild) => {
             const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);

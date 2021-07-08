@@ -6,7 +6,7 @@ module.exports = {
     
     async execute(client, message, args) {
         if (!message.guild.member(message.author).hasPermission("ADMINISTRATOR")) return message.channel.send("Không có quyền để dùng lệnh này.")
-        var prefix = client.prefix;
+        var prefix = client.config.prefix;
         
         if(!args[0]) return message.channel.send("Cách dùng: " + prefix + "setup chat <Kênh>");
         

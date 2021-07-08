@@ -65,13 +65,8 @@ if(config.dev == "true") {
 }
 
 client.footer = config.footer;
-
-var prefixSet = config.prefix;
-
-if (config.dev == "true") prefixSet = config.devPrefix;
-
-client.prefixSet = prefixSet;
-
+client.color = config.botEmbedColor;
+client.prefix = config.prefix;
 
 // module.exports.run = () => {
 //     createBot(client);
@@ -183,7 +178,7 @@ function createBot() {
 
         if (msg.channel.id == defaultChannel) {
             if (msg.content.startsWith(">")) return;
-            if (msg.content.startsWith(prefixSet)) return;
+            if (msg.content.startsWith(config.prefix)) return;
 
             var content = msg.content;
             

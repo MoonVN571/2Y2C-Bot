@@ -21,17 +21,11 @@ module.exports = {
 
         log("Bot ended");
 
-        client.guilds.cache.forEach((guild) => {
-            const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
-            const checkdata = data.get('livechat');
-
-            if(checkdata == undefined || guild == undefined) return;
-            
-            try {
-                if(bot.dev) return;
-                client.channels.cache.get(checkdata).setTopic("");
-            } catch(e) {}
-        }); 
+        if(!client.dev) {
+            client.channels.cache.get(client.config.CHANNEL).setTopic("");
+        } else {
+            client.channels.cache.get(client.config.CHANNEL2).setTopic("");
+        }
 
         setTimeout(() => {
             if(bot.joined) {
