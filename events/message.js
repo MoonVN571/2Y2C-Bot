@@ -7,7 +7,7 @@ module.exports = {
 	execute(client, message) {
         if(message.author.bot || !message.content.startsWith(client.config.prefix) || message.author == client.user || message.channel.type == "dm") return;
 
-        const args = message.content.slice(client.prefixSet.length).split(/ +/);
+        const args = message.content.slice(client.prefix.length).split(/ +/);
         const cmdName = args.shift().toLowerCase();
     
         const cmd = client.commands.get(cmdName)
