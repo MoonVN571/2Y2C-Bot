@@ -12,6 +12,7 @@
     "mineflayer": "^2.41.0",
     "mineflayer-pathfinder": "^1.6.1",
     "mineflayer-tps": "^1.0.1",
+    "mongoose": "^5.13.2",
     "os": "^0.1.1",
     "request": "^2.88.2",
     "script.db": "^3.0.0",

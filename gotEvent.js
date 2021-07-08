@@ -6,12 +6,6 @@ module.exports = event;
 
 function event() {
     var data = new Scriptdb('./data.json');
-
-    this.setup = () => {
-        data.set('startedTPS', false);
-        data.set('startedME', false);
-        data.set('startedAuto', false);
-    }
     
     this.getTPS = () => {
         log('set tps');

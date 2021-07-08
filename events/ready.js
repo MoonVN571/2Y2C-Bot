@@ -70,10 +70,9 @@ module.exports = {
         
         log("Ready!");
     
-        // unlink('./data.json', (err) => { if(err) console.log(err) });
+        unlink('./data.json', (err) => { if(err) console.log(err) });
     
         api.clean();
-        event.setup();
         // main.run();
         
         // started notify

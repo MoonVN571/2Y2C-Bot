@@ -225,12 +225,7 @@ function API() {
     this.clean = () => {
         var data = new Scriptdb('./data.json');
          
-        data.set('queueStart', null);
-        data.set('queueEnd', null);
-
-        data.set('tab-content', null);
-        data.set('uptime', null);
-        data.set('players', null);
+        data.deleteAll();
     }
 
     this.removeFormat = (data) => {

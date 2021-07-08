@@ -91,7 +91,7 @@ module.exports = {
             var check = new MessageEmbed()
                             .setColor(0x000DFF)
                             .setDescription("***Các lệnh check ( thông số ):***\n" +
-                            prefix + 'kd - ``Xem chỉ số K/D.``'
+                            prefix + 'kd - ``Xem chỉ số K/D.`` \n'
                             + prefix + 'joindate - ``Xem ngày người chơi lần đầu tham gia server.`` \n'
                             + prefix + 'playtime - ``Xem thời người chơi đã chơi.`` \n'
                             + prefix + 'seen - ``Xem lần hoạt động gần nhất của người chơi.``\n'

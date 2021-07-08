@@ -68,12 +68,16 @@ client.footer = config.footer;
 client.color = config.botEmbedColor;
 client.prefix = config.prefix;
 
-// module.exports.run = () => {
-//     createBot(client);
-// }
 client.on('ready', () => {
     setTimeout(createBot, 5 * 1000);
 });
+
+// const mongoose = require('mongoose')
+
+// mongoose.connect('mongodb+srv://Moon:t.FW_!76LGnKVSr@cluster0.nthgz.mongodb.net/data', {
+//     userUnifiedTopology: true,
+//     useNewUrlParser: true
+// }).then(console.log("connected"))
 
 function createBot() {
 	console.log('------------------------');

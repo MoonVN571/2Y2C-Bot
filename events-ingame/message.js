@@ -22,6 +22,8 @@ module.exports = {
     
         if (logger.startsWith(">")) color2 = client.config.chatColorHighlight;
     
+        if(logger.startsWith("[")) color2 = 0x4983e7;
+
         var bp = client.config.ingamePrefix;
         if (client.dev) bp = client.config.ingamePrefixDev;
         
@@ -44,6 +46,7 @@ module.exports = {
             if(checkdata == undefined || guild == undefined) return;
                     
             if(setLogger.split(" ")[1].startsWith(">")) color = client.config.chatColorHighlight;
+            if(setLogger.split(" ")[0].startsWith("[")) color = 0x4983e7;
 
             let embedChat = new MessageEmbed()
                         .setDescription(setLogger)

@@ -33,10 +33,8 @@ module.exports = {
 		if(checkWhisper == "nhắn:") {
 			var toLog = logger
 
-			if(logger.startsWith("[")) {
-				toLog = toLog.split("]")[1];
-			}
-
+			if(logger.startsWith("[")) toLog = toLog.split("]")[1];
+			
 			api.removeFormat(toLog);
 			
 			notfMsg = toLog;
@@ -47,9 +45,7 @@ module.exports = {
 		if (logger.startsWith("nhắn cho")) {
 			var log = logger;
 
-			if(logger.split(" ")[2].startsWith("[")) {
-				log = "nhắn cho " + logger.split("]")[1];
-			}
+			if(logger.split(" ")[2].startsWith("[")) log = "nhắn cho " + logger.split("]")[1];
 
 			api.removeFormat(log);
 
@@ -57,39 +53,17 @@ module.exports = {
 			colorNotf = "0xFD00FF";
 		}
 
-		if(logger == "2y2c đã full") {
-			var fully = new MessageEmbed()
-						.setDescription("2y2c đã full")
-						.setColor(0xb60000);
-			
-			setTimeout(() => {
-				var guild = client.guilds.cache.map(guild => guild.id);
-				setInterval(() => {
-					if (guild[0]) {
-						const line = guild.pop()
-						const data = new Scriptdb(`./data/guilds/setup-${line}.json`);
-						const checkdata = data.get('livechat');
-		
-						if(guild == undefined || checkdata == undefined) return;
-		
-						try {
-							if(bot.dev) return;
-							client.channels.cache.get(checkdata).send(fully);
-						} catch(e) {}
-					}
-				}, 200);
+		if(logger =="Đang vào 2y2c") {
+			let data = new Scriptdb('./data.json');
 
-				client.channels.cache.get(bot.defaultChannel).send(fully);
-			}, 1000)
-			return;
+			if(data.get('queueStart')) {
+				data.set('queueEnd', Date.now());
+			}
 		}
 
-		if(logger == "Đang vào 2y2c") {
-			var data = new Scriptdb('./data.json');
-
-			if(data.get('queueStart')) data.set('queueEnd', Date.now());
-
-			data.set(`uptime`, Date.now()); // server uptime
+		if(logger == " đang vào 2y2c...") {
+			let data = new Scriptdb('./data.json');
+			data.set(`uptime`, Date.now());
 
 			var quetime = new MessageEmbed()
 						.setDescription(`Trong hàng chờ được ${api.queueTime()}.`)
@@ -100,27 +74,11 @@ module.exports = {
 			} else {
 				client.channels.cache.get("806881615623880704").send(quetime);
 			}
-
-			var fully = new MessageEmbed()
-						.setDescription("Đang vào 2y2c")
-						.setColor(0xb60000);
-
-			client.channels.cache.get(bot.defaultChannel).send(fully);
-
-			client.guilds.cache.forEach((guild) => {
-				const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
-				const checkdata = data.get('livechat');
-		
-				if(checkdata == undefined || guild == undefined) return;
-		
-				try {
-					if(bot.dev) return;
-					client.channels.cache.get(checkdata).send(fully);
-				} catch(e) {}
-			});
 		}
 		
-		if (logger == "đang vào 2y2c..."
+		if (logger == " đang vào 2y2c..."
+		|| logger == "Đang vào 2y2c"
+		|| logger =="2y2c đã full"
 		|| logger.startsWith("[Server]")
 		|| logger.startsWith("[AutoRestart]")
 		|| logger.startsWith("[Broadcast]")

@@ -16,13 +16,20 @@ module.exports = {
 
         delete require.cache[require.resolve(`../commands/${args[0]}.js`)];
 
-        const cmd = require(`../commands/${args[0]}`);
-        client.commands.set(cmd.name, cmd);
+        try {
+            const cmd = require(`../commands/${args[0]}`);
+            client.commands.set(cmd.name, cmd);
 
-        var successful = new MessageEmbed()
-                .setDescription(`Đã tải lại ${args[0]} thành công!`)
-                .setColor(0x2EA711);
+            var successful = new MessageEmbed()
+                    .setDescription(`Đã tải lại ${args[0]} thành công!`)
+                    .setColor(0x2EA711);
 
-        message.channel.send(successful)
+            message.channel.send(successful);
+        } catch(e) {
+            message.channel.send({embed: {
+                description: "Không tìm thấy lệnh này",
+                color: 0xC51515
+            }});
+        }
     }
 }
