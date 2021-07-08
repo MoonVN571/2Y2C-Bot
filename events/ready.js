@@ -28,7 +28,7 @@ module.exports = {
             
             const webhook = new Topgg.Webhook(client.config.authtoken) // add your Top.gg webhook authorization (not bot token)
             
-            AutoPoster(config.tggtoken, client).on('posted', () => console.log('Posted stats to Top.gg!'));
+            AutoPoster(client.config.tggtoken, client).on('posted', () => console.log('Posted stats to Top.gg!'));
     
             app.post('/dblwebhook', webhook.listener(vote => {
                 // vote is your vote object
