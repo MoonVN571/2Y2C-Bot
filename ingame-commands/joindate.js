@@ -9,8 +9,6 @@ module.exports = {
     aliases: ['jd', 'joindate'],
     
     async execute(bot, username, args) {
-
-        return bot.whisper(username, "> Lệnh đã bị tắt!");
         if(!args[0]) return;
         if(!args[0].match(bot.regex)) return;
 
@@ -32,6 +30,6 @@ module.exports = {
 
         var tick = new Date(datee).getTime();
 
-        bot.whisper(username, `> ${args[0]}: ${firstjoin} (${api.ageCalc(tick)} trước)`);
+        bot.whisper(username, `> ${args[0]}: ${firstjoin} (${api.ageCalc(tick)} trước) - Dữ liệu chỉ lưu sau 28/1/2021`);
     }
 }

@@ -23,9 +23,6 @@ module.exports = {
         if (logger.startsWith(">")) color2 = client.config.chatColorHighlight;
     
         if(logger.startsWith("[")) color2 = 0x4983e7;
-
-        var bp = client.config.ingamePrefix;
-        if (client.dev) bp = client.config.ingamePrefixDev;
         
         var chat = new MessageEmbed()
                         .setDescription(`**<${api.removeFormat(username)}>** ${api.removeFormat(logger)}`)
@@ -46,13 +43,14 @@ module.exports = {
             if(checkdata == undefined || guild == undefined) return;
                     
             if(setLogger.split(" ")[1].startsWith(">")) color = client.config.chatColorHighlight;
+
             if(setLogger.split(" ")[0].startsWith("[")) color = 0x4983e7;
 
             let embedChat = new MessageEmbed()
                         .setDescription(setLogger)
                         .setColor(color);
 
-            if(client.dev) return;
+            if(bot.dev) return;
 
             try {
                 client.channels.cache.get(checkdata).send(embedChat);
@@ -62,7 +60,6 @@ module.exports = {
     
         saveMsgsData(username, logger);
         function saveMsgsData(username, logger) {
-            if(logger.startsWith(bp)) return;
             let messages = new Scriptdb(`./data/quotes/${username}.json`);
             let msgs = messages.get("messages")
             let times = messages.get("times")
@@ -76,16 +73,16 @@ module.exports = {
             }
         }
     
-        if(!logger.startsWith(bp)) return;
-        const args = logger.slice(bp.length).split(/ +/);
+        if(!logger.startsWith(bot.prefix)) return;
+        const args = logger.slice(bot.prefix.length).split(/ +/);
         const cmdName = args.shift().toLowerCase();
-    
+
         const cmd = bot.commands.get(cmdName)
             || bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
         
         if(!cmd) return;
 
-        if(username.includes("§")) return bot.chat("Tên của bạn có ký tự đặc biệt.");
+        if(username.includes("§")) return bot.chat("Tên của bạn có ký tự đặc biệt. Hãy vào link: https://ghostbin.com/paste/xYaOP và làm theo hướng dẫn");
     
         bot.regex = /[a-z]|[A-Z]|[0-9]/i;
         bot.logger = logger;

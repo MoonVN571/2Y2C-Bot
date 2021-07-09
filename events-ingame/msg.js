@@ -56,27 +56,27 @@ module.exports = {
 		if(logger =="Đang vào 2y2c") {
 			let data = new Scriptdb('./data.json');
 
-			if(data.get('queueStart')) {
-				data.set('queueEnd', Date.now());
-			}
+			data.set('queueEnd', Date.now());
+			
+			setTimeout(() => {
+				var quetime = new MessageEmbed()
+							.setDescription(`Trong hàng chờ được ${api.queueTime()}.`)
+							.setColor(0xeeee00);
+
+				if(bot.dev) {
+					client.channels.cache.get("807045720699830273").send(quetime);
+				} else {
+					client.channels.cache.get("806881615623880704").send(quetime);
+				}
+			}, 2 * 1000);
 		}
 
-		if(logger == " đang vào 2y2c...") {
+		if(logger == "Unknown command") {
 			let data = new Scriptdb('./data.json');
 			data.set(`uptime`, Date.now());
-
-			var quetime = new MessageEmbed()
-						.setDescription(`Trong hàng chờ được ${api.queueTime()}.`)
-						.setColor(0xeeee00);
-
-			if(bot.dev) {
-				client.channels.cache.get("807045720699830273").send(quetime);
-			} else {
-				client.channels.cache.get("806881615623880704").send(quetime);
-			}
 		}
-		
-		if (logger == " đang vào 2y2c..."
+
+		if (logger =="đang vào 2y2c..."
 		|| logger == "Đang vào 2y2c"
 		|| logger =="2y2c đã full"
 		|| logger.startsWith("[Server]")

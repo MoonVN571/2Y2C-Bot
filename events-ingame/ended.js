@@ -21,12 +21,6 @@ module.exports = {
 
         log("Bot ended");
 
-        if(!client.dev) {
-            client.channels.cache.get(client.config.CHANNEL).setTopic("");
-        } else {
-            client.channels.cache.get(client.config.CHANNEL2).setTopic("");
-        }
-
         setTimeout(() => {
             if(bot.joined) {
                 if(bot.lobby) {

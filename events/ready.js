@@ -69,9 +69,11 @@ module.exports = {
         console.log('Developer: ' + client.dev.toString().replace(/t/, "T").replace(/f/, "F"));
         
         log("Ready!");
-    
-        unlink('./data.json', (err) => { if(err) console.log(err) });
-    
+        
+        new Scriptdb('./data.json');
+
+        unlink('./data.json', (err) => { if(err) console.log("Sảy ra lỗi khi xoá file data.json") });
+
         api.clean();
         // main.run();
         
@@ -82,6 +84,8 @@ module.exports = {
     
             if(checkdata == undefined || guild == undefined) return;
     
+            if(client.dev) return;
+
             try {
                 client.channels.cache.get(checkdata).send({embed: {
                     description: "Đang khởi động lại bot.",

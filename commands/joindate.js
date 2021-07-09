@@ -9,11 +9,6 @@ module.exports = {
     aliases: ['joindate', 'jd'],
     
     async execute(client, message, args) {
-        return message.channel.send({embed: {
-            description: "Lệnh đã bị tắt!",
-            color: client.config.botEmbedColor
-        }});
-
         if (!args[0]) return message.channel.send(client.userNotFound);
 
 		let fj = new Scriptdb(`./data/joindate/${args}.json`);
@@ -36,7 +31,8 @@ module.exports = {
 
         var embed = new MessageEmbed()
                         .setDescription(`${args[0]}: ${firstjoin} (${api.ageCalc(tick)} trước)`)
-                        .setColor(0x2EA711);
+                        .setColor(0x2EA711)
+                        .setFooter("Dữ liệu chỉ lưu sau 28/1/2021");
 
         message.channel.send(embed);
     }

@@ -49,7 +49,7 @@ module.exports = {
             if(!que.split(" | ")) {
                 que = 0;
             } else {
-                que = que;
+                que = "None";
             }
         }
 

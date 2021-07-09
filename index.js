@@ -57,19 +57,26 @@ const config = {
 
 client.config = config;
 
+var dev = false;
+var prefix;
 
 if(config.dev == "true") {
-    client.dev = true;
+    dev = true;
+    prefix = config.devPrefix
 } else {
-    client.dev = false;
+    dev = false;
+    prefix = config.prefix
 }
 
+client.dev = dev;
+client.prefix = prefix;
 client.footer = config.footer;
 client.color = config.botEmbedColor;
-client.prefix = config.prefix;
+
 
 client.on('ready', () => {
     setTimeout(createBot, 5 * 1000);
+
 });
 
 // const mongoose = require('mongoose')
@@ -86,13 +93,18 @@ function createBot() {
     
     var defaultChannel;
     var usernameBot;
+    var igPrefix;
 
     if (config.dev == "true") {
         defaultChannel = config.devChannel;
         usernameBot = config.devUsername;
+
+        igPrefix = config.ingamePrefixDev;
     } else {
         defaultChannel = config.channel;
         usernameBot = config.username;
+
+        igPrefix = config.ingamePrefix;
     }
     
     const bot = mineflayer.createBot({
@@ -105,14 +117,12 @@ function createBot() {
     bot.loadPlugin(tpsPlugin);
     bot.loadPlugin(pathfinder);
 
-    // Import
     bot.defaultChannel = defaultChannel; // Kenh mat dinh cua chat
 
-    if(config.dev == "true") {
-        bot.dev = true;
-    } else {
-        bot.dev = false;
-    }
+    bot.dev = dev;
+    bot.config = config;
+    bot.prefix = igPrefix;
+
 
     var lobby = true; // Bot in queue
     bot.lobby = lobby;
@@ -123,7 +133,6 @@ function createBot() {
     var countPlayers = 0; // Join spam fix
     bot.countPlayers = countPlayers;
 
-    bot.config = config;
 
     // cmd  handler
     bot.commands = new Collection();
