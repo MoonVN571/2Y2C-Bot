@@ -200,7 +200,7 @@ function createBot() {
             if(cooldown.has("active")) return message.channel.send("Bạn cần chờ một chút chat tiếp tục.");
 
             // tranh lap lai content
-            if(antiSpam.has(content)) {
+            if(antiSpam.has(msg.content + msg.author.id)) {
                 antiSpam.add(message.author.id);
 
                 setTimeout(() => antiSpam.delete(message.author.id), 5 * 60 * 1000);
@@ -214,6 +214,8 @@ function createBot() {
             var chat = str.charAt(0).toUpperCase() + str.substr(1);
 
             var fixes = content.charAt(0).toLowerCase();
+
+            if(str == "") return msg.channel.send("Nhập tin nhắn đê.");
 
             if(msg.content.includes("§" || !fixes && fixes == "")) return msg.channel.send("bug text");
 
@@ -229,14 +231,14 @@ function createBot() {
 
                 // cooldown
                 cooldown.add("active");
-                antiSpam.add(content);
+                antiSpam.add(msg.content + msg.author.id);
 
                 setTimeout(() => {
                     cooldown.delete("active");
                 }, 5 * 1000);
 
                 setTimeout(() => {
-                    antiSpam.delete(content);
+                    antiSpam.delete(msg.content + msg.author.id);
                 }, 1 * 60 * 1000);
 
             }, 1 * 1000);

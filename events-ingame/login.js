@@ -3,6 +3,8 @@ var { MessageEmbed } = require('discord.js');
 
 const log = require('../log');
 
+var { start } = require('../auto');
+
 module.exports = {
 	name: 'spawn',
 	once: true,
@@ -20,6 +22,8 @@ module.exports = {
         
         bot.joined = true;
         
+        start(bot,client);
+
         if(bot.dev) {
             client.channels.cache.get(bot.defaultChannel).send(joinedd);
             client.channels.cache.get("807045720699830273").send(queuejoined); // bot log

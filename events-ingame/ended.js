@@ -7,6 +7,9 @@ var waitUntil = require('wait-until');
 var a = require("../api");
 var api = new a();
 
+var e = require("../goTevent");
+var event = new e();
+
 const log = require('../log');
 
 
@@ -58,6 +61,7 @@ module.exports = {
                     client.channels.cache.get("806881615623880704").send(disconnectedLog);
                 }
 
+                event.setME(false);
                 api.clean();
             }
             

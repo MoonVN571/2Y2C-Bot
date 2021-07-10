@@ -17,7 +17,16 @@ function event() {
     this.getME = () => {
         log('set msg event');
         var me = data.get('startedME');
-        setTimeout(() => { data.set('startedME', true) }, 5000);
+        return me;
+    }
+
+    this.setME = (boolean) => {
+        log('un set msg event');
+        var me = data.get('startedME');
+        // if(boolean) boolean = true;
+        // if(!boolean) boolean = false;
+        
+        setTimeout(() => { data.set('startedME', boolean) }, 5000);
         return me;
     }
     

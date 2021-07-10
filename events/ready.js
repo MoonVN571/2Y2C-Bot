@@ -1,8 +1,3 @@
-var main = require('../index');
-
-var e = require('../gotEvent');
-var event = new e();
-
 var a = require('../api');
 var api = new a();
 
@@ -75,7 +70,6 @@ module.exports = {
         unlink('./data.json', (err) => { if(err) console.log("Sảy ra lỗi khi xoá file data.json") });
 
         api.clean();
-        // main.run();
         
         // started notify
         client.guilds.cache.forEach((guild) => {
