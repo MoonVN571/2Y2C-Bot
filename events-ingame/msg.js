@@ -76,7 +76,7 @@ module.exports = {
 			data.set(`uptime`, Date.now());
 		}
 
-		if (logger =="đang vào 2y2c..."
+		if (logger ==" đang vào 2y2c..."
 		|| logger == "Đang vào 2y2c"
 		|| logger =="2y2c đã full"
 		|| logger.startsWith("[Server]")

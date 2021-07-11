@@ -17,13 +17,13 @@ module.exports.start = (bot, client) => {
     var msg;
     var afk;
 
-    if(event.getME()) {
+    if(event.getAuto()) {
         clearInterval(topic)
         clearInterval(player)
         clearInterval(data)
         clearInterval(msg)
         clearInterval(afk)
-        event.setME(false);
+        event.setAuto(false);
     }
 
     topic = setInterval(() => {

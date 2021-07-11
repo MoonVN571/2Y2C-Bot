@@ -14,26 +14,23 @@ function event() {
         return tps;
     }
 
-    this.getME = () => {
-        log('set msg event');
-        var me = data.get('startedME');
+    this.getAuto = () => {
+        log('get auto event');
+        var me = data.get('startedAuto');
         return me;
     }
 
-    this.setME = (boolean) => {
-        log('un set msg event');
-        var me = data.get('startedME');
-        // if(boolean) boolean = true;
-        // if(!boolean) boolean = false;
-        
+    this.setAuto = (boolean) => {
+        log('set auto event');
+        var auto = data.get('startedAuto');
         setTimeout(() => { data.set('startedME', boolean) }, 5000);
-        return me;
+        return auto;
     }
     
-    this.getAuto = () => {
-        log('set auto');
-        var auto = data.get('startedAuto');
-        setTimeout(() => { data.set('startedAuto', true); }, 5000);
+    this.getME = () => {
+        log('set me');
+        var auto = data.get('startedME');
+        setTimeout(() => { data.set('startedME', true); }, 5000);
         return auto;
     }
 }

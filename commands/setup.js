@@ -22,11 +22,12 @@ module.exports = {
             const checkdata = data.get('livechat')
             
             if(checkdata == undefined) {
-                message.channel.send("Bạn đã setup chat tại kênh: <#" + channel + "> thành công!");
-                client.channels.cache.get(channel).send({embed: {
-                    description: "Livechat đã sẵn sàng!",
-                    color: 0x15ff00
-                }})
+                message.channel.send("Bạn đã setup chat tại kênh: <#" + channel + "> thành công!").then(() => {
+                    client.channels.cache.get(channel).send({embed: {
+                        description: "Livechat đã sẵn sàng!",
+                        color: 0x15ff00
+                    }})
+                });
                 data.set('livechat', channel);
             } else {
                 message.channel.send("Đã setup. Cách xoá: " + prefix + "delete chat <Kênh>")
