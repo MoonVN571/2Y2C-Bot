@@ -61,7 +61,7 @@ module.exports = {
                     client.channels.cache.get("806881615623880704").send(disconnectedLog);
                 }
 
-                event.setME(false);
+                event.setAuto(false);
                 api.clean();
             }
             
