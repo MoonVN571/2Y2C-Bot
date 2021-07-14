@@ -32,8 +32,9 @@ function API() {
         var minstr = parseInt(t.split(":")[1]);
 
         if(t.split(" ")[1] == "PM") hstr = hstr + 12;
-
+        
         if(d.split("/")[0] == 1) hstr = hstr - 8;
+        if(hstr <= 0) hstr = 0;
 
         log(dstr +"d");
         log(mstr +"m");
