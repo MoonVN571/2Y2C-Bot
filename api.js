@@ -31,6 +31,8 @@ function API() {
         var hstr = parseInt(t.split(":")[0]);
         var minstr = parseInt(t.split(":")[1]);
 
+        if(t == "Invalid Date") return "không rõ";
+
         if(t.split(" ")[1] == "PM") hstr = hstr + 12;
         
         if(d.split("/")[0] == 1) hstr = hstr - 8;

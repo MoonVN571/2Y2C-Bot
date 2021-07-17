@@ -24,7 +24,6 @@ module.exports = {
         var month = date.split("-")[1]
         var year = date.split("-")[2].split(" ")[0];
 
-
         var datee = year + '-' + month + '-' + day + "T" + t.replace(" ", "T") + ":55.506Z";
 
         var tick = new Date(datee).getTime();
@@ -33,7 +32,7 @@ module.exports = {
                         .setDescription(`${args[0]}: ${firstjoin} (${api.ageCalc(tick)} trước)`)
                         .setColor(0x2EA711)
                         .setFooter("Dữ liệu chỉ lưu sau 28/1/2021");
-
+        
         message.channel.send(embed);
     }
 }

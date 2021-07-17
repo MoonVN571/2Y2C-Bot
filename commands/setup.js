@@ -24,13 +24,17 @@ module.exports = {
             if(checkdata == undefined) {
                 message.channel.send("Bạn đã setup chat tại kênh: <#" + channel + "> thành công!").then(() => {
                     client.channels.cache.get(channel).send({embed: {
-                        description: "Livechat đã sẵn sàng!",
+                        description: "Livechat đã sẵn sàng! Hãy chờ bot đồng bộ trong lần tiếp theo nào!",
                         color: 0x15ff00
                     }})
+                }).then(() => {
+                    message.channel.send("Bạn nên tham gia discord dev để cập nhật tình hình của bot tại announcements.\n\ndiscord.gg/yrNvvkqp6w");
                 });
-                data.set('livechat', channel);
+                setTimeout(() => {
+                    data.set('livechat', channel);
+                }, 60 * 1000);
             } else {
-                message.channel.send("Đã setup. Cách xoá: " + prefix + "delete chat <Kênh>")
+                message.channel.send("Bạn đã setup livechat rồi. Xoá livechat bằng lệnh " + prefix + "delete chat <Kênh>")
             }
         }
 
