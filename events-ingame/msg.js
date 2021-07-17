@@ -132,7 +132,7 @@ module.exports = {
 
 		if (logger === '2y2c đã full'
 		|| logger === 'Đang vào 2y2c'
-		|| logger === ' đang vào 2y2c...') return;
+		|| logger === 'đang vào 2y2c...') return;
 
 		if (logger === undefined || logger == null) return;
 

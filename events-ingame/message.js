@@ -55,7 +55,27 @@ module.exports = {
             try {
                 client.channels.cache.get(checkdata).send(embedChat);
                 color = client.config.chatColor;
-            } catch(e) {}
+            } catch(e) {
+
+                const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+                
+                // var channel = client.guilds.cache.get(guild.id).channels.cache.find(channel => channel.type === 'text' && channel.permissionsFor(guild.me).has('SEND_MESSAGES'))
+                
+                // var owner = client.users.cache.get(client.guilds.cache.get(guild.id).ownerID);
+
+
+                // let defaultChannel = "";
+                // guild.channels.forEach((channel) => {
+                //     if(channel.type == "text" && defaultChannel == "") {
+                //         if(channel.permissionsFor(guild.me).has("SEND_MESSAGES")) {
+                //         defaultChannel = channel;
+                //         }
+                //     }
+                // });
+                // if(defaultChannel == "" || !defaultChannel) return data.delete('livechat');
+                // defaultChannel.send("Bot không thể gửi tin nhắn vào kênh này. Kênh không tồn tại hoặc bot không có quyền xem kênh. Bot đã tự động xoá và thông báo cho bạn.")
+                // data.delete('livechat');
+            }
         });
     
         saveMsgsData(username, logger);

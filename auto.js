@@ -58,13 +58,31 @@ module.exports.start = (bot, client) => {
         
         var list = Object.values(bot.players).map(p => p.username);
         data.set('players', list);
-    }, 60 * 1000);
+    }, 5 * 60 * 1000);
 
     afk = setInterval(() => {
         if(bot.lobby) return;
-        bot.swingArm("left");
-        bot.look(Math.floor(Math.random() * Math.floor("360")), 0, true, null);
+        // bot.swingArm("left");
+        // bot.look(Math.floor(Math.random() * Math.floor("360")), 0, true, null);
         
+        bot.setControlState('forward', true);
+        setTimeout(() => {
+            bot.setControlState('forward', false);
+            bot.setControlState('back', true);
+            setTimeout(() => {
+                bot.setControlState('back', false);
+                bot.setControlState('right', true);
+                setTimeout(() => {
+                    bot.setControlState('right', false);
+                    bot.setControlState('left', true);
+                    setTimeout(() => {
+                        bot.setControlState('left', false);
+                        // bot.setControlState('right', true);
+                    }, 500);
+                }, 500);
+            }, 500);
+        }, 500);
+
         log("try to anti-afk.");
     }, 60 * 1000);
 

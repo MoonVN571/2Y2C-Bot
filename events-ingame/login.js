@@ -23,7 +23,7 @@ module.exports = {
         bot.joined = true;
         
         start(bot,client);
-
+        
         if(bot.dev) {
             client.channels.cache.get(bot.defaultChannel).send(joinedd);
             client.channels.cache.get("807045720699830273").send(queuejoined); // bot log
@@ -38,7 +38,24 @@ module.exports = {
                 
                 try {
                     client.channels.cache.get(checkdata).send(joinedd);
-                } catch(e) {}
+                } catch(e) {
+                    const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+                    
+                    let defaultChannel = "";
+                    guild.channels.cache.forEach((channel) => {
+                        if(channel.type == "text" && defaultChannel == "") {
+                            if(channel.permissionsFor(guild.me).has("SEND_MESSAGES")) {
+                            defaultChannel = channel;
+                            }
+                        }
+                    });
+
+                    if(client.channels.cache.get(data.get('livechat'))) return;
+
+                    if(defaultChannel == "" || !defaultChannel) return data.delete('livechat');
+                    defaultChannel.send("Bot không thể gửi tin nhắn vào kênh này. Kênh không tồn tại hoặc bot không có quyền xem kênh. Bot đã tự động xoá và thông báo cho bạn.")
+                    data.delete('livechat');
+                }
             });
 
             client.channels.cache.get("806881615623880704").send(queuejoined); // devlog

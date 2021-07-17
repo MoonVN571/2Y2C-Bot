@@ -108,7 +108,7 @@ function createBot() {
     }
     
     const bot = mineflayer.createBot({
-        host: "2y2c.org",
+        host: "localhost",
         port: 25565,
         username: usernameBot,
         version: "1.16.5"
@@ -133,6 +133,10 @@ function createBot() {
     var countPlayers = 0; // Join spam fix
     bot.countPlayers = countPlayers;
 
+    var Chatbox = new Client();
+    bot.Chatbox = Chatbox;
+
+    Chatbox.login(config.token);
 
     // cmd  handler
     bot.commands = new Collection();
@@ -164,9 +168,7 @@ function createBot() {
         }
     }
 
-    if(event.getME()) return;
-
-    client.on('message', msg => {
+    Chatbox.on('message', msg => {
         var message = msg;
         
         if (msg.author.bot) return;

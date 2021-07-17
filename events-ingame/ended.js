@@ -24,6 +24,9 @@ module.exports = {
 
         log("Bot ended");
 
+        bot.Chatbox.destroy()
+        bot.Chatbox.login(bot.config.token);
+
         setTimeout(() => {
             if(bot.joined) {
                 if(bot.lobby) {
@@ -34,7 +37,7 @@ module.exports = {
                                     .setDescription("🏮 Bot đã mất kết nối đến server. 🏮")
                                     .setColor("F71319");
 
-                    client.channels.cache.get(bot.defaultChannel).send(disconnected);
+                client.channels.cache.get(bot.defaultChannel).send(disconnected);
             
                 if(!bot.dev) {
                     client.guilds.cache.forEach((guild) => {

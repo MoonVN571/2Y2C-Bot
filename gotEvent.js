@@ -26,11 +26,4 @@ function event() {
         setTimeout(() => { data.set('startedME', boolean) }, 5000);
         return auto;
     }
-    
-    this.getME = () => {
-        log('set me');
-        var auto = data.get('startedME');
-        setTimeout(() => { data.set('startedME', true); }, 5000);
-        return auto;
-    }
 }

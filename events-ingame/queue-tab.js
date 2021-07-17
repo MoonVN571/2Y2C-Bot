@@ -34,26 +34,16 @@ module.exports = {
         var getCurrentQueue = s7.replace("Vị trí của bạn: ", "");
         var currentQueue = getCurrentQueue.split(' ')[0];
 
-        if(currentQueue == "None") return;
+        if(currentQueue == "None") currentQueue = 0;
         if (s7 === undefined) return;
 
         var Scriptdb = require('script.db');
         const dataa = new Scriptdb(`./data.json`);
 
-        var q = currentQueue + "/" + dataa.get('queue');			
-
         var que = dataa.get('queue');
-        if(que == undefined) {
-            que = "None";
-        } else {
-            if(!que.split(" | ")) {
-                que = 0;
-            } else {
-                que = "None";
-            }
-        }
+        if(que == undefined) que = 0;
 
-        if(q == "") return;
+        var q = currentQueue + "/" + que;
         
         var status = "Vị trí hàng chờ: " + q + " - Chờ: " + que + " | $help";
 
