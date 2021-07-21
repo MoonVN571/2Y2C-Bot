@@ -18,7 +18,7 @@ module.exports = {
         
         setTimeout(() => {
             check = false;
-        }, 3 * 60 * 1000);
+        }, 5 * 60 * 1000);
 
         if(bot.lobby) return;
         var footer = data.footer;
@@ -41,11 +41,11 @@ module.exports = {
         var queue = dataa.get('queue');
         var prio = dataa.get('prio');
 
-        if(queue == undefined) queue = "None";
+        if(queue == undefined) queue = -1;
 
-        if(prio == undefined) prio = "None";
+        if(prio == undefined) prio = -1;
 
-        var status = "TPS: " + tps + " - Chờ: " + queue + " - Ưu Tiên: " + prio + " | $help";
+        var status = "TPS: " + tps + " - Chờ: " + queue + " - Ưu Tiên: " + prio + " | $help for cmds";
         if(status.startsWith("§6Donate")) return;
         
         client.user.setActivity(status, { type: 'PLAYING' });

@@ -34,23 +34,22 @@ module.exports = {
         var getCurrentQueue = s7.replace("Vị trí của bạn: ", "");
         var currentQueue = getCurrentQueue.split(' ')[0];
 
-        if(currentQueue == "None") currentQueue = 0;
         if (s7 === undefined) return;
 
         var Scriptdb = require('script.db');
         const dataa = new Scriptdb(`./data.json`);
 
         var que = dataa.get('queue');
+
         if(que == undefined) que = 0;
+
+        if(currentQueue == "None") currentQueue = que;
 
         var q = currentQueue + "/" + que;
         
-        var status = "Vị trí hàng chờ: " + q + " - Chờ: " + que + " | $help";
+        var status = "Vị trí hàng chờ: " + q + " - Chờ: " + que + " | $help for cmds";
 
         if(status === undefined) return;
-            client.user.setActivity(status, { type: 'PLAYING' }).then(() => {
-                log("Set status to bot queue stats");
-            })
     
         if(s7 == null || s7 == "" || s7.includes("2YOUNG")) return;
         var embed = new MessageEmbed()
@@ -59,8 +58,18 @@ module.exports = {
         
         if(!once) {
             once = true;
-            var timeQ = new Scriptdb('./data.json')
+            var timeQ = new Scriptdb('./data.json');
             timeQ.set('queueStart', Date.now());
+
+            var inter;
+
+            inter = setInterval(() => {
+                if(!bot.lobby) clearInterval(inter);
+                if(currentQueue == undefined) return;
+                
+                client.user.setActivity(status, { type: 'PLAYING' });
+                log("Set status to bot queue stats");
+            }, 2 * 60 * 1000);
         }
 
         if(!bot.joined) return;

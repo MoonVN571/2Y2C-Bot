@@ -56,6 +56,8 @@ module.exports = {
 		if(logger =="Đang vào 2y2c") {
 			let data = new Scriptdb('./data.json');
 
+			bot.haveJoined = true; // check da thay chat dang vao 2y2c chua va tat queue
+
 			data.set('queueEnd', Date.now());
 			
 			setTimeout(() => {

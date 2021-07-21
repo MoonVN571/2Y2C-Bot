@@ -130,6 +130,9 @@ function createBot() {
     var joined = false; // check bot is joined
     bot.joined = joined;
 
+    var haveJoined = false; // check da thay tin dang vao 2y2c chua
+    bot.haveJoined = haveJoined; 
+
     var countPlayers = 0; // Join spam fix
     bot.countPlayers = countPlayers;
 
