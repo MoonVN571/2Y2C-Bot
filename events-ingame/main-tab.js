@@ -42,10 +42,9 @@ module.exports = {
         var prio = dataa.get('prio');
 
         if(queue == undefined) queue = -1;
-
         if(prio == undefined) prio = -1;
 
-        var status = "TPS: " + tps + " - Chờ: " + queue + " - Ưu Tiên: " + prio + " | $help for cmds";
+        var status = "TPS: " + tps + " - Queue: " + queue + " - Prio: " + prio + " | $help for cmds";
         if(status.startsWith("§6Donate")) return;
         
         client.user.setActivity(status, { type: 'PLAYING' });

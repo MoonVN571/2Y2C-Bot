@@ -1,5 +1,4 @@
 var Scriptdb = require('script.db');
-const data = new Scriptdb(`../data.json`);
 
 module.exports = {
     name: "normalqueue",
@@ -7,10 +6,12 @@ module.exports = {
     aliases: ['normalqueue', 'nq'],
     
     async execute(bot, username, args) {
-        var queue = data.get('queue');
+	    var data = new Scriptdb(`./data.json`);
+
+        var queue = await data.get('queue');
         if(queue == undefined) return bot.whisper(username, "> Không tìm thấy dữ liệu.");
 
-        if (queue == 0) return bot.whisper(username, `> Không có bất kì hàng chờ nào.`);
+        if (queue == 0) return bot.whisper(username, `> Không có ai trong hàng chờ cả.`);
 
         bot.whisper(username, `> Hàng chờ: ${queue}`);
     }

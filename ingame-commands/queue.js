@@ -1,5 +1,4 @@
 var Scriptdb = require('script.db');
-var data = new Scriptdb('./data.json');
 
 module.exports = {
     name: "queue",
@@ -7,8 +6,10 @@ module.exports = {
     aliases: ['queue', 'q', 'que'],
     
     async execute(bot, username, args) {
-        var queue = data.get('queue');
-        var prio = data.get('prio');
+        var data = new Scriptdb('./data.json');
+
+        var queue = await data.get('queue');
+        var prio = await data.get('prio');
 
         if(queue == undefined || prio == undefined) return bot.whisper(username, "> Không tìm thấy dữ liệu.");
 

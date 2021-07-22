@@ -48,8 +48,6 @@ module.exports = {
         var q = currentQueue + "/" + que;
         
         var status = "Vị trí hàng chờ: " + q + " - Chờ: " + que + " | $help for cmds";
-
-        if(status === undefined) return;
     
         if(s7 == null || s7 == "" || s7.includes("2YOUNG")) return;
         var embed = new MessageEmbed()
@@ -62,12 +60,13 @@ module.exports = {
             timeQ.set('queueStart', Date.now());
 
             var inter;
+            client.user.setActivity("IN QUEUE", { type: 'PLAYING' });
 
             inter = setInterval(() => {
                 if(!bot.lobby) clearInterval(inter);
                 if(currentQueue == undefined) return;
                 
-                client.user.setActivity(status, { type: 'PLAYING' });
+                //client.user.setActivity(status, { type: 'PLAYING' });
                 log("Set status to bot queue stats");
             }, 2 * 60 * 1000);
         }
