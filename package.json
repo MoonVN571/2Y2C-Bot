@@ -9,15 +9,18 @@
     "discord.js": "^12.5.3",
     "dotenv": "^8.6.0",
     "express": "^4.17.1",
+    "express-subdomain": "^1.0.5",
     "mineflayer": "^2.41.0",
     "mineflayer-pathfinder": "^1.6.1",
     "mineflayer-tps": "^1.0.1",
+    "moment": "^2.29.1",
     "mongoose": "^5.13.2",
     "os": "^0.1.1",
     "request": "^2.88.2",
     "script.db": "^3.0.0",
     "top.gg-core": "^1.0.0-b",
     "topgg-autoposter": "^2.0.0",
+    "vhost": "^3.0.2",
     "wait-until": "0.0.2"
   },
   "devDependencies": {
