@@ -14,16 +14,18 @@ module.exports = {
 
         request("https://api.2b2t.dev/stats?username=" + args[0], function (error, response, body) {
             var data = JSON.parse(body)[0];
-            if(data == undefined) return message.channel.send(client.userNotFound)
+            if(data == undefined) return bot.whisper(username, "Không tìm thấy người chơi.");
 
             let joins = data.joins
             let leaves = data.leaves
             let deads = data.deaths
             let kills = data.kills
 
-            if (kills === undefined) { kills = 0 }
+            if(kills == undefined && deads == undefined) return bot.whisper(username, "Không tìm thấy người chơi.");
 
-            if (deads === undefined) { deads = 0 }
+            if (kills === undefined) kills = 0
+
+            if (deads === undefined) deads = 0
 
             var ratio = kills / deads;
             var ratioFixed = ratio.toFixed(2);

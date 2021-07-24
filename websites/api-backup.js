@@ -21,6 +21,29 @@ app.get('/api/status', function (req, res) {
     res.send(obj);
 });
 
+app.get('/api/queue', function (req, res) {
+    var data = new Scriptdb('./data.json').get('queue');
+
+    if(!data) return res.send([]);
+
+
+    var obj = [data];
+    
+    res.send(obj);
+});
+
+
+app.get('/api/prio', function (req, res) {
+    var data = new Scriptdb('./data.json').get('prio');
+
+    if(!data) return res.send([]);
+
+
+    var obj = [data];
+    
+    res.send(obj);
+});
+
 app.get('/', function (req, res) {
     res.writeHead(200, {'Content-type': 'text/html'});
     res.write(readFileSync('./index.html'));
@@ -40,11 +63,50 @@ app.get('/api', function(req, res) {
     res.send("Nhập data");
 });
 
-app.get('/api/data', function(req, res) {
+app.get('/api/2y2c/data', function(req, res) {
     res.send("Nhập data");
 });
 
-app.get('/api/data/joindate', function(req, res) {
+app.get('/api/7y7c/data', function(req, res) {
+    res.send("Nhập data");
+});
+
+app.get('/api/7y7c/data/joindate', function(req, res) {
+    var username = req.url.split("=")[1];
+
+    data = new Scriptdb('C:/Users/Administrator/Desktop/7y7c/data/joindate/' + username + '.json').get('date')
+
+    if(!data) return res.send([]);
+
+    res.json([{"datetime": data }])
+});
+
+app.get('/api/7y7c/data/playtime', function(req, res) {
+    var username = req.url.split("=")[1];
+
+    data = new Scriptdb('C:/Users/Administrator/Desktop/7y7c/data/playtime/' + username + '.json').get('time')
+
+    if(!data) return res.send([]);
+
+    res.json([{"playtime": data}])
+});
+
+app.get('/api/7y7c/data/seen', function(req, res) {
+    var username = req.url.split("=")[1];
+
+    data = new Scriptdb('C:/Users/Administrator/Desktop/7y7c/data/seen/' + username + '.json').get('seen')
+
+    if(!data) return res.send([]);
+
+    res.json([{"seen": data}])
+});
+
+
+
+
+
+
+app.get('/api/2y2c/data/joindate', function(req, res) {
     var username = req.url.split("=")[1];
 
     data = new Scriptdb('./data/joindate/' + username + '.json').get('date')
@@ -54,7 +116,7 @@ app.get('/api/data/joindate', function(req, res) {
     res.json([{"datetime": data }])
 });
 
-app.get('/api/data/playtime', function(req, res) {
+app.get('/api/2y2c/data/playtime', function(req, res) {
     var username = req.url.split("=")[1];
 
     data = new Scriptdb('./data/playtime/' + username + '.json').get('time')
@@ -64,7 +126,7 @@ app.get('/api/data/playtime', function(req, res) {
     res.json([{"playtime": data}])
 });
 
-app.get('/api/data/stats', function(req, res) {
+app.get('/api/2y2c/data/stats', function(req, res) {
     var username = req.url.split("=")[1];
 
     data = new Scriptdb('./data/kd/' + username + '.json').get('kills')
@@ -79,7 +141,7 @@ app.get('/api/data/stats', function(req, res) {
     res.json([{"kills": data, "deaths": data2}])
 });
 
-app.get('/api/data/seen', function(req, res) {
+app.get('/api/2y2c/data/seen', function(req, res) {
     var username = req.url.split("=")[1];
 
     data = new Scriptdb('./data/seen/' + username + '.json').get('seen')
