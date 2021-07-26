@@ -33,22 +33,19 @@ module.exports.start = (bot, client) => {
         var datas = new Scriptdb(`./data.json`).get('tab-content');
         if(datas == undefined) return;
         
-        try {
-            client.channels.cache.get(bot.defaultChannel).setTopic(datas.split(" | ")[0] + " - Đã vào server từ " + api.calcTime() + " trước.");
+        client.channels.cache.get(bot.defaultChannel).setTopic(datas.split(" | ")[0] + " - Đã vào server từ " + api.calcTime() + " trước.");
 
-        } catch(e) { console.log(e)};
-        
         client.guilds.cache.forEach((guild) => {
             const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
             const checkdata = data.get('livechat');
 
-            if(checkdata == undefined || guild == undefined) return;
+            if(guild == undefined) return;
             
-            try {
-                if(bot.dev) return;
-                client.channels.cache.get(checkdata).setTopic(datas.split(" | ")[0] + " - Đã vào server từ " + api.calcTime() + " trước.")
-            } catch(e) {}
-        }); 
+            let channel = client.channels.cache.get(checkdata);
+
+            if(!channel) return;
+            channel.setTopic(datas.split(" | ")[0] + " - Đã vào server từ " + api.calcTime() + " trước.").catch(err => {});
+        });
     }, 5 * 60 * 1000);
 
     player = setInterval(() => {
@@ -62,8 +59,6 @@ module.exports.start = (bot, client) => {
 
     afk = setInterval(() => {
         if(bot.lobby) return;
-        // bot.swingArm("left");
-        // bot.look(Math.floor(Math.random() * Math.floor("360")), 0, true, null);
         
         bot.setControlState('forward', true);
         setTimeout(() => {
@@ -77,7 +72,6 @@ module.exports.start = (bot, client) => {
                     bot.setControlState('left', true);
                     setTimeout(() => {
                         bot.setControlState('left', false);
-                        // bot.setControlState('right', true);
                     }, 500);
                 }, 500);
             }, 500);

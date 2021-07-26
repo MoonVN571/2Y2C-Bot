@@ -63,49 +63,6 @@ app.get('/api', function(req, res) {
     res.send("Nhập data");
 });
 
-app.get('/api/2y2c/data', function(req, res) {
-    res.send("Nhập data");
-});
-
-app.get('/api/7y7c/data', function(req, res) {
-    res.send("Nhập data");
-});
-
-app.get('/api/7y7c/data/joindate', function(req, res) {
-    var username = req.url.split("=")[1];
-
-    data = new Scriptdb('C:/Users/Administrator/Desktop/7y7c/data/joindate/' + username + '.json').get('date')
-
-    if(!data) return res.send([]);
-
-    res.json([{"datetime": data }])
-});
-
-app.get('/api/7y7c/data/playtime', function(req, res) {
-    var username = req.url.split("=")[1];
-
-    data = new Scriptdb('C:/Users/Administrator/Desktop/7y7c/data/playtime/' + username + '.json').get('time')
-
-    if(!data) return res.send([]);
-
-    res.json([{"playtime": data}])
-});
-
-app.get('/api/7y7c/data/seen', function(req, res) {
-    var username = req.url.split("=")[1];
-
-    data = new Scriptdb('C:/Users/Administrator/Desktop/7y7c/data/seen/' + username + '.json').get('seen')
-
-    if(!data) return res.send([]);
-
-    res.json([{"seen": data}])
-});
-
-
-
-
-
-
 app.get('/api/2y2c/data/joindate', function(req, res) {
     var username = req.url.split("=")[1];
 

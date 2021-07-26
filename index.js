@@ -136,11 +136,6 @@ function createBot() {
     var countPlayers = 0; // Join spam fix
     bot.countPlayers = countPlayers;
 
-    var Chatbox = new Client();
-    bot.Chatbox = Chatbox;
-
-    Chatbox.login(config.token);
-
     // cmd  handler
     bot.commands = new Collection();
 
@@ -171,7 +166,7 @@ function createBot() {
         }
     }
 
-    Chatbox.on('message', msg => {
+    client.on('message', msg => {
         var message = msg;
         
         if (msg.author.bot) return;

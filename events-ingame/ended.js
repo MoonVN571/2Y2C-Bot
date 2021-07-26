@@ -24,9 +24,6 @@ module.exports = {
 
         log("Bot ended");
 
-        bot.Chatbox.destroy()
-        bot.Chatbox.login(bot.config.token);
-
         setTimeout(() => {
             if(bot.joined) {
                 if(bot.lobby) {
