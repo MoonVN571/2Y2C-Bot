@@ -46,7 +46,7 @@ module.exports.start = (bot, client) => {
             if(!channel) return;
             channel.setTopic(datas.split(" | ")[0] + " - Đã vào server từ " + api.calcTime() + " trước.").catch(err => {});
         });
-    }, 5 * 60 * 1000);
+    }, 6 * 60 * 1000);
 
     player = setInterval(() => {
         if(bot.lobby) return;

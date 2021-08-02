@@ -210,6 +210,10 @@ function createBot() {
 
             if(content.length > 88) return msg.channel.send("Rút ngắn tin nhắn của bạn lại để có thể gửi.");
             
+            let regex = /[a-z]|[A-Z]|[0-9]/i;
+
+            if(!message.author.username.toString().match(regex)) return msg.channel.send("Tên bạn có ký tự đặc biệt. Hãy đặt biệt danh");
+
             var str = msg.content.toString().split('\n')[0];
             var chat = str.charAt(0).toUpperCase() + str.substr(1);
 
@@ -224,7 +228,10 @@ function createBot() {
             if(!chat.endsWith(".")) chat = chat + ".";
 
             setTimeout(() => {
-                bot.chat(`[${msg.author.tag}]  ${chat}`);
+                let member = message.guild.member(message.author.id);
+
+                let tag = `${member.nickname !== null ? `${member.nickname}` : message.author.tag}`;
+                bot.chat(`[${tag}]  ${chat}`);
                 
                 const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");
                 msg.react(send).catch();
