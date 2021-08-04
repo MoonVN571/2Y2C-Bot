@@ -272,7 +272,7 @@ module.exports = {
 
 			// deaths msg
 			const d = new Scriptdb(`./data/deaths/${name}.json`);
-			logger = logger.replace("/", "\/");
+			logger = logger.replace(/\//ig, "\/");
 			if(d.get('deaths') == undefined) {
 				d.set('deaths', logger);
 				d.set('times', Date.now());
@@ -296,7 +296,7 @@ module.exports = {
 			if(name == "Piglin" || name == "Zombie"  || name == "Zombified" || name == "Drowned" || name == "Phantom" || name == "Enderman") return;
 
 			// kills msg
-			logger = logger.replace("/", "\/");
+			logger = logger.replace(/\//ig, "\/");
 			const k = new Scriptdb(`./data/kills/${name}.json`);
 			if(k.get('kills') == undefined) {
 				k.set('deaths', logger);
