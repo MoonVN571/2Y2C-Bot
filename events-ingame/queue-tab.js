@@ -43,19 +43,8 @@ module.exports = {
 
         if(que == undefined) que = 0;
 
-        if(currentQueue == "None") currentQueue = que;
-
-        var q = currentQueue + "/" + que;
-        
-        var status = "Vị trí hàng chờ: " + q + " - Chờ: " + que + " | $help for cmds";
-    
-        if(s7 == null || s7 == "" || s7.includes("2YOUNG")) return;
-        var embed = new MessageEmbed()
-                            .setDescription(s7)
-                            .setColor("0xFFCE00");
-        
-        if(!once) {
-            once = true;
+        if(currentQueue == "None") {
+			
             var timeQ = new Scriptdb('./data.json');
             timeQ.set('queueStart', Date.now());
 
@@ -69,8 +58,19 @@ module.exports = {
                 //client.user.setActivity(status, { type: 'PLAYING' });
                 log("Set status to bot queue stats");
             }, 2 * 60 * 1000);
-        }
+			
+			currentQueue = que;
 
+		}
+        var q = currentQueue + "/" + que;
+        
+        var status = "Vị trí hàng chờ: " + q + " - Chờ: " + que + " | $help for cmds";
+    
+        if(s7 == null || s7 == "" || s7.includes("2YOUNG")) return;
+        var embed = new MessageEmbed()
+                            .setDescription(s7)
+                            .setColor("0xFFCE00");
+        
         if(!bot.joined) return;
         if(embed == undefined) return;
         if(bot.haveJoined) return;
