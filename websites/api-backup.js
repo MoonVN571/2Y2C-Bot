@@ -108,4 +108,37 @@ app.get('/api/2y2c/data/seen', function(req, res) {
     res.json([{"seen": data}])
 });
 
+
+// 10y10c
+
+app.get('/api/10y10c/data/joindate', function(req, res) {
+    var username = req.url.split("=")[1];
+
+    data = new Scriptdb('C:\Users\Administrator\Desktop\10y10c' + '/data/joindate/' + username + '.json').get('date')
+
+    if(!data) return res.send([]);
+
+    res.json([{"datetime": data }])
+});
+
+app.get('/api/10y10c/data/playtime', function(req, res) {
+    var username = req.url.split("=")[1];
+
+    data = new Scriptdb('C:\Users\Administrator\Desktop\10y10c' + 'data/playtime/' + username + '.json').get('time')
+
+    if(!data) return res.send([]);
+
+    res.json([{"playtime": data}])
+});
+
+app.get('/api/10y10c/data/seen', function(req, res) {
+    var username = req.url.split("=")[1];
+
+    data = new Scriptdb('C:\Users\Administrator\Desktop\10y10c' + '/data/seen/' + username + '.json').get('seen')
+
+    if(!data) return res.send([]);
+
+    res.json([{"seen": data}])
+});
+
 app.listen(80)
