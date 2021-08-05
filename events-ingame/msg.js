@@ -272,7 +272,9 @@ module.exports = {
 
 			// deaths msg
 			const d = new Scriptdb(`./data/deaths/${name}.json`);
-			logger = logger.replace(/\//ig, "\/");
+
+			if(!name.match(bot.regex)) return;
+
 			if(d.get('deaths') == undefined) {
 				d.set('deaths', logger);
 				d.set('times', Date.now());
@@ -292,11 +294,12 @@ module.exports = {
 			const kill = new Scriptdb(`./data/kd/${name}.json`);
 			var data = kill.get('kills');
 
-			// phai o day moi dung :v
-			if(name == "Piglin" || name == "Zombie"  || name == "Zombified" || name == "Drowned" || name == "Phantom" || name == "Enderman") return;
+			if(!name.match(bot.regex)) return;
 
-			// kills msg
-			logger = logger.replace(/\//ig, "\/");
+			var users = Object.values(bot.players).map(p => p.username);
+
+			if(!name.includes(users.toString())) return;
+
 			const k = new Scriptdb(`./data/kills/${name}.json`);
 			if(k.get('kills') == undefined) {
 				k.set('deaths', logger);
