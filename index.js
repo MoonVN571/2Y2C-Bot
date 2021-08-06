@@ -204,6 +204,7 @@ function createBot() {
             
             if(!content) return;
 
+            let member = message.guild.members.cache.get(message.author);
             let role = message.guild.roles.cache.find(r => r.name == "bypass chat");
             if(!member.roles.cache.get(role.id)) {
                 if(cooldown.has("active")) return message.channel.send("Bạn cần chờ một chút chat tiếp tục.");
