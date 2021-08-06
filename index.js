@@ -204,10 +204,10 @@ function createBot() {
             
             if(!content) return;
 
-            if(cooldown.has("active")) return message.channel.send("Bạn cần chờ một chút chat tiếp tục.");
-
             let role = message.guild.roles.cache.find(r => r.name == "bypass chat");
             if(!member.roles.cache.get(role.id)) {
+                if(cooldown.has("active")) return message.channel.send("Bạn cần chờ một chút chat tiếp tục.");
+
                 // tranh lap lai content
                 if(antiSpam.has(msg.content + msg.author.id)) {
                     antiSpam.add(message.author.id);
