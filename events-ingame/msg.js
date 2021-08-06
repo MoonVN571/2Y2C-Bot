@@ -12,20 +12,20 @@ module.exports = {
 		var logger = message.toString();
 		var nocheck = message.toString().split(' ')[0];
 		
+		if (nocheck.startsWith('<') && nocheck.endsWith(">")) return;
+
 		if(bot.dev) {
 			client.channels.cache.get("802456011252039680").send(logger);
 		} else {
 			client.channels.cache.get("797426761142632450").send(logger);	
 		}
 
-		if (nocheck.startsWith('<') && nocheck.endsWith(">")) return;
-
 		var notfMsg;
 		var colorNotf;
 		
 		if (logger === "[AutoRestart] Server Restarting!") {
 			if(bot.dev) return;
-			client.channels.cache.get('795534684967665695').send("@everyone " + logger);
+			client.channels.cache.get('795534684967665695').send("@here " + logger);
 		}
 
 		var checkWhisper = logger.split(' ')[1];
@@ -267,13 +267,12 @@ module.exports = {
 		}
 
 		function saveDead(name, logger) {
-			const death = new Scriptdb(`./data/kd/${name}.json`);
-			var data = death.get('deaths');
+			var users = Object.values(bot.players).map(p => p.username);
+
+			if(users.indexOf(name) < 0) return;
 
 			// deaths msg
 			const d = new Scriptdb(`./data/deaths/${name}.json`);
-
-			if(!name.match(bot.regex)) return;
 
 			if(d.get('deaths') == undefined) {
 				d.set('deaths', logger);
@@ -283,22 +282,23 @@ module.exports = {
 				d.set('times', d.get('times') + " | " + Date.now());
 			}
 
+			const death = new Scriptdb(`./data/kd/${name}.json`);
+			var data = death.get('deaths');
+
 			if(data == undefined) {
 				death.set('deaths', 1);
 			} else {
 				death.set('deaths', +data + 1);
 			}
+
 		}
 
 		function saveKills(name, logger) {
-			const kill = new Scriptdb(`./data/kd/${name}.json`);
-			var data = kill.get('kills');
-
-			if(!name.match(bot.regex)) return;
+			if(!name.match(bot.regex)) return; // check regex
 
 			var users = Object.values(bot.players).map(p => p.username);
 
-			if(!name.includes(users.toString())) return;
+			if(users.indexOf(name) < 0) return;
 
 			const k = new Scriptdb(`./data/kills/${name}.json`);
 			if(k.get('kills') == undefined) {
@@ -309,6 +309,10 @@ module.exports = {
 				k.set('times', k.get('times') + " | " + Date.now());
 			}
 			
+			
+			const kill = new Scriptdb(`./data/kd/${name}.json`);
+			var data = kill.get('kills');
+
 			if(data == undefined) {
 				kill.set('kills', 1);
 			} else {

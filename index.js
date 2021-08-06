@@ -166,6 +166,8 @@ function createBot() {
         }
     }
 
+    var delayed = false;
+
     client.on('message', msg => {
         var message = msg;
         
@@ -193,26 +195,34 @@ function createBot() {
             if (msg.content.startsWith(">")) return;
             if (msg.content.startsWith(config.prefix)) return;
 
+            if(delayed) return;
+            delayed = true;
+
+            setTimeout(() => delayed = false, 5 * 1000);
+
             var content = msg.content;
             
             if(!content) return;
 
             if(cooldown.has("active")) return message.channel.send("Bạn cần chờ một chút chat tiếp tục.");
 
-            // tranh lap lai content
-            if(antiSpam.has(msg.content + msg.author.id)) {
-                antiSpam.add(message.author.id);
+            let role = message.guild.roles.cache.find(r => r.name == "bypass chat");
+            if(!member.roles.cache.get(role.id)) {
+                // tranh lap lai content
+                if(antiSpam.has(msg.content + msg.author.id)) {
+                    antiSpam.add(message.author.id);
 
-                setTimeout(() => antiSpam.delete(message.author.id), 5 * 60 * 1000);
+                    setTimeout(() => antiSpam.delete(message.author.id), 5 * 60 * 1000);
+                }
+
+                if(antiSpam.has(message.author.id)) return message.channel.send("Bạn đã tạm thời bị mute.");
+
+                if(content.length > 88) return msg.channel.send("Rút ngắn tin nhắn của bạn lại để có thể gửi.");
+                
+                let regex = /[a-z]|[A-Z]|[0-9]/i;
+
+                if(!message.author.username.toString().match(regex)) return msg.channel.send("Tên bạn có ký tự đặc biệt. Hãy đặt biệt danh");
             }
-
-            if(antiSpam.has(message.author.id)) return message.channel.send("Bạn đã tạm thời bị mute.");
-
-            if(content.length > 88) return msg.channel.send("Rút ngắn tin nhắn của bạn lại để có thể gửi.");
-            
-            let regex = /[a-z]|[A-Z]|[0-9]/i;
-
-            if(!message.author.username.toString().match(regex)) return msg.channel.send("Tên bạn có ký tự đặc biệt. Hãy đặt biệt danh");
 
             var str = msg.content.toString().split('\n')[0];
             var chat = str.charAt(0).toUpperCase() + str.substr(1);
