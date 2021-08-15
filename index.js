@@ -28,9 +28,6 @@ var mineflayer = require('mineflayer');
 var tpsPlugin = require('mineflayer-tps')(mineflayer);
 var {pathfinder} = require('mineflayer-pathfinder');
 
-var cooldown = new Set();
-var antiSpam = new Set();
-
 const log = require('./log');
 
 require('dotenv').config();
@@ -75,16 +72,10 @@ client.color = config.botEmbedColor;
 
 
 client.on('ready', () => {
+    // if(!dev) 
     setTimeout(createBot, 5 * 1000);
 
 });
-
-// const mongoose = require('mongoose')
-
-// mongoose.connect('mongodb+srv://Moon:t.FW_!76LGnKVSr@cluster0.nthgz.mongodb.net/data', {
-//     userUnifiedTopology: true,
-//     useNewUrlParser: true
-// }).then(console.log("connected"))
 
 function createBot() {
 	console.log('------------------------');
@@ -207,17 +198,6 @@ function createBot() {
             let member = message.guild.members.cache.get(message.author);
             let role = message.guild.roles.cache.find(r => r.name == "bypass chat");
             if(!member.roles.cache.get(role.id)) {
-                if(cooldown.has("active")) return message.channel.send("Bạn cần chờ một chút chat tiếp tục.");
-
-                // tranh lap lai content
-                if(antiSpam.has(msg.content + msg.author.id)) {
-                    antiSpam.add(message.author.id);
-
-                    setTimeout(() => antiSpam.delete(message.author.id), 5 * 60 * 1000);
-                }
-
-                if(antiSpam.has(message.author.id)) return message.channel.send("Bạn đã tạm thời bị mute.");
-
                 if(content.length > 88) return msg.channel.send("Rút ngắn tin nhắn của bạn lại để có thể gửi.");
                 
                 let regex = /[a-z]|[A-Z]|[0-9]/i;

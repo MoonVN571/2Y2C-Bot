@@ -73,7 +73,7 @@ module.exports = {
 			}, 2 * 1000);
 		}
 
-		if(logger == "Unknown command") {
+		if(logger == " đang vào 2y2c...") {
 			let data = new Scriptdb('./data.json');
 			data.set(`uptime`, Date.now());
 		}
@@ -106,12 +106,14 @@ module.exports = {
 								.setDescription(notf)
 								.setColor(colorNotf);
 
-			if(logger.startsWith("[Broadcast]") && logger.includes("vừa")) { // donators
+			if(logger.startsWith("[Broadcast]") && logger.includes("vừa")) {
 				if(bot.dev) return;
-				setTimeout(() => {  client.channels.cache.get("838711105278705695").send(embedNotf); }, 150)
+				client.channels.cache.get("838711105278705695").send(embedNotf);
 			}
 
-			client.channels.cache.get(bot.defaultChannel).send(embedNotf);
+			let channel = client.channels.cache.get(bot.defaultChannel)
+			
+			if(channel) channel.send(embedNotf);
 
 			if(!bot.dev) {
 				client.guilds.cache.forEach((guild) => {
@@ -120,9 +122,10 @@ module.exports = {
 			
 					if(checkdata == undefined || guild == undefined) return;
 
-					try {
-						client.channels.cache.get(checkdata).send(embedNotf);
-					} catch(e) {}
+					let channel = client.channels.cache.get(checkdata);
+					
+					if(!channel) return;
+					channel.send(embedNotf);
 				});
 			}
 		}
@@ -191,10 +194,7 @@ module.exports = {
 		if (logger.includes('bị hội đồng bởi một đám')) {
 			var str = logger;
 			var user = str.split(" ")[7];
-			var newUser = user;
-			if(user.includes("'s")) {
-				newUser = user.replace("'s", "")
-			}
+			var newUser = user.split("'s")[0].split(" ")[1];
 			saveKills(newUser, logger)
 			deathMsg = logger;
 		}
@@ -213,7 +213,7 @@ module.exports = {
 		if (logger.includes('giết') && logger.includes("bằng")) {
 			var str = logger;
 			var user = str.split(" ")[2];
-			var killer = str.split(" ")[1];
+			var killer = str.split(" ")[0];
 
 			saveKills(killer, logger)
 			saveDead(user, logger)
@@ -266,13 +266,17 @@ module.exports = {
 			deathMsg = logger;
 		}
 
-		function saveDead(name, logger) {
-			var users = Object.values(bot.players).map(p => p.username);
+		async function saveDead(name, logger) {
+			// console.log(name + "\n" + logger)
 
+			let regex = /[a-z]|[A-Z]|[0-9]/i;
+			if(!name.match(regex)) return; // check regex
+
+			var users = await Object.values(bot.players).map(p => p.username);
 			if(users.indexOf(name) < 0) return;
+			// console.log("save dead " + name);
 
-			// deaths msg
-			const d = new Scriptdb(`./data/deaths/${name}.json`);
+			const d = new Scriptdb(`./data/deaths/${name}.json`, { asyncWrite: true });
 
 			if(d.get('deaths') == undefined) {
 				d.set('deaths', logger);
@@ -290,17 +294,18 @@ module.exports = {
 			} else {
 				death.set('deaths', +data + 1);
 			}
-
 		}
 
-		function saveKills(name, logger) {
-			if(!name.match(bot.regex)) return; // check regex
+		async function saveKills(name, logger) {
+			// console.log(name + "\nlog: " + logger);
+			let regex = /[a-z]|[A-Z]|[0-9]/i;
+			if(!name.match(regex)) return;
 
-			var users = Object.values(bot.players).map(p => p.username);
-
+			var users = await Object.values(bot.players).map(p => p.username);
 			if(users.indexOf(name) < 0) return;
+			// console.log("Saved " + name);
 
-			const k = new Scriptdb(`./data/kills/${name}.json`);
+			const k = new Scriptdb(`./data/kills/${name}.json`, { asyncWrite: true });
 			if(k.get('kills') == undefined) {
 				k.set('deaths', logger);
 				k.set('times', Date.now());
@@ -308,7 +313,6 @@ module.exports = {
 				k.set('deaths', k.get('deaths') + " | " + logger);
 				k.set('times', k.get('times') + " | " + Date.now());
 			}
-			
 			
 			const kill = new Scriptdb(`./data/kd/${name}.json`);
 			var data = kill.get('kills');
@@ -320,7 +324,7 @@ module.exports = {
 			}
 		}
 
-		if(deathMsg == undefined) return;
+		if(!deathMsg) return;
 		
 		var embedDeath = new MessageEmbed()
 					.setDescription(api.removeFormat(deathMsg))
@@ -336,9 +340,11 @@ module.exports = {
 
 			if(checkdata == undefined || guild == undefined) return;
 
-			try {
-				client.channels.cache.get(checkdata).send(embedDeath);
-			} catch(e) {}
+			let channel = client.channels.cache.get(checkdata);
+
+			if(!channel) return;
+			
+			channel.send(embedDeath);
 		});
 	}
 }

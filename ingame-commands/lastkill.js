@@ -4,8 +4,7 @@ var a = require('../api');
 var api = new a();
 
 module.exports = {
-    name: "lastwords",
-    aliases: ['lw'],
+    name: "lastkill",
     
     async execute(bot, username, args) {
         if(!args[0]) return bot.whisper(username, '> Không tìm thấy người chơi.');

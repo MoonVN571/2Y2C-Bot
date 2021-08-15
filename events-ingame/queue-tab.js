@@ -82,10 +82,11 @@ module.exports = {
             const checkdata = data.get('livechat');
 
             if(checkdata == undefined || guild == undefined) return;
-                        
-            try {
-                client.channels.cache.get(checkdata).send(embed);
-            } catch(e) {}
+                
+            let channel = client.channels.cache.get(checkdata);
+            
+            if(!channel) return;
+            channel.send(embed);
         });
     }
 }

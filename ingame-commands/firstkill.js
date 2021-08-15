@@ -5,7 +5,6 @@ var api = new a();
 
 module.exports = {
     name: "firstkill",
-    aliases: [''],
     
     async execute(bot, username, args) {
         if(!args[0]) return bot.whisper(username, '> Không tìm thấy người chơi.');

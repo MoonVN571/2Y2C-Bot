@@ -43,9 +43,11 @@ module.exports = {
 
                         if(checkdata == undefined || guild == undefined) return;
 
-                        try {
-                            client.channels.cache.get(checkdata).send(disconnected);
-                        } catch(e) {}
+                        let channel = client.channels.cache.get(checkdata);
+                        
+                        if(!channel) return;
+                        
+                        channel.send(disconnected);
                     });
                 }
                 

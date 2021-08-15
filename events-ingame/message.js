@@ -28,10 +28,8 @@ module.exports = {
                         .setDescription(`**<${api.removeFormat(username)}>** ${api.removeFormat(logger)}`)
                         .setColor(color2);
     
-        try {
-            client.channels.cache.get(bot.defaultChannel).send(chat);
-            color2 = "0x797979";
-        } catch (e) {}
+        client.channels.cache.get(bot.defaultChannel).send(chat);
+        color2 = "0x797979";
 
         // check if message start with > and change color 
         var setLogger = `**<${api.removeFormat(username)}>** ${api.removeFormat(logger)}`;
@@ -41,7 +39,7 @@ module.exports = {
             const checkdata = data.get('livechat');
     
             if(checkdata == undefined || guild == undefined) return;
-                    
+            
             if(setLogger.split(" ")[1].startsWith(">")) color = client.config.chatColorHighlight;
 
             if(setLogger.split(" ")[0].startsWith("[") && username == bot.username) color = 0x4983e7;
@@ -52,30 +50,12 @@ module.exports = {
 
             if(bot.dev) return;
 
-            try {
-                client.channels.cache.get(checkdata).send(embedChat);
-                color = client.config.chatColor;
-            } catch(e) {
+            let channel = client.channels.cache.get(checkdata);
+            
+            color = client.config.chatColor;
+            if(!channel) return;
 
-                const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
-                
-                // var channel = client.guilds.cache.get(guild.id).channels.cache.find(channel => channel.type === 'text' && channel.permissionsFor(guild.me).has('SEND_MESSAGES'))
-                
-                // var owner = client.users.cache.get(client.guilds.cache.get(guild.id).ownerID);
-
-
-                // let defaultChannel = "";
-                // guild.channels.forEach((channel) => {
-                //     if(channel.type == "text" && defaultChannel == "") {
-                //         if(channel.permissionsFor(guild.me).has("SEND_MESSAGES")) {
-                //         defaultChannel = channel;
-                //         }
-                //     }
-                // });
-                // if(defaultChannel == "" || !defaultChannel) return data.delete('livechat');
-                // defaultChannel.send("Bot không thể gửi tin nhắn vào kênh này. Kênh không tồn tại hoặc bot không có quyền xem kênh. Bot đã tự động xoá và thông báo cho bạn.")
-                // data.delete('livechat');
-            }
+            channel.send(embedChat);
         });
     
         saveMsgsData(username, logger);
@@ -107,10 +87,20 @@ module.exports = {
         bot.regex = /[a-z]|[A-Z]|[0-9]/i;
         bot.logger = logger;
 
-        try {
-            cmd.execute(bot, username, args);
-        } catch(err) {
-            console.log(err);
+        if(cmd.admin && (username == "MoonVN" || username == "MoonZ" || username == "MoonOnTop" || username == "MoonX" || username == bot.username || username == "MoonzVN")) {
+            try {
+                cmd.execute(bot, username, args);
+            } catch(err) {
+                console.log(err);
+            }
+            return;
+        }
+        if(!cmd.admin) {
+            try {
+                cmd.execute(bot, username, args);
+            } catch(err) {
+                console.log(err);
+            }
         }
     }
 }

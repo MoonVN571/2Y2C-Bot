@@ -95,13 +95,11 @@ module.exports = {
 
             if(checkdata == undefined || guild == undefined) return;
 
-            try {
-                if(embed !== undefined) {
-                    client.channels.cache.get(checkdata).send(embed);
-                }
-            } catch(e) {
-                
-            }
+            let channel = client.channels.cache.get(checkdata);
+
+            if(!channel) return;
+            channel.send(embed);
+            
         });
     }
 }

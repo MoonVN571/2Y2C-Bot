@@ -12,13 +12,14 @@ module.exports = {
         if(check) return;
         check = true;
         var header = data.header;
+
         if(header.toString().includes("2YOUNG")) {
             bot.lobby = false;
         }
         
         setTimeout(() => {
             check = false;
-        }, 5 * 60 * 1000);
+        }, 60 * 1000);
 
         if(bot.lobby) return;
         var footer = data.footer;
@@ -41,10 +42,13 @@ module.exports = {
         var queue = dataa.get('queue');
         var prio = dataa.get('prio');
 
+        var headerr =  header.toString().split("§r§6")[1].split(/\\n/ig)[0];
+        dataa.set('server-motd', headerr);
+
         if(queue == undefined) queue = -1;
         if(prio == undefined) prio = -1;
 
-        var status = "TPS: " + tps + " - Queue: " + queue + " - Prio: " + prio + " | $help for cmds";
+        var status = "TPS: " + tps + " - Queue: " + queue + " - Prio: " + prio + " | Prefix: $";
         if(status.startsWith("§6Donate")) return;
         
         client.user.setActivity(status, { type: 'PLAYING' });

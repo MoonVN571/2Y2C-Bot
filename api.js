@@ -166,7 +166,7 @@ function API() {
         minutes = parseInt(((temp - day * 86400 - hours * 3600)) / 60)
         seconds = parseInt(temp % 60)
         
-        if(data.get('queueEnd') == undefined || hours == "NaN" || minutes == "NaN" || seconds == "NaN") {
+        if(hours == "NaN" || minutes == "NaN" || seconds == "NaN") {
             hours = 0;
             minutes = 0;
             seconds = 0;

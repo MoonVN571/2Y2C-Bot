@@ -54,7 +54,7 @@ module.exports = {
                             .setDescription(api.removeFormat(username) + " left")
                             .setColor('0xb60000')
 
-        client.channels.cache.get(bot.defaultChannel).send(embed)
+        client.channels.cache.get(bot.defaultChannel).send(embed);
         
         if(bot.dev) return;
     
@@ -64,9 +64,10 @@ module.exports = {
 
             if(checkdata == undefined || guild == undefined) return;
 
-            try {
-                client.channels.cache.get(checkdata).send(embed);
-            } catch(e) { }
+            let channel = client.channels.cache.get(checkdata);
+            
+            if(!channel) return;
+            channel.send(embed);
         });
     }
 }

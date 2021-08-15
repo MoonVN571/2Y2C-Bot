@@ -2,7 +2,6 @@ var Scriptdb = require("script.db");
 
 module.exports = {
     name: "setup",
-    aliases: [''],
     
     async execute(client, message, args) {
         if (!message.guild.member(message.author).hasPermission("ADMINISTRATOR")) return message.channel.send("Không có quyền để dùng lệnh này.")

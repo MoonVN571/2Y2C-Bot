@@ -2,7 +2,6 @@ var Scriptdb = require('script.db');
 
 module.exports = {
     name: "deaths",
-    aliases: [''],
     
     async execute(bot, username, args) {
         if(args[0]) {

@@ -2,8 +2,7 @@ var Scriptdb = require('script.db');
 
 module.exports = {
     name: "delete",
-    description: "delete command.",
-    aliases: [''],
+    aliases: ['del'],
     
     async execute(client, message, args) {
         if (!message.member.hasPermission('ADMINISRTATOR')) return message.channel.send("Không có quyền để dùng lệnh này.");

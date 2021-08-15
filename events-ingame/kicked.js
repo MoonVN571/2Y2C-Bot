@@ -24,8 +24,6 @@ module.exports = {
         
         log('Bot disconnected with: ' + reason)
 
-        if(bot.joined) {
-            client.channels.cache.get(bot.defaultChannel).send(disconnected);
-        }
+        if(bot.joined) client.channels.cache.get(bot.defaultChannel).send(disconnected);
     }
 }

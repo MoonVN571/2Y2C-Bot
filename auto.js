@@ -14,14 +14,12 @@ module.exports.start = (bot, client) => {
     var topic;
     var player;
     var data;
-    var msg;
     var afk;
 
     if(event.getAuto()) {
         clearInterval(topic)
         clearInterval(player)
         clearInterval(data)
-        clearInterval(msg)
         clearInterval(afk)
         event.setAuto(false);
     }
@@ -51,11 +49,14 @@ module.exports.start = (bot, client) => {
     player = setInterval(() => {
         if(bot.lobby) return;
         log("Try to save palyerlist.");
-        const data = new Scriptdb(`./data.json`);
+        const data = new Scriptdb(`./data.json`, {
+            asyncWrite: true,
+            syncOnWrite: true
+        });
         
         var list = Object.values(bot.players).map(p => p.username);
         data.set('players', list);
-    }, 5 * 60 * 1000);
+    }, 10 * 60 * 1000);
 
     afk = setInterval(() => {
         if(bot.lobby) return;
@@ -114,18 +115,4 @@ module.exports.start = (bot, client) => {
             }
         });
     }, 1 * 60 * 1000);
-
-    msg = setInterval(() => {
-        readFile("ads.txt", 'utf8', function (err, data) {
-            if (err) throw err;
-            const lines = data.split('\n');
-            var random = lines[Math.floor(Math.random() * lines.length)];
-
-            if(random == "") return;
-
-            bot.chat(random);
-        });
-
-        log("Send message");
-    },  10 * 60 * 1000);
 }

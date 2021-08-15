@@ -7,45 +7,27 @@ const Topgg = require('@top-gg/sdk')
 const { AutoPoster } = require('topgg-autoposter')
 const express = require('express')
 
-const { unlink  } = require('fs');
+const { unlink } = require('fs');
 var Scriptdb = require('script.db');
-
-const top = require('top.gg-core');
 
 module.exports = {
 	name: 'ready',
 	once: false,
 	execute(client) {
-        const topgg = new top.Client(client.config.tggtoken);
 
         if(client.config.dev !== "true") {
-            const app = express() // Your express app
+            const app = express()
             
-            const webhook = new Topgg.Webhook(client.config.authtoken) // add your Top.gg webhook authorization (not bot token)
+            const webhook = new Topgg.Webhook(client.config.authtoken)
             
             AutoPoster(client.config.tggtoken, client).on('posted', () => console.log('Posted stats to Top.gg!'));
     
-            app.post('/dblwebhook', webhook.listener(vote => {
-                // vote is your vote object
-                var user = client.users.cache.find(user => user.id === vote.user);
-    
-                client.channels.cache.get('861767070106255360').send("**" + user.tag + "** đã vote bot!");
-            })) // attach the middleware
-            
-            app.listen(3000) // your port
+            app.post('/dblwebhook', webhook.listener(vote => {    
+                client.channels.cache.get('862215076698128396').send("**<@" + vote.user.id + ">** đã vote bot!");
+            }))
+
+            app.listen(3000);
         }
-        /*
-        topgg.post({ servers: client.guilds.cache.size }).then(console.log); //post only server count | returning: boolean
-        
-        topgg.post({
-            servers: client.guilds.cache.size,
-            shard: {
-                id: client.shard.ids,
-                count: client.shard.count
-            }
-        }).then(console.log) //with shard info | returning: boolean
-        
-        topgg.on('posted', data =>console.log(data)); */
     
         
         client.user.setActivity("RESTARTING", { type: 'PLAYING' });
@@ -65,9 +47,7 @@ module.exports = {
         
         log("Ready!");
         
-        new Scriptdb('./data.json');
-
-        unlink('./data.json', (err) => { if(err) console.log("Sảy ra lỗi khi xoá file data.json") });
+        if(!client.dev) unlink('./data.json', (err) => { if(err) console.log("Sảy ra lỗi khi xoá file data.json") });
 
         api.clean();
         
