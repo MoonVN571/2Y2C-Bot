@@ -14,9 +14,9 @@ module.exports = {
                 msg.delete({ timeout: 10000 });
             });
 
-        delete require.cache[require.resolve(`../commands/${args[0]}.js`)];
-
         try {
+            delete require.cache[require.resolve(`../commands/${args[0]}`)];
+
             const cmd = require(`../commands/${args[0]}`);
             client.commands.set(cmd.name, cmd);
 

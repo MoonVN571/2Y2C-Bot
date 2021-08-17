@@ -20,6 +20,10 @@ module.exports = {
     aliases: ['2i'],
     
     async execute(client, message, args) {
+        let checkVote = new Scriptdb('./voted.json').get('users-' + new Date().getUTCDate() + (new Date().getUTCMonth()+1) + new Date().getUTCFullYear());
+
+        if(!checkVote || checkVote.indexOf(message.author.id < 0 )) return message.channel.send("Bạn phải vote bot để sử dụng lệnh này.\n\nVote tại: https://top.gg/bot/768448728125407242/vote");
+
         const canvas = Canvas.createCanvas(1927, 1080);
 
         const background = await Canvas.loadImage('./pictures/tab.jpg')
@@ -63,13 +67,13 @@ module.exports = {
         status = status.split(" tps")[0].replace(/ /g, "") + status.split("tps")[1];
 
 
-        Canvas.registerFont('./MinecraftRegular-Bmg3.otf', { 
-            family: 'Minecraft',
+        Canvas.registerFont('./NotoSansTC-Regular.otf', { 
+            family: 'NotoSansTC',
             weight: 'normal',
             style: "normal"
         });
 
-        context.font = '20px Minecraft'
+        context.font = '20px NotoSansTC'
 
 
         context.fillStyle = '#FFD728';
@@ -247,7 +251,14 @@ module.exports = {
             context.save();
         } */
 
+
+
         const attachment = new MessageAttachment(canvas.toBuffer(), "tab.png")
+        
+        const fileContents = new Buffer(attachment.attachment, 'base64')
+        require('fs').writeFile("./image.png", fileContents, (err) => {
+          if (err) return console.error(err)
+        })
         await message.channel.send('', attachment)
         // context.font = applyText(canvas, "dak");
         // context.fillStyle = '#ffffff';

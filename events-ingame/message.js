@@ -49,13 +49,11 @@ module.exports = {
                         .setColor(color);
 
             if(bot.dev) return;
-
-            let channel = client.channels.cache.get(checkdata);
-            
-            color = client.config.chatColor;
-            if(!channel) return;
-
-            channel.send(embedChat);
+            try {
+                client.channels.cache.get(checkdata).send(embedChat).then(() => {				
+                    color = client.config.chatColor;
+                });
+            } catch(e) {}
         });
     
         saveMsgsData(username, logger);

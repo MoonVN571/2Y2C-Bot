@@ -4,9 +4,10 @@ const app = express()
 
 var Scriptdb = require('script.db');
 
-const {readFileSync} = require('fs');
+const {readFileSync, readFile} = require('fs');
 
-app.get('/api/status', function (req, res) {
+app.get('/status', function (req, res) {
+    if(!req.get('host').startsWith("api")) return;
     var data = new Scriptdb('./data.json').get('tab-content');
 
     if(!data) return res.send([]);
@@ -21,7 +22,8 @@ app.get('/api/status', function (req, res) {
     res.send(obj);
 });
 
-app.get('/api/queue', function (req, res) {
+app.get('/queue', function (req, res) {
+    if(!req.get('host').startsWith("api")) return;
     var data = new Scriptdb('./data.json').get('queue');
 
     if(!data) return res.send([]);
@@ -33,7 +35,8 @@ app.get('/api/queue', function (req, res) {
 });
 
 
-app.get('/api/prio', function (req, res) {
+app.get('/prio', function (req, res) {
+    if(!req.get('host').startsWith("api")) return;
     var data = new Scriptdb('./data.json').get('prio');
 
     if(!data) return res.send([]);
@@ -45,25 +48,43 @@ app.get('/api/prio', function (req, res) {
 });
 
 app.get('/', function (req, res) {
+    // var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    if(!req.get('host').startsWith("mo0nbot") || !req.get('host').startsWith("www")) return;
+
     res.writeHead(200, {'Content-type': 'text/html'});
     res.write(readFileSync('./index.html'));
 });
 
-app.get('/server', function (req, res) {
+app.get('/', function (req, res) {
+    if(!req.get('host').startsWith("image")) return;
+
+    readFile('./image.png', (err, data) => {
+        if(err) return;
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.write('<html><body><img src="data:image/png;base64,')
+        res.write(Buffer.from(data).toString('base64'));
+        res.end('"/></body></html>');
+    });
+});
+
+
+app.get('/', function (req, res) {
+    if(!req.get('host').startsWith("discord")) return;
+
     res.writeHead(200, {'Content-type': 'text/html'});
-    res.write(readFileSync('server.html'));
+    res.write(readFileSync('./server.html'));
 });
 
-app.get('/invite', function (req, res) {
+app.get('/', function (req, res) {
+    if(!req.get('host').startsWith("invite")) return;
+
     res.writeHead(200, {'Content-type': 'text/html'});
-    res.write(readFileSync('invite.html'));
+    res.write(readFileSync('./invite.html'));
 });
 
-app.get('/api', function(req, res) {
-    res.send("Nhập data");
-});
+app.get('/data/2y2c/joindate', function(req, res) {
+    if(!req.get('host').startsWith("api")) return;
 
-app.get('/api/2y2c/data/joindate', function(req, res) {
     var username = req.url.split("=")[1];
 
     data = new Scriptdb('./data/joindate/' + username + '.json').get('date')
@@ -73,7 +94,9 @@ app.get('/api/2y2c/data/joindate', function(req, res) {
     res.json([{"datetime": data }])
 });
 
-app.get('/api/2y2c/data/playtime', function(req, res) {
+app.get('/data/2y2c/playtime', function(req, res) {
+    if(!req.get('host').startsWith("api")) return;
+
     var username = req.url.split("=")[1];
 
     data = new Scriptdb('./data/playtime/' + username + '.json').get('time')
@@ -83,7 +106,9 @@ app.get('/api/2y2c/data/playtime', function(req, res) {
     res.json([{"playtime": data}])
 });
 
-app.get('/api/2y2c/data/stats', function(req, res) {
+app.get('/data/2y2c/stats', function(req, res) {
+    if(!req.get('host').startsWith("api")) return;
+
     var username = req.url.split("=")[1];
 
     data = new Scriptdb('./data/kd/' + username + '.json').get('kills')
@@ -98,7 +123,9 @@ app.get('/api/2y2c/data/stats', function(req, res) {
     res.json([{"kills": data, "deaths": data2}])
 });
 
-app.get('/api/2y2c/data/seen', function(req, res) {
+app.get('/data/2y2c/seen', function(req, res) {
+    if(!req.get('host').startsWith("api")) return;
+
     var username = req.url.split("=")[1];
 
     data = new Scriptdb('./data/seen/' + username + '.json').get('seen')
@@ -107,38 +134,4 @@ app.get('/api/2y2c/data/seen', function(req, res) {
 
     res.json([{"seen": data}])
 });
-
-
-// 10y10c
-
-app.get('/api/10y10c/data/joindate', function(req, res) {
-    var username = req.url.split("=")[1];
-
-    data = new Scriptdb('C:\Users\Administrator\Desktop\10y10c' + '/data/joindate/' + username + '.json').get('date')
-
-    if(!data) return res.send([]);
-
-    res.json([{"datetime": data }])
-});
-
-app.get('/api/10y10c/data/playtime', function(req, res) {
-    var username = req.url.split("=")[1];
-
-    data = new Scriptdb('C:\Users\Administrator\Desktop\10y10c' + 'data/playtime/' + username + '.json').get('time')
-
-    if(!data) return res.send([]);
-
-    res.json([{"playtime": data}])
-});
-
-app.get('/api/10y10c/data/seen', function(req, res) {
-    var username = req.url.split("=")[1];
-
-    data = new Scriptdb('C:\Users\Administrator\Desktop\10y10c' + '/data/seen/' + username + '.json').get('seen')
-
-    if(!data) return res.send([]);
-
-    res.json([{"seen": data}])
-});
-
 app.listen(80)

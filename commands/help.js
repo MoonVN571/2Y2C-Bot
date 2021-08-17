@@ -1,10 +1,16 @@
 var { MessageEmbed } = require('discord.js');
 
+const Scriptdb = require('script.db');
+
 module.exports = {
     name: "help",
     aliases: ['help'],
     
     async execute(client, message, args) {
+        let checkVote = new Scriptdb('./voted.json').get('users-' + new Date().getUTCDate() + (new Date().getUTCMonth()+1) + new Date().getUTCFullYear());
+
+        if(!checkVote || checkVote.split(" ").indexOf(message.author.id) < 0) return message.channel.send("Bạn phải vote bot để sử dụng lệnh này.\n\nVote tại: https://top.gg/bot/768448728125407242/vote");
+
         var prefix = client.prefix;
         var footer = client.footer;
 

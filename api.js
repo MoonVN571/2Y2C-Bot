@@ -232,10 +232,12 @@ function API() {
         return string;
     }
 
+    this.soKhong = (value, length) => {
+        return `${value}`.padStart(length, 0);
+    }
+
     this.clean = () => {
-        var data = new Scriptdb('./data.json');
-         
-        data.deleteAll();
+        require('fs').unlink('./data.json', (err) => { if(err) console.log("Sảy ra lỗi khi xoá file data.json") });
     }
 
     this.removeFormat = (data) => {

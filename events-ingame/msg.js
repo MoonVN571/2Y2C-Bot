@@ -4,6 +4,8 @@ var Scriptdb = require("script.db");
 var a = require('../api');
 var api = new a();
 
+var log = require('../log');
+
 module.exports = {
 	name: 'message',
 	once: false,
@@ -43,7 +45,7 @@ module.exports = {
 
 
 		if (logger.startsWith("nhắn cho")) {
-			var log = logger;
+			let log = logger;
 
 			if(logger.split(" ")[2].startsWith("[")) log = "nhắn cho " + logger.split("]")[1];
 
@@ -122,10 +124,7 @@ module.exports = {
 			
 					if(checkdata == undefined || guild == undefined) return;
 
-					let channel = client.channels.cache.get(checkdata);
-					
-					if(!channel) return;
-					channel.send(embedNotf);
+					try { client.channels.cache.get(checkdata).send(embedNotf); } catch(e) {}
 				});
 			}
 		}
@@ -275,24 +274,31 @@ module.exports = {
 			var users = await Object.values(bot.players).map(p => p.username);
 			if(users.indexOf(name) < 0) return;
 			// console.log("save dead " + name);
+			log("Try to save death " + name);
+			try {
+				const d = new Scriptdb(`./data/deaths/${name}.json`);
 
-			const d = new Scriptdb(`./data/deaths/${name}.json`, { asyncWrite: true });
+				if(d.get('deaths') == undefined) {
+					d.set('deaths', logger);
+					d.set('times', Date.now());
+				} else {
+					d.set('deaths', d.get('deaths') + " | " + logger);
+					d.set('times', d.get('times') + " | " + Date.now());
+				}
 
-			if(d.get('deaths') == undefined) {
-				d.set('deaths', logger);
-				d.set('times', Date.now());
-			} else {
-				d.set('deaths', d.get('deaths') + " | " + logger);
-				d.set('times', d.get('times') + " | " + Date.now());
-			}
+				const death = new Scriptdb(`./data/kd/${name}.json`);
+				var data = death.get('deaths');
 
-			const death = new Scriptdb(`./data/kd/${name}.json`);
-			var data = death.get('deaths');
-
-			if(data == undefined) {
-				death.set('deaths', 1);
-			} else {
-				death.set('deaths', +data + 1);
+				if(data == undefined) {
+					death.set('deaths', 1);
+				} else {
+					death.set('deaths', +data + 1);
+				}
+			} catch(e) {
+				log("Error to save dead " + name);
+				console.log(e);
+				console.log(logger);
+				console.log(name);
 			}
 		}
 
@@ -304,23 +310,30 @@ module.exports = {
 			var users = await Object.values(bot.players).map(p => p.username);
 			if(users.indexOf(name) < 0) return;
 			// console.log("Saved " + name);
+			log("try to save kill " + name);
+			try {
+				const k = new Scriptdb(`./data/kills/${name}.json`);
+				if(k.get('kills') == undefined) {
+					k.set('deaths', logger);
+					k.set('times', Date.now());
+				} else {
+					k.set('deaths', k.get('deaths') + " | " + logger);
+					k.set('times', k.get('times') + " | " + Date.now());
+				}
+				
+				const kill = new Scriptdb(`./data/kd/${name}.json`);
+				var data = kill.get('kills');
 
-			const k = new Scriptdb(`./data/kills/${name}.json`, { asyncWrite: true });
-			if(k.get('kills') == undefined) {
-				k.set('deaths', logger);
-				k.set('times', Date.now());
-			} else {
-				k.set('deaths', k.get('deaths') + " | " + logger);
-				k.set('times', k.get('times') + " | " + Date.now());
-			}
-			
-			const kill = new Scriptdb(`./data/kd/${name}.json`);
-			var data = kill.get('kills');
-
-			if(data == undefined) {
-				kill.set('kills', 1);
-			} else {
-				kill.set('kills', +data + 1);
+				if(data == undefined) {
+					kill.set('kills', 1);
+				} else {
+					kill.set('kills', +data + 1);
+				}
+			} catch(e) {
+				log("Error to save kill " + name);
+				console.log(e);
+				console.log(logger);
+				console.log(name);
 			}
 		}
 
@@ -340,11 +353,7 @@ module.exports = {
 
 			if(checkdata == undefined || guild == undefined) return;
 
-			let channel = client.channels.cache.get(checkdata);
-
-			if(!channel) return;
-			
-			channel.send(embedDeath);
+			try { client.channels.cache.get(checkdata).send(embedDeath); } catch(e) {}
 		});
 	}
 }

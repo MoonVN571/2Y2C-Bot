@@ -7,7 +7,6 @@ const Topgg = require('@top-gg/sdk')
 const { AutoPoster } = require('topgg-autoposter')
 const express = require('express')
 
-const { unlink } = require('fs');
 var Scriptdb = require('script.db');
 
 module.exports = {
@@ -22,9 +21,20 @@ module.exports = {
             
             AutoPoster(client.config.tggtoken, client).on('posted', () => console.log('Posted stats to Top.gg!'));
     
-            app.post('/dblwebhook', webhook.listener(vote => {    
-                client.channels.cache.get('862215076698128396').send("**<@" + vote.user.id + ">** đã vote bot!");
-            }))
+            app.post('/dblwebhook', webhook.listener(vote => {
+                let data = new Scriptdb('./voted.json');
+                
+                if(!data.get("users-" + new Date().getUTCDate() + (new Date().getUTCMonth()+1) + new Date().getUTCFullYear())) {
+                    data.set('users-' + new Date().getUTCDate() + (new Date().getUTCMonth()+1) + new Date().getUTCFullYear(), vote.user);
+                } else {
+                    data.set('users-' + new Date().getUTCDate() + (new Date().getUTCMonth()+1) + new Date().getUTCFullYear(), vote.user + " " + data.get('users-' + new Date().getUTCDate() + (new Date().getUTCMonth()+1) + new Date().getUTCFullYear()));
+                }
+
+                client.channels.cache.get('862215076698128396').send({embed: {
+                    description: "**<@" + vote + ">** đã vote bot lúc: " + api.soKhong(new Date().getHours(), 2) + ":" + api.soKhong(new Date().getMinutes(), 2) + ":" + api.soKhong(new Date().getSeconds()),
+                    color: client.config.botEmbedColor
+                }});
+            }));
 
             app.listen(3000);
         }
@@ -47,8 +57,6 @@ module.exports = {
         
         log("Ready!");
         
-        if(!client.dev) unlink('./data.json', (err) => { if(err) console.log("Sảy ra lỗi khi xoá file data.json") });
-
         api.clean();
         
         // started notify
@@ -78,7 +86,7 @@ module.exports = {
             client.channels.cache.get('856516410750664764').setName('Total Guilds: ' +  client.guilds.cache.size);
             client.channels.cache.get('856517492372668426').setName('Total Channels: ' +  client.channels.cache.size);
             client.channels.cache.get('856517721122406430').setName('Total Users: ' +  client.guilds.cache.reduce((a, g) => a + g.memberCount, 0));
-        }, 1 * 60 * 60 * 1000);
+        }, 30 * 60 * 1000);
     
         // restart since
         var today = new Date()

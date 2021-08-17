@@ -43,11 +43,7 @@ module.exports = {
 
                         if(checkdata == undefined || guild == undefined) return;
 
-                        let channel = client.channels.cache.get(checkdata);
-                        
-                        if(!channel) return;
-                        
-                        channel.send(disconnected);
+                        try { client.channels.cache.get(checkdata).send(disconnected); } catch(e) {}
                     });
                 }
                 
@@ -66,17 +62,6 @@ module.exports = {
                 event.setAuto(false);
                 api.clean();
             }
-            
-            waitUntil(120 * 1000, 50, function condition() {
-                try {
-                    start.createBot(client);
-                    console.log('Reconected to the server.');
-                    return true;
-                } catch (error) {
-                    console.log("Error: " + error);
-                    return false;
-                }
-            }, () => {});
         }, 2 * 1000);
     }
 }

@@ -7,6 +7,10 @@ module.exports = {
         if (!message.guild.member(message.author).hasPermission("ADMINISTRATOR")) return message.channel.send("Không có quyền để dùng lệnh này.")
         var prefix = client.config.prefix;
         
+        let checkVote = new Scriptdb('./voted.json').get('users-' + new Date().getUTCDate() + (new Date().getUTCMonth()+1) + new Date().getUTCFullYear());
+
+        if(!checkVote || checkVote.split(" ").indexOf(message.author.id) < 0) return message.channel.send("Bạn phải vote bot để sử dụng lệnh này.\n\nVote tại: https://top.gg/bot/768448728125407242/vote");
+        
         if(!args[0]) return message.channel.send("Cách dùng: " + prefix + "setup chat <Kênh>");
         
         if(args[0] === "chat") {

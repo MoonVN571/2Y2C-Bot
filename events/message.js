@@ -6,6 +6,8 @@ module.exports = {
 	once: false,
 	execute(client, message) {
         if(message.author.bot || !message.content.startsWith(client.prefix) || message.author == client.user || message.channel.type == "dm") return;
+        
+        console.log(`[${new Date().toLocaleString()}] Guild: ${message.guild.name} || Channel: ${message.channel.name} || Usage: ${message.author.tag} - ${message.author.id}\nMessage: ${message.content}`);
 
         const args = message.content.slice(client.prefix.length).split(/ +/);
         const cmdName = args.shift().toLowerCase();

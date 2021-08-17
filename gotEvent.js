@@ -22,8 +22,7 @@ function event() {
 
     this.setAuto = (boolean) => {
         log('set auto event');
-        var auto = data.get('startedAuto');
-        setTimeout(() => { data.set('startedME', boolean) }, 5000);
-        return auto;
+        setTimeout(() => { data.set('startedAuto', boolean) }, 5000);
+        return boolean;
     }
 }

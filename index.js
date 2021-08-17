@@ -70,11 +70,9 @@ client.prefix = prefix;
 client.footer = config.footer;
 client.color = config.botEmbedColor;
 
-
 client.on('ready', () => {
     // if(!dev) 
     setTimeout(createBot, 5 * 1000);
-
 });
 
 function createBot() {
@@ -156,13 +154,11 @@ function createBot() {
             }
         }
     }
-
     var delayed = false;
 
+    // Only chat
     client.on('message', msg => {
-        var message = msg;
-        
-        if (msg.author.bot) return;
+        if(msg.author.bot) return;
 
         if (msg.channel.id === '797426761142632450') { // main
             if (msg.author == client.user) return;
@@ -172,7 +168,7 @@ function createBot() {
                 bot.chat(msg.content);
             }, 1 * 1000);
         }
-
+    
         if (msg.channel.id === '802456011252039680') {
             if (msg.author == client.user) return;
             if(config.dev == "true") return; 
@@ -185,65 +181,42 @@ function createBot() {
         if (msg.channel.id == defaultChannel) {
             if (msg.content.startsWith(">")) return;
             if (msg.content.startsWith(config.prefix)) return;
-
+    
             if(delayed) return;
             delayed = true;
-
+    
             setTimeout(() => delayed = false, 5 * 1000);
-
+    
             var content = msg.content;
-            
             if(!content) return;
-
-            let member = message.guild.members.cache.get(message.author);
-            let role = message.guild.roles.cache.find(r => r.name == "bypass chat");
+    
+            let member = msg.guild.members.cache.get(msg.author.id);
+            let role = msg.guild.roles.cache.find(r => r.name == "bypass chat");
             if(!member.roles.cache.get(role.id)) {
-                if(content.length > 88) return msg.channel.send("Rút ngắn tin nhắn của bạn lại để có thể gửi.");
+                if(msg.author.usernaem.length + content.length > 88) return msg.reply(" rút ngắn tin nhắn của bạn lại để có thể gửi.");
                 
                 let regex = /[a-z]|[A-Z]|[0-9]/i;
-
-                if(!message.author.username.toString().match(regex)) return msg.channel.send("Tên bạn có ký tự đặc biệt. Hãy đặt biệt danh");
+    
+                if(!msg.author.username.match(regex)) return msg.reply(" tên bạn có ký tự đặc biệt. Hãy đặt biệt danh");
             }
-
-            var str = msg.content.toString().split('\n')[0];
+    
+            var str = msg.content.split('\n')[0];
             var chat = str.charAt(0).toUpperCase() + str.substr(1);
-
             var fixes = content.charAt(0).toLowerCase();
-
+    
             if(str == "") return msg.channel.send("Nhập tin nhắn đê.");
-
-            if(msg.content.includes("§" || !fixes && fixes == "")) return msg.channel.send("bug text");
-
-            if(msg.author.bot) return;
+            if(msg.content.includes("§" || !fixes && fixes == "")) return msg.reply(" bạn không được phép gửi kí tự này");
 
             if(!chat.endsWith(".")) chat = chat + ".";
-
-            setTimeout(() => {
-                let member = message.guild.member(message.author.id);
-
-                let tag = `${member.nickname !== null ? `${member.nickname}` : message.author.tag}`;
-                bot.chat(`[${tag}]  ${chat}`);
-                
-                const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");
-                msg.react(send).catch();
-
-                // cooldown
-                cooldown.add("active");
-                antiSpam.add(msg.content + msg.author.id);
-
-                setTimeout(() => {
-                    cooldown.delete("active");
-                }, 5 * 1000);
-
-                setTimeout(() => {
-                    antiSpam.delete(msg.content + msg.author.id);
-                }, 1 * 60 * 1000);
-
-            }, 1 * 1000);
+    
+            let tag = `${member.nickname !== null ? `${member.nickname}` : msg.author.tag}`;
+            bot.chat(`[${tag}]  ${chat}`);
+            
+            const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");
+            msg.react(send).catch();
         }
     });
 }
-
 
 module.exports = {createBot };
 

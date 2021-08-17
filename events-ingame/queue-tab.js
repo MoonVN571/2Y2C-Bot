@@ -83,10 +83,7 @@ module.exports = {
 
             if(checkdata == undefined || guild == undefined) return;
                 
-            let channel = client.channels.cache.get(checkdata);
-            
-            if(!channel) return;
-            channel.send(embed);
+            try { client.channels.cache.get(checkdata).send(embed); } catch(e) {}
         });
     }
 }

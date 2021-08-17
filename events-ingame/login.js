@@ -36,11 +36,7 @@ module.exports = {
 
                 if(checkdata == undefined || guild == undefined) return;
                 
-                let channel = client.channels.cache.get(checkdata);
-
-                if(!chnanel) return;
-
-                channel.send(joinedd);
+                try { client.channels.cache.get(checkdata).send(joinedd); } catch(e) {}
                 
             });
 
