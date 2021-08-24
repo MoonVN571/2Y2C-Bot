@@ -34,10 +34,10 @@ module.exports = {
                     data.set('users-' + new Date().getUTCDate() + (new Date().getUTCMonth()+1) + new Date().getUTCFullYear(), vote.user + " " + data.get('users-' + new Date().getUTCDate() + (new Date().getUTCMonth()+1) + new Date().getUTCFullYear()));
                 }
 
-                client.channels.cache.get('862215076698128396').send({embed: {
-                    description: "**<@" + vote + ">** đã vote bot lúc: " + new Api().getTime(Date.now()),
+                client.channels.cache.get('862215076698128396').send({embeds: [{
+                    description: "**<@" + vote.user + ">** đã vote bot lúc: " + new Api().getTime(Date.now()),
                     color: client.config.DEF_COLOR
-                }});
+                }]});
             }));
 
             app.listen(3000);

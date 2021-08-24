@@ -10,17 +10,20 @@ const cfDir = require('../config.json');
 module.exports = {
 	name: 'message',
 	once: false,
-	execute(bot, client, msg) {
+	execute(bot, client, message) {
         var color = cfDir.COLORS.GAME.DEFAULT; // single channel
         var color2 = cfDir.COLORS.GAME.DEFAULT; // multi channel
 
-        if (!(msg.toString().startsWith("<"))) return;
+        if(!message) return;
+        var msg = message.toString();
 
-        var username = msg.toString().split(" ")[0].split("<")[1].split(">")[0];
+        if (!msg.startsWith("<")) return;
+
+        var username = msg.split(" ")[0].split("<")[1].split(">")[0];
 
         if(username.startsWith("[")) username = username.split("]")[1];
 
-        logger = msg.toString().substr(msg.toString().split(" ")[0].length + 1);
+        logger = msg.substr(msg.split(" ")[0].length + 1);
     
         if (logger.startsWith(">")) color2 = cfDir.COLORS.GAME.DEFAULT;
     
@@ -30,9 +33,11 @@ module.exports = {
                         .setDescription(`**<${api.removeFormat(username)}>** ${api.removeFormat(logger)}`)
                         .setColor(color2);
     
-        client.channels.cache.get(bot.defaultChannel).send({embeds: [chat]});
-        color2 = "0x797979";
-
+        try {
+            client.channels.cache.get(bot.defaultChannel).send({embeds: [chat]});
+            color2 = "0x797979";
+        } catch(e) {}
+        
         // check if message start with > and change color 
         var setLogger = `**<${api.removeFormat(username)}>** ${api.removeFormat(logger)}`;
 

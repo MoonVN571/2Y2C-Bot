@@ -1,4 +1,5 @@
 var { MessageEmbed, Permissions, Collection } = require('discord.js');
+const Scriptdb = require('script.db');
 
 const cfDir = require('../config.json');
 const Api =  require("../api");

@@ -3,7 +3,7 @@ module.exports = {
     aliases: ['e'],
     admin: true,
     
-    execute(bot, username, args) {
+    async execute(bot, username, args) {
         let evaled;
         try {
             evaled = await eval(args.join(' '));

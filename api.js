@@ -262,6 +262,10 @@ function API() {
         ":" + this.soKhong(new Date(datetime).getSeconds(), 2);
     }
 
+    this.soKhong = (value, length) => {
+        return `${value}`.padStart(length, 0);
+    }
+
     this.calculate = time => {
         let temp = time / 1000;
         var day = 0, hour = 0, minutes = 0, seconds = 0;

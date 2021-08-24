@@ -36,7 +36,9 @@ client.dev = devMode;
 client.PREFIX = prefix;
 client.FOOTER = cfDir.FOOTER + "";
 
-client.config = {
+require('dotenv').config();
+
+const config = {
     DEF_COLOR: cfDir.COLORS.DISCORD.DEFAULT,
     ERR_COLOR: cfDir.COLORS.DISCORD.ERROR,
     PROCESS_COLOR: cfDir.COLORS.DISCORD.PROCESS,
@@ -45,12 +47,10 @@ client.config = {
     TOPGG_AUTH: process.env.TOPGG_AUTH
 }
 
+client.config = config;
+
 client.on('ready', () => {
     setTimeout(createBot, 5 * 1000);
-});
-
-client.on('guildMemberAdd', (guild) => {
-    
 });
 
 const notRepeat = new Set();
@@ -149,12 +149,7 @@ function createBot() {
 
         if (msg.channel.id == defaultChannel) {
             if (msg.content.startsWith(">")) return;
-    
-            if(delayed) return;
-            delayed = true;
-    
-            setTimeout(() => delayed = false, 5 * 1000);
-    
+
             var content = msg.content;
             if(!content) return;
     
@@ -175,9 +170,9 @@ function createBot() {
             if(msg.content.includes("§") || !fixes) return msg.reply("Kí tự không hợp lệ.");
 
             if(!chat.endsWith(".")) chat = chat + ".";
-    
+            
             if(delayCheck.has('inQueue')) return;
-            if(notRepeat.has(msg.content + msg.author.id)) return;
+            if(notRepeat.has(msg.content + " " + msg.author.id)) return;
 
             let tag = `${member.nickname !== null ? `${member.nickname}` : msg.author.tag}`;
             bot.chat(`[${tag}]  ${chat}`);
@@ -191,24 +186,23 @@ function createBot() {
 client.on('messageCreate', msg => {
     if(msg.author.bot || msg.author == client.user || msg.content.startsWith(prefix)) return;
 
-    if(msg.channel.id == defaultChannel) {
-        if(delayCheck) return msg.reply("Bạn phải chờ vài giây trước khi tiếp tục chat.");
+    setTimeout(() => {
+        if(msg.channel.id == defaultChannel) {
+            if(delayCheck.has('inQueue')) return msg.reply("Bạn phải chờ vài giây trước khi tiếp tục chat.");
 
-        delayCheck.set('inQueue');
-        setTimeout(() => delayCheck.delete('inQueue'), 2 * 1000);
+            delayCheck.add('inQueue');
+            setTimeout(() => delayCheck.clear(), 2 * 1000);
 
-        if(notRepeat.has(msg.content + msg.author.id)) return msg.reply("Bạn không được lập lại tin nhắn.");
+            if(notRepeat.has(msg.content + " " + msg.author.id)) return msg.reply("Bạn không được lập lại tin nhắn.");
 
-        notRepeat.set(msg.content + " " + msg.author.id);
-        setTimeout(() => notRepeat.delete(msg.content + " " + msg.author.id), 5 * 60 * 1000);
-        
-    }
+            notRepeat.add(msg.content + " " + msg.author.id);
+            setTimeout(() => notRepeat.delete(msg.content + " " + msg.author.id), 5 * 60 * 1000);
+        }
+    }, 2 * 1000);
 });
 
 module.exports = { createBot };
 
 require('./handlers/event')(client);
-
-require('dotenv').config();
 
 client.login(process.env.TOKEN).catch(err => console.log(err));

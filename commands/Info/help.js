@@ -77,6 +77,7 @@ module.exports = {
                         .setDescription(`\u300B Hãy gõ **${client.PREFIX}help <tên lệnh>** để biết thêm thông tin!\n\u300BTổng **${totalCommands}** lệnh có sẵn và trong server có **${totalIgCmd}** lệnh.\u200b\n\u200b`)
                         .setTimestamp()
                         .setColor(client.config.DEF_COLOR)
+                        .setFooter(client.FOOTER)
                         .setThumbnail(client.user.avatarURL)
 
         await readdirSync('./commands/').forEach(async dir => {

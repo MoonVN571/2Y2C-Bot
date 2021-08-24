@@ -66,7 +66,7 @@ module.exports = {
 				if(bot.dev) {
 					client.channels.cache.get("807045720699830273").send({embeds: [quetime]});
 				} else {
-					client.channels.cache.get("806881615623880704").send({embds: [quetime]});
+					client.channels.cache.get("806881615623880704").send({embeds: [quetime]});
 				}
 			}, 2 * 1000);
 		}
@@ -307,8 +307,10 @@ module.exports = {
 					.setDescription(api.removeFormat(deathMsg))
 					.setColor(newcolor);
 		
-		client.channels.cache.get(bot.defaultChannel).send({embeds: [embedDeath]});
-
+		try{
+			client.channels.cache.get(bot.defaultChannel).send({embeds: [embedDeath]});
+		} catch(e) {}
+		
 		if(!bot.dev) return;
 		
 		client.guilds.cache.forEach((guild) => {

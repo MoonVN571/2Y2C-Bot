@@ -48,7 +48,7 @@ module.exports = {
         if(queue == String) queue = queue.split(" ")[0];
         if(prio == String) prio = prio.split(" ")[0];
 
-        var status = "TPS: " + tps + " - Queue: " + queue + " - Prio: " + prio + " | Prefix: $";
+        var status = "TPS: " + tps + " - Queue: " + queue.split(" ")[0] + " - Prio: " + prio.split(" ")[0] + " | Prefix: $";
         if(status.startsWith("§6Donate")) return;
         
         client.user.setActivity(status, { type: 'PLAYING' });

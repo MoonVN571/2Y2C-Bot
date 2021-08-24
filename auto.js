@@ -38,11 +38,10 @@ module.exports.start = (bot, client) => {
             const checkdata = data.get('livechat');
 
             if(guild == undefined) return;
-            
-            let channel = client.channels.cache.get(checkdata);
-
-            if(!channel) return;
-            channel.setTopic(datas.split(" | ")[0] + " - Đã vào server từ " + api.calcTime() + " trước.").catch(err => {});
+            try {
+                let channel = client.channels.cache.get(checkdata);
+                channel.setTopic(datas.split(" | ")[0] + " - Đã vào server từ " + api.calcTime() + " trước.").catch(err => {});
+            } catch(e) {}
         });
     }, 6 * 60 * 1000);
 

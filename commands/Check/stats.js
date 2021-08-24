@@ -33,7 +33,7 @@ module.exports = {
                         .addField(`K/D Ratio`, `${ratioFixed}`, true )
                         .setThumbnail(`https://minotar.net/helm/${args[0]}`)
                         .setColor(0x2EA711)
-                        .setFooter(client.footer, 'https://cdn.discordapp.com/avatars/768448728125407242/f18ec971961b23db96e6cf0f3f79ec1c.png?size=256')
+                        .setFooter(client.FOOTER, 'https://cdn.discordapp.com/avatars/768448728125407242/f18ec971961b23db96e6cf0f3f79ec1c.png?size=256')
                         .setTimestamp();
 
         message.reply({embeds: [embed]});
