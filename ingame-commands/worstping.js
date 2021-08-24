@@ -1,9 +1,9 @@
 module.exports = {
     name: "worstping",
-    description: "Xem người chơi ping cao nhất.",
+    description: "Xem người chơi ping cao nhất",
     aliases: ['wp'],
     
-    async execute(bot, username, args) {
+    execute(bot, username, args) {
         var arr = Object.values(bot.players).map(p => p.ping + " " +p.username);
 
         arr.sort((a, b) => b.split(" ")[0] - a.split(" ")[0]);

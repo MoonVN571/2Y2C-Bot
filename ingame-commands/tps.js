@@ -1,9 +1,9 @@
 module.exports = {
     name: "tps",
-    description: "tps command.",
+    description: "Xem độ mượt của server",
     aliases: ['tps'],
     
-    async execute(bot, username, args) {
+    execute(bot, username, args) {
         bot.whisper(username, `> TPS : ${bot.getTps()}`)
     }
 }

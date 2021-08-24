@@ -5,8 +5,9 @@ var api = new a();
 
 module.exports = {
     name: "lastkill",
-    
-    async execute(bot, username, args) {
+    description: "Xem tin nhắn giết người mới nhất",
+
+    execute(bot, username, args) {
         if(!args[0]) return bot.whisper(username, '> Không tìm thấy người chơi.');
         if(!args[0].match(bot.regex)) return;
 
@@ -31,6 +32,8 @@ module.exports = {
             time = times;
         }
 
-        bot.whisper(username, `> ${args[0]} [${api.ageCalc(time)} trước]: ${data}`);
+        let timed = time ? api.ageCalc(time) : "Không rõ";
+
+        bot.whisper(username, `> ${args[0]} [${timed} trước]: ${data}`);
     }
 }

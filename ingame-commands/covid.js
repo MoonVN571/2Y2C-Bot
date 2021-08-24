@@ -2,6 +2,7 @@ const covid19 = require('covid19-stats');
 
 module.exports = {
     name: "covid",
+    description: "Xem API dịch Covid ở VN",
     aliases: ['covid19', 'covid-19', 'coronavirus', 'corona'],
     
     async execute(bot, username, args) {

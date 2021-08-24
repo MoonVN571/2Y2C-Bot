@@ -3,10 +3,9 @@ const { Movements } = require('mineflayer-pathfinder')
 
 module.exports = {
     name: "follow",
-    description: "follow command.",
-    aliases: ['follow'],
-    
-    async execute(bot, username, args) {
+    description: "Cho bot đi theo bạn",
+
+    execute(bot, username, args) {
 		const mcData = require('minecraft-data')(bot.version)
 		const defaultMove = new Movements(bot, mcData)
 

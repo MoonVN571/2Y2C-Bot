@@ -39,14 +39,14 @@ module.exports = {
         if(tps.startsWith("*")) tps = data.replace("*", "")
 
         var dataa = new Scriptdb('./data.json');
-        var queue = dataa.get('queue');
-        var prio = dataa.get('prio');
+        var queue = dataa.get('queue') || 0;
+        var prio = dataa.get('prio') || 0;
 
         var headerr =  header.toString().split("§r§6")[1].split(/\\n/ig)[0];
         dataa.set('server-motd', headerr);
 
-        if(queue == undefined) queue = -1;
-        if(prio == undefined) prio = -1;
+        if(queue == String) queue = queue.split(" ")[0];
+        if(prio == String) prio = prio.split(" ")[0];
 
         var status = "TPS: " + tps + " - Queue: " + queue + " - Prio: " + prio + " | Prefix: $";
         if(status.startsWith("§6Donate")) return;

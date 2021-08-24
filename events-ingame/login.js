@@ -25,10 +25,10 @@ module.exports = {
         start(bot,client);
         
         if(bot.dev) {
-            client.channels.cache.get(bot.defaultChannel).send(joinedd);
-            client.channels.cache.get("807045720699830273").send(queuejoined); // bot log
+            client.channels.cache.get(bot.defaultChannel).send({embeds: [joinedd]});
+            client.channels.cache.get("807045720699830273").send({embeds: [queuejoined]}); // bot log
         } else {
-            client.channels.cache.get(bot.defaultChannel).send(joinedd);
+            client.channels.cache.get(bot.defaultChannel).send({embeds: [joinedd]});
             
             client.guilds.cache.forEach((guild) => {
                 const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
@@ -36,11 +36,11 @@ module.exports = {
 
                 if(checkdata == undefined || guild == undefined) return;
                 
-                try { client.channels.cache.get(checkdata).send(joinedd); } catch(e) {}
+                try { client.channels.cache.get(checkdata).send({embeds: {joinedd}}); } catch(e) {}
                 
             });
 
-            client.channels.cache.get("806881615623880704").send(queuejoined); // devlog
+            client.channels.cache.get("806881615623880704").send({embeds: [queuejoined]}); // devlog
         }
     }
 }

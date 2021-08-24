@@ -2,7 +2,10 @@ var Scriptdb = require('script.db');
 var log = require('./log');
 
 function API() {
-    this.ageCalc = (time) => {
+    /**
+     * locate: Vietnam, quoc_te
+     */
+    this.ageCalc = (time, quoc_te) => {
         log(new Date(+time).toLocaleString());
         log(new Date().toLocaleString());
 
@@ -18,10 +21,15 @@ function API() {
         log(t +"time");
         log(d +"d");
 
-        var dstr = d.split("/")[1];
-        var mstr = d.split("/")[0];
-        var ystr = d.split("/")[2];
-
+        if(!quoc_te) {
+            var dstr = d.split("/")[1];
+            var mstr = d.split("/")[0];
+            var ystr = d.split("/")[2];
+        } else {
+            var dstr = d.split("/")[0];
+            var mstr = d.split("/")[1];
+            var ystr = d.split("/")[2];    
+        }
         if(dstr >= 1) dstr = dstr - 1;
         if(mstr >= 1) mstr = mstr - 1;
         if(ystr == 1970) ystr = ystr - 1970;
@@ -126,7 +134,7 @@ function API() {
         minutes = parseInt(((temp - days * 86400 - hours * 3600)) / 60)
         seconds = parseInt(temp % 60)
 
-        return days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+        return days + " ngày " + hours + " giờ " + minutes + " phút " + seconds + " giây";
     }
 
     this.uptimeCalc = () => {        
@@ -232,6 +240,66 @@ function API() {
         return string;
     }
 
+    this.getDate = (datetime) => {
+        return this.soKhong(new Date(datetime).getDate(), 2) + 
+        "/" + this.soKhong(new Date(datetime).getMonth() + 1, 2) + 
+        "/" + new Date(datetime).getFullYear();
+    }
+
+    this.getTime = (time) => {
+        return this.soKhong(new Date(time).getHours(), 2) + 
+        ":" + this.soKhong(new Date(time).getMinutes(), 2) + 
+        ":" + this.soKhong(new Date(time).getSeconds(), 2);
+    }
+
+    this.getTimestamp = (datetime) => {
+        return this.soKhong(new Date(datetime).getDate(), 2) + 
+        "/" + this.soKhong(new Date(datetime).getMonth() + 1, 2) + 
+        "/" + new Date(datetime).getFullYear() + 
+        " " + 
+        this.soKhong(new Date(datetime).getHours(), 2) + 
+        ":" + this.soKhong(new Date(datetime).getMinutes(), 2) + 
+        ":" + this.soKhong(new Date(datetime).getSeconds(), 2);
+    }
+
+    this.calculate = time => {
+        let temp = time / 1000;
+        var day = 0, hour = 0, minutes = 0, seconds = 0;
+        days = parseInt(temp / 86400);
+        hour = parseInt(((temp - days * 86400) / 3600))
+        minutes = parseInt(((temp - days * 86400 - hour * 3600)) / 60)
+        seconds = parseInt(temp % 60)
+    
+        var string;
+        if( day == 0 ) {
+            if(minutes > 0 && hour > 0 ) {
+                string = hour + " giờ " + minutes + " phút";
+                if(seconds > 0) string = hour + " giờ " + minutes + " phút " + seconds + " giây";		
+            }
+            if(minutes == 0 && hour > 0) {
+                string = hour + " giờ";
+                if(seconds > 0) string = hour + " giờ " + seconds + " giây"
+            }
+            if(minutes > 0 && hour == 0) {
+                string = minutes + " phút";
+                if(seconds > 0) string = minutes + " phút " +  seconds + " giây";
+            }
+
+            if(minutes == 0 && hour == 0) string = seconds + " giây";
+        } else {
+            if(minutes > 0 && hour > 0 ) {
+                string = day + " ngày " + hour + " giờ " + minutes + " phút";		
+            }
+            if(minutes == 0 && hour > 0) {
+                string = day + " ngày " + hour + " giờ";
+            }
+            if(minutes > 0 && hour == 0) {
+                string = day + " ngày " + minutes + " phút";
+            }
+        }
+        return string;
+    }
+    
     this.soKhong = (value, length) => {
         return `${value}`.padStart(length, 0);
     }

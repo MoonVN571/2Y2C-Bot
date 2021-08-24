@@ -1,9 +1,8 @@
 module.exports = {
     name: "ping",
-    description: "ping command.",
-    aliases: ['ping'],
+    description: "Xem ping của bạn hoặc ai đó",
     
-    async execute(bot, username, args) {
+    execute(bot, username, args) {
         if(args[0]) {
             if(!args[0].toString().match(bot.regex)) return;
         } else {

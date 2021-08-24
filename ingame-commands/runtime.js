@@ -3,10 +3,10 @@ var api = new abc();
 
 module.exports = {
     name: "runtime",
-    description: "runtime command.",
+    description: "Xem thời gian bot đã hoạt động trong server",
     aliases: ['runtime', 'uptime'],
     
-    async execute(bot, username, args) {
+    execute(bot, username, args) {
         bot.whisper(username, "> Uptime : " + api.uptimeCalc());
     }
 }

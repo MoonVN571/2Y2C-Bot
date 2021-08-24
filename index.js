@@ -15,86 +15,62 @@
  * Copyright © 2020 - 2021 Moon Bot
  */
 
-// Discord client
-const { Client, Collection } = require("discord.js");
-const client = new Client();
+const { Client, Intents, Collection } = require("discord.js");
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES], allowedMentions: {repliedUser: false }});
 
-const { readdirSync  } = require('fs');
-
-var d = require("./gotEvent");
-var event = new d();
+const { readdirSync } = require('fs');
 
 var mineflayer = require('mineflayer');
 var tpsPlugin = require('mineflayer-tps')(mineflayer);
-var {pathfinder} = require('mineflayer-pathfinder');
+var { pathfinder } = require('mineflayer-pathfinder');
 
 const log = require('./log');
+const cfDir = require('./config.json');
 
-require('dotenv').config();
+var devMode = cfDir.DEV_MODE;
+var prefix = cfDir.MAIN.DISCORD_PREFIX;
 
-const config = {
-	token: process.env.TOKEN,
-	username: process.env.IGN,
-	devUsername: process.env.IGN2,
-	footer: process.env.FOOTER,
-	prefix:  process.env.PREFIX,
-	devPrefix: process.env.PREFIX2,
-	channel: process.env.CHANNEL,
-	devChannel: process.env.CHANNEL2,
-	ingamePrefix: process.env.IGPREFIX,
-	ingamePrefixDev: process.env.IGPREFIX2,
-	chatColor: process.env.COLOR,
-	chatColorHighlight: process.env.COLOR2LAI,
-	botEmbedColor: process.env.BOTCOLOR,
-	author: process.env.AUTHOR,
-	dev: process.env.DEV,
-    tggtoken: process.env.TOPGGTOKEN,
-    authtoken: process.env.TOPGGAUTH
-};
+if(devMode) prefix = cfDir.DEV.DISCORD_PREFIX;
 
-client.config = config;
+client.dev = devMode;
+client.PREFIX = prefix;
+client.FOOTER = cfDir.FOOTER + "";
 
-var dev = false;
-var prefix;
-
-if(config.dev == "true") {
-    dev = true;
-    prefix = config.devPrefix
-} else {
-    dev = false;
-    prefix = config.prefix
+client.config = {
+    DEF_COLOR: cfDir.COLORS.DISCORD.DEFAULT,
+    ERR_COLOR: cfDir.COLORS.DISCORD.ERROR,
+    PROCESS_COLOR: cfDir.COLORS.DISCORD.PROCESS,
+    AUTHOR: cfDir.DEVELOPERS,
+    TOPGG_TOKEN: process.env.TOPGG_TOKEN,
+    TOPGG_AUTH: process.env.TOPGG_AUTH
 }
 
-client.dev = dev;
-client.prefix = prefix;
-client.footer = config.footer;
-client.color = config.botEmbedColor;
-
 client.on('ready', () => {
-    // if(!dev) 
     setTimeout(createBot, 5 * 1000);
 });
+
+client.on('guildMemberAdd', (guild) => {
+    
+});
+
+const notRepeat = new Set();
+const delayCheck = new Set();
+
+var defaultChannel = cfDir.MAIN.CHANNEL;
+var usernameBot = cfDir.MAIN.USERNAME;
+var igPrefix = cfDir.MAIN.IG_PREFIX;
+
+if (devMode) {
+    defaultChannel = cfDir.DEV.CHANNEL;
+    usernameBot = cfDir.DEV.USERNAME;
+
+    igPrefix = cfDir.DEV.IG_PREFIX;
+}
 
 function createBot() {
 	console.log('------------------------');
 
-    log("Bot function started");
-    
-    var defaultChannel;
-    var usernameBot;
-    var igPrefix;
-
-    if (config.dev == "true") {
-        defaultChannel = config.devChannel;
-        usernameBot = config.devUsername;
-
-        igPrefix = config.ingamePrefixDev;
-    } else {
-        defaultChannel = config.channel;
-        usernameBot = config.username;
-
-        igPrefix = config.ingamePrefix;
-    }
+    log("Creating bot and connect to the server...");
     
     const bot = mineflayer.createBot({
         host: "2y2c.org",
@@ -106,12 +82,10 @@ function createBot() {
     bot.loadPlugin(tpsPlugin);
     bot.loadPlugin(pathfinder);
 
-    bot.defaultChannel = defaultChannel; // Kenh mat dinh cua chat
+    bot.defaultChannel = defaultChannel;
 
-    bot.dev = dev;
-    bot.config = config;
+    bot.dev = devMode;
     bot.prefix = igPrefix;
-
 
     var lobby = true; // Bot in queue
     bot.lobby = lobby;
@@ -121,10 +95,7 @@ function createBot() {
 
     var haveJoined = false; // check da thay tin dang vao 2y2c chua
     bot.haveJoined = haveJoined; 
-
-    var countPlayers = 0; // Join spam fix
-    bot.countPlayers = countPlayers;
-
+    
     // cmd  handler
     bot.commands = new Collection();
 
@@ -157,12 +128,11 @@ function createBot() {
     var delayed = false;
 
     // Only chat
-    client.on('message', msg => {
-        if(msg.author.bot) return;
+    client.on('messageCreate', msg => {
+        if(msg.author.bot || msg.author == client.user || msg.content.startsWith(prefix)) return;
 
         if (msg.channel.id === '797426761142632450') { // main
-            if (msg.author == client.user) return;
-            if(config.dev !== "false") return;
+            if(dev) return;
         
             setTimeout(() => {
                 bot.chat(msg.content);
@@ -170,8 +140,7 @@ function createBot() {
         }
     
         if (msg.channel.id === '802456011252039680') {
-            if (msg.author == client.user) return;
-            if(config.dev == "true") return; 
+            if(dev) return; 
             
             setTimeout(() => {
                 bot.chat(msg.content);
@@ -180,7 +149,6 @@ function createBot() {
 
         if (msg.channel.id == defaultChannel) {
             if (msg.content.startsWith(">")) return;
-            if (msg.content.startsWith(config.prefix)) return;
     
             if(delayed) return;
             delayed = true;
@@ -193,22 +161,24 @@ function createBot() {
             let member = msg.guild.members.cache.get(msg.author.id);
             let role = msg.guild.roles.cache.find(r => r.name == "bypass chat");
             if(!member.roles.cache.get(role.id)) {
-                if(msg.author.usernaem.length + content.length > 88) return msg.reply(" rút ngắn tin nhắn của bạn lại để có thể gửi.");
+                if(msg.author.username.length + content.length > 88) return msg.reply("Rút ngắn tin nhắn của bạn lại để có thể gửi.");
                 
                 let regex = /[a-z]|[A-Z]|[0-9]/i;
     
-                if(!msg.author.username.match(regex)) return msg.reply(" tên bạn có ký tự đặc biệt. Hãy đặt biệt danh");
+                if(!msg.author.username.match(regex)) return msg.reply("Tên bạn có ký tự đặc biệt. Hãy đặt biệt danh");
             }
     
             var str = msg.content.split('\n')[0];
             var chat = str.charAt(0).toUpperCase() + str.substr(1);
             var fixes = content.charAt(0).toLowerCase();
-    
-            if(str == "") return msg.channel.send("Nhập tin nhắn đê.");
-            if(msg.content.includes("§" || !fixes && fixes == "")) return msg.reply(" bạn không được phép gửi kí tự này");
+
+            if(msg.content.includes("§") || !fixes) return msg.reply("Kí tự không hợp lệ.");
 
             if(!chat.endsWith(".")) chat = chat + ".";
     
+            if(delayCheck.has('inQueue')) return;
+            if(notRepeat.has(msg.content + msg.author.id)) return;
+
             let tag = `${member.nickname !== null ? `${member.nickname}` : msg.author.tag}`;
             bot.chat(`[${tag}]  ${chat}`);
             
@@ -218,29 +188,27 @@ function createBot() {
     });
 }
 
-module.exports = {createBot };
+client.on('messageCreate', msg => {
+    if(msg.author.bot || msg.author == client.user || msg.content.startsWith(prefix)) return;
 
-// event handler
-const eventFiles = readdirSync('./events').filter(file => file.endsWith('.js'));
+    if(msg.channel.id == defaultChannel) {
+        if(delayCheck) return msg.reply("Bạn phải chờ vài giây trước khi tiếp tục chat.");
 
-for (const file of eventFiles) {
-    const event = require(`./events/${file}`);
-    
-    if (event.once) {
-        client.once(event.name, (...args) => event.execute(client, ...args));
-    } else {
-        client.on(event.name, (...args) => event.execute(client, ...args));
+        delayCheck.set('inQueue');
+        setTimeout(() => delayCheck.delete('inQueue'), 2 * 1000);
+
+        if(notRepeat.has(msg.content + msg.author.id)) return msg.reply("Bạn không được lập lại tin nhắn.");
+
+        notRepeat.set(msg.content + " " + msg.author.id);
+        setTimeout(() => notRepeat.delete(msg.content + " " + msg.author.id), 5 * 60 * 1000);
+        
     }
-}
-  
-client.commands = new Collection();
+});
 
-const cmds = readdirSync(`./commands`).filter(file => file.endsWith('.js'));
-for (const file of cmds) {
-    const cmd = require(`./commands/${file}`);
+module.exports = { createBot };
 
-    client.commands.set(cmd.name, cmd);
-}
+require('./handlers/event')(client);
 
+require('dotenv').config();
 
-client.login(config.token).catch(err => console.log(err));
+client.login(process.env.TOKEN).catch(err => console.log(err));

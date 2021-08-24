@@ -2,10 +2,10 @@ var Scriptdb = require("script.db");
 
 module.exports = {
     name: "stats",
-    description: "stats command.",
+    description: "Xem K/D người chơi",
     aliases: ['stats', 'kd'],
     
-    async execute(bot, username, args) {
+    execute(bot, username, args) {
         if(args[0]) {
             if(!args[0].toString().match(bot.regex)) return;
         } else {

@@ -5,7 +5,7 @@ module.exports = {
     description: "quotes command.",
     aliases: ['quotes'],
     
-    async execute(bot, username, args) {
+    execute(bot, username, args) {
         if(!args[0]) return;
         if(!args[0].match(bot.regex)) return;
 

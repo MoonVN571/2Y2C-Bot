@@ -5,10 +5,10 @@ var api = new a();
 
 module.exports = {
     name: "joindate",
-    description: "joindate command.",
+    description: "Xem lần đầu bot thấy người chơi vào server",
     aliases: ['jd', 'joindate'],
     
-    async execute(bot, username, args) {
+    execute(bot, username, args) {
         if(!args[0]) return;
         if(!args[0].match(bot.regex)) return;
 

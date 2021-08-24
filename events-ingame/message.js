@@ -5,12 +5,14 @@ var api = new a();
 
 var Scriptdb = require('script.db');
 
+const cfDir = require('../config.json');
+
 module.exports = {
 	name: 'message',
 	once: false,
 	execute(bot, client, msg) {
-        var color = client.config.chatColor; // single channel
-        var color2 = client.config.chatColor; // multi channel
+        var color = cfDir.COLORS.GAME.DEFAULT; // single channel
+        var color2 = cfDir.COLORS.GAME.DEFAULT; // multi channel
 
         if (!(msg.toString().startsWith("<"))) return;
 
@@ -20,7 +22,7 @@ module.exports = {
 
         logger = msg.toString().substr(msg.toString().split(" ")[0].length + 1);
     
-        if (logger.startsWith(">")) color2 = client.config.chatColorHighlight;
+        if (logger.startsWith(">")) color2 = cfDir.COLORS.GAME.DEFAULT;
     
         if(logger.startsWith("[") && username == bot.username) color2 = 0x4983e7;
         
@@ -28,7 +30,7 @@ module.exports = {
                         .setDescription(`**<${api.removeFormat(username)}>** ${api.removeFormat(logger)}`)
                         .setColor(color2);
     
-        client.channels.cache.get(bot.defaultChannel).send(chat);
+        client.channels.cache.get(bot.defaultChannel).send({embeds: [chat]});
         color2 = "0x797979";
 
         // check if message start with > and change color 
@@ -40,7 +42,7 @@ module.exports = {
     
             if(checkdata == undefined || guild == undefined) return;
             
-            if(setLogger.split(" ")[1].startsWith(">")) color = client.config.chatColorHighlight;
+            if(setLogger.split(" ")[1].startsWith(">")) color = cfDir.COLORS.GAME.HIGHLIGHT;
 
             if(setLogger.split(" ")[0].startsWith("[") && username == bot.username) color = 0x4983e7;
 
@@ -50,8 +52,8 @@ module.exports = {
 
             if(bot.dev) return;
             try {
-                client.channels.cache.get(checkdata).send(embedChat).then(() => {				
-                    color = client.config.chatColor;
+                client.channels.cache.get(checkdata).send({embeds: [embedChat]}).then(() => {				
+                    color = cfDir.COLORS.GAME.DEFAULT;
                 });
             } catch(e) {}
         });

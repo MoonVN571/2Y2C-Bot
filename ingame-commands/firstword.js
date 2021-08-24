@@ -5,9 +5,9 @@ var api = new a();
 
 module.exports = {
     name: "firstword",
-    aliases: [''],
+    description: "Xem tin nhắn đã gửi đầu tiên",
     
-    async execute(bot, username, args) {
+    execute(bot, username, args) {
         if(!args[0]) return bot.whisper(username, '> Không tìm thấy người chơi.');
         if(!args[0].match(bot.regex)) return;
         

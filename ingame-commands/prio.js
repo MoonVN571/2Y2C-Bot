@@ -2,7 +2,7 @@ var Scriptdb = require('script.db');
 
 module.exports = {
     name: "prio",
-    description: "prio command.",
+    description: "Xem hàng chờ ưu tiên",
     aliases: ['prioqueue'],
     
     async execute(bot, username, args) {

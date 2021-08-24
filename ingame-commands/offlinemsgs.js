@@ -4,7 +4,7 @@ module.exports = {
     name: "offlinemsgs",
     aliases: ['omsgs'],
     
-    async execute(bot, username, args) {
+    execute(bot, username, args) {
         if(!args[0]) return bot.whisper(username, "> Nhập tên người cần nhắn khi họ online.");
         if(!args[1]) return bot.whisper(username, "> Bạn cần nhập nội dung để gửi tin nhắn.");
 

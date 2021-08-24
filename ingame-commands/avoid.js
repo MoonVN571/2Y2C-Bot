@@ -4,10 +4,9 @@ const { GoalFollow, GoalInvert } = require('mineflayer-pathfinder').goals
 
 module.exports = {
     name: "avoid",
-    description: "avoid command.",
-    aliases: [''],
-    
-    async execute(bot, username, args) {
+    description: "Tránh",
+
+    execute(bot, username, args) {
 		const mcData = require('minecraft-data')(bot.version)
 		const defaultMove = new Movements(bot, mcData)
 

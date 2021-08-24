@@ -1,9 +1,8 @@
 module.exports = {
     name: "discord",
-    description: "discord command.",
-    aliases: [''],
+    description: "Lấy link discord server bot",
     
-    async execute(bot, username, args) {
+    execute(bot, username, args) {
         bot.whisper(username, `> Discord : http://discord.gg/yrNvvkqp6w`)
     }
 }

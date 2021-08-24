@@ -45,13 +45,9 @@ module.exports = {
 
 
 		if (logger.startsWith("nhắn cho")) {
-			let log = logger;
+			if(logger.split(" ")[2].startsWith("[")) loggger = "nhắn cho " + logger.split("]")[1];
 
-			if(logger.split(" ")[2].startsWith("[")) log = "nhắn cho " + logger.split("]")[1];
-
-			api.removeFormat(log);
-
-			notfMsg = log;
+			notfMsg = api.removeFormat(logger);
 			colorNotf = "0xFD00FF";
 		}
 
@@ -68,35 +64,41 @@ module.exports = {
 							.setColor(0xeeee00);
 
 				if(bot.dev) {
-					client.channels.cache.get("807045720699830273").send(quetime);
+					client.channels.cache.get("807045720699830273").send({embeds: [quetime]});
 				} else {
-					client.channels.cache.get("806881615623880704").send(quetime);
+					client.channels.cache.get("806881615623880704").send({embds: [quetime]});
 				}
 			}, 2 * 1000);
 		}
 
-		if(logger == " đang vào 2y2c...") {
+		if(logger == "đang vào 2y2c...") {
 			let data = new Scriptdb('./data.json');
 			data.set(`uptime`, Date.now());
 		}
 
-		if (logger ==" đang vào 2y2c..."
+		if (logger =="đang vào 2y2c..."
 		|| logger == "Đang vào 2y2c"
 		|| logger =="2y2c đã full"
 		|| logger.startsWith("[Server]")
 		|| logger.startsWith("[AutoRestart]")
 		|| logger.startsWith("[Broadcast]")
 		|| logger == "Unknown command"
-		|| logger === "Donate để duy trì server admin đang đói chết con *ĩ *ẹ."
 		|| logger === " diễn đàn của server https://www.reddit.com/r/2y2c/."
 		|| logger === "server thường back up vào 1h sáng nên tps đsẽ tụt vào khoảng thời gian này."
 		|| logger == "The main server is down. We will be back soon!"
 		|| logger == "Vote cho server tại https://minecraft-mp.com/server-s271071."
 		|| logger == "Những ai muốn xài hack của bản 1.12 cho server hãy đọc phần #cách-chơi-cơ-bản trong discord 2y2c."
 		|| logger == " dùng lệnh/2y2c  để vào server."
+		|| logger == "Like fanpage cho Channy nhé:  https://fb.me/ChannyMinecraft ."
 		|| logger == "Please log-in in order to use the chat or any commands!"
 		|| logger == "[LP] Permissions data for your user was not loaded during the pre-login stage - unable to continue. Please try again later. If you are a server admin, please check the console for any errors."
 		|| logger == "Donate bằng thẻ cào để duy trì server, dùng lệnh /napthe và lệnh /muarank.") {
+			if(logger == "2y2c đã full") {
+				colorNotf = '0xb60000';
+				notfMsg = logger;
+				return;
+			}
+			
 			colorNotf = '0xb60000';
 			notfMsg = logger;
 		}
@@ -110,12 +112,10 @@ module.exports = {
 
 			if(logger.startsWith("[Broadcast]") && logger.includes("vừa")) {
 				if(bot.dev) return;
-				client.channels.cache.get("838711105278705695").send(embedNotf);
+				client.channels.cache.get("838711105278705695").send({embeds: [embedNotf]});
 			}
 
-			let channel = client.channels.cache.get(bot.defaultChannel)
-			
-			if(channel) channel.send(embedNotf);
+			if(embedNotf) client.channels.cache.get(bot.defaultChannel).send({embeds:[embedNotf]});
 
 			if(!bot.dev) {
 				client.guilds.cache.forEach((guild) => {
@@ -124,7 +124,7 @@ module.exports = {
 			
 					if(checkdata == undefined || guild == undefined) return;
 
-					try { client.channels.cache.get(checkdata).send(embedNotf); } catch(e) {}
+					try { client.channels.cache.get(checkdata).send({embeds: [embedNotf]}); } catch(e) {}
 				});
 			}
 		}
@@ -138,91 +138,55 @@ module.exports = {
 		|| logger === 'Đang vào 2y2c'
 		|| logger === 'đang vào 2y2c...') return;
 
-		if (logger === undefined || logger == null) return;
+		if (!logger) return;
 
 		if (logger.startsWith("[Server]") || logger.startsWith("[Broadcast]")) return;
 
 		if (logger.includes('chết cháy khi đánh với')) {
-			var str = logger;
-			var user = str.split(" ")[6];
+			var user = logger.split(" ")[6];
 			
 			saveKills(user, logger)
 			deathMsg = logger;
 		}
 
 		if (logger.includes('bị bắn bởi')) {
-			var str = logger;
-			var user = str.split(" ")[4];
+			var user = logger.split(" ")[4];
 
 			saveKills(user, logger)
 			deathMsg = logger;
 		}
 		
 		if (logger.includes('bị phản sát thương khi đánh')) {
-			var str = logger;
-			var user = str.split(" ")[7];
+			var user = logger.split(" ")[7];
 			
 			saveKills(user, logger)
 			deathMsg = logger;
 		}
 
 		if (logger.includes('bị giết bởi') && !(logger.includes("một đám"))) {
-			var str = logger;
-			var user = str.split(" ")[4];
-
-			saveKills(user, logger)
-			deathMsg = logger;
-		} 
-
-		if (logger.includes('khô máu với')) {
-			var str = logger;
-			var user = str.split(" ")[4];
+			var user = logger.split(" ")[4];
 
 			saveKills(user, logger)
 			deathMsg = logger;
 		}
 
 		if (logger.includes('bị') && logger.includes("đẩy té mẹ ra khỏi game") || logger.includes("đá xuống lava")) {
-			var str = logger;
-			var user = str.split(" ")[2];
+			var user = logger.split(" ")[2];
 			
 			saveKills(user, logger)
 			deathMsg = logger;
 		}
 
 		if (logger.includes('bị hội đồng bởi một đám')) {
-			var str = logger;
-			var user = str.split(" ")[7];
-			var newUser = user.split("'s")[0].split(" ")[1];
-			saveKills(newUser, logger)
+			var user = logger.split("'s")[0].split(" ")[1];
+
+			saveKills(user, logger)
 			deathMsg = logger;
 		}
-
-		if (logger.includes('bị bởi một đám')) {
-			var str = logger;
-			var user = str.split(" ")[5];
-			var newUser = user;
-			if(user.includes("'s")) {
-				newUser = user.replace("'s", "")
-			}
-			saveKills(newUser, logger)
-			deathMsg = logger;
-		} 
 
 		if (logger.includes('giết') && logger.includes("bằng")) {
-			var str = logger;
-			var user = str.split(" ")[2];
-			var killer = str.split(" ")[0];
-
-			saveKills(killer, logger)
-			saveDead(user, logger)
-			deathMsg = logger;
-		}
-
-		if (logger.includes("nổ banh xác")) {
-			var str = logger;
-			var user = str.split(" ")[4];
-			var killer = str.split(" ")[0];
+			let user = logger.split(" ")[2];
+			let killer = logger.split(" ")[0];
 
 			saveKills(killer, logger)
 			saveDead(user, logger)
@@ -266,16 +230,16 @@ module.exports = {
 		}
 
 		async function saveDead(name, logger) {
-			// console.log(name + "\n" + logger)
-
-			let regex = /[a-z]|[A-Z]|[0-9]/i;
-			if(!name.match(regex)) return; // check regex
-
-			var users = await Object.values(bot.players).map(p => p.username);
-			if(users.indexOf(name) < 0) return;
-			// console.log("save dead " + name);
-			log("Try to save death " + name);
 			try {
+				// console.log(name + "\n" + logger)
+
+				let regex = /[a-z]|[A-Z]|[0-9]/i;
+				if(!name.match(regex)) return; // check regex
+
+				var users = await Object.values(bot.players).map(p => p.username);
+				if(users.indexOf(name) < 0) return;
+				// console.log("save dead " + name);
+				log("Try to save death " + name);
 				const d = new Scriptdb(`./data/deaths/${name}.json`);
 
 				if(d.get('deaths') == undefined) {
@@ -303,15 +267,15 @@ module.exports = {
 		}
 
 		async function saveKills(name, logger) {
-			// console.log(name + "\nlog: " + logger);
-			let regex = /[a-z]|[A-Z]|[0-9]/i;
-			if(!name.match(regex)) return;
-
-			var users = await Object.values(bot.players).map(p => p.username);
-			if(users.indexOf(name) < 0) return;
-			// console.log("Saved " + name);
-			log("try to save kill " + name);
 			try {
+				// console.log(name + "\nlog: " + logger);
+				let regex = /[a-z]|[A-Z]|[0-9]/i;
+				if(!name.match(regex)) return;
+
+				var users = await Object.values(bot.players).map(p => p.username);
+				if(users.indexOf(name) < 0) return;
+				// console.log("Saved " + name);
+				log("try to save kill " + name);
 				const k = new Scriptdb(`./data/kills/${name}.json`);
 				if(k.get('kills') == undefined) {
 					k.set('deaths', logger);
@@ -343,7 +307,7 @@ module.exports = {
 					.setDescription(api.removeFormat(deathMsg))
 					.setColor(newcolor);
 		
-		client.channels.cache.get(bot.defaultChannel).send(embedDeath);
+		client.channels.cache.get(bot.defaultChannel).send({embeds: [embedDeath]});
 
 		if(!bot.dev) return;
 		
@@ -353,7 +317,7 @@ module.exports = {
 
 			if(checkdata == undefined || guild == undefined) return;
 
-			try { client.channels.cache.get(checkdata).send(embedDeath); } catch(e) {}
+			try { client.channels.cache.get(checkdata).send({embeds: [embedDeath]}); } catch(e) {}
 		});
 	}
 }

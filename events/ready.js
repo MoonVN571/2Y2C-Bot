@@ -1,5 +1,4 @@
-var a = require('../api');
-var api = new a();
+var Api = require('../api');
 
 const log = require('../log');
 
@@ -7,19 +6,24 @@ const Topgg = require('@top-gg/sdk')
 const { AutoPoster } = require('topgg-autoposter')
 const express = require('express')
 
+const { Collection } = require('discord.js');
+
 var Scriptdb = require('script.db');
+
 
 module.exports = {
 	name: 'ready',
-	once: false,
-	execute(client) {
+    once: true,
+    execute(client) {
+        client.commands = new Collection();
+        require('../handlers/command')(client);
 
-        if(client.config.dev !== "true") {
+        if(!client.dev) {
             const app = express()
             
-            const webhook = new Topgg.Webhook(client.config.authtoken)
+            const webhook = new Topgg.Webhook(client.config.TOPGG_AUTH)
             
-            AutoPoster(client.config.tggtoken, client).on('posted', () => console.log('Posted stats to Top.gg!'));
+            AutoPoster(client.config.TOPGG_TOKEN, client).on('posted', () => console.log('Posted stats to Top.gg!'));
     
             app.post('/dblwebhook', webhook.listener(vote => {
                 let data = new Scriptdb('./voted.json');
@@ -31,8 +35,8 @@ module.exports = {
                 }
 
                 client.channels.cache.get('862215076698128396').send({embed: {
-                    description: "**<@" + vote + ">** đã vote bot lúc: " + api.soKhong(new Date().getHours(), 2) + ":" + api.soKhong(new Date().getMinutes(), 2) + ":" + api.soKhong(new Date().getSeconds()),
-                    color: client.config.botEmbedColor
+                    description: "**<@" + vote + ">** đã vote bot lúc: " + new Api().getTime(Date.now()),
+                    color: client.config.DEF_COLOR
                 }});
             }));
 
@@ -57,7 +61,7 @@ module.exports = {
         
         log("Ready!");
         
-        api.clean();
+        new Api().clean();
         
         // started notify
         client.guilds.cache.forEach((guild) => {
@@ -69,10 +73,10 @@ module.exports = {
             if(client.dev) return;
 
             try {
-                client.channels.cache.get(checkdata).send({embed: {
+                client.channels.cache.get(checkdata).send({embeds: [{
                     description: "Đang khởi động lại bot.",
                     color: 0x15ff00
-                }});
+                }]});
             } catch(e) {}
         });
     

@@ -1,10 +1,9 @@
 module.exports = {
     name: "bestping",
-    description: "Xem người chơi ping tốt nhất.",
+    description: "Xem người chơi ping tốt nhất",
     aliases: ['bp'],
     
-    async execute(bot, username, args) {
-
+    execute(bot, username, args) {
         var oldArr = [];
 
         Object.values(bot.players).map(p => oldArr.push(p.ping + " " + p.username));

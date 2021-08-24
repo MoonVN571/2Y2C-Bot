@@ -2,7 +2,7 @@ var Scriptdb = require('script.db');
 
 module.exports = {
     name: "normalqueue",
-    description: "normalqueue command.",
+    description: "Xem hàng chờ 2y2c",
     aliases: ['normalqueue', 'nq'],
     
     async execute(bot, username, args) {

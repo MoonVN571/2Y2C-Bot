@@ -5,10 +5,10 @@ var api = new a();
 
 module.exports = {
     name: "playtime",
-    description: "playtime command.",
+    description: "Xem thời gian đã chơi",
     aliases: ['pt', 'playtime'],
     
-    async execute(bot, username, args) {
+    execute(bot, username, args) {
         if(args[0]) {
             if(!args[0].toString().match(bot.regex)) return;
         } else {

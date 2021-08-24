@@ -1,11 +1,12 @@
 var check = false;
 
-var { MessageEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 var once = false;
 
 var log = require('../log');
 
+const Scriptdb = require('script.db');
 
 module.exports = {
 	name: 'playerlist_header',
@@ -34,19 +35,21 @@ module.exports = {
         var getCurrentQueue = s7.replace("Vị trí của bạn: ", "");
         var currentQueue = getCurrentQueue.split(' ')[0];
 
-        if (s7 === undefined) return;
+        if (!s7) return;
 
-        var Scriptdb = require('script.db');
         const dataa = new Scriptdb(`./data.json`);
 
-        var que = dataa.get('queue');
+        var que = dataa.get('queue') || 0;
 
-        if(que == undefined) que = 0;
+        if(que == String) que = que.split(" ")[0]
 
         var q = currentQueue + "/" + que;
-        var status = "Vị trí hàng chờ: " + q + " - Chờ: " + que + " | $help for cmds";
+        var status = "In queue: " + q + " - Queue: " + que + " | $help for cmds";
 
-        if(currentQueue == "None") {
+        if(currentQueue == "None") currentQueue = que;
+
+        if(!once) {
+            once = true;
             var timeQ = new Scriptdb('./data.json');
             timeQ.set('queueStart', Date.now());
 
@@ -59,21 +62,17 @@ module.exports = {
                 client.user.setActivity(status, { type: 'PLAYING' });
                 log("Set status to bot queue stats");
             }, 2 * 60 * 1000);
-			
-			currentQueue = que;
+        }
 
-		}
-            
-        if(s7 == null || s7 == "" || s7.includes("2YOUNG")) return;
+        if(!s7 || s7.includes("2YOUNG")) return;
         var embed = new MessageEmbed()
                             .setDescription(s7)
                             .setColor("0xFFCE00");
         
         if(!bot.joined) return;
-        if(embed == undefined) return;
         if(bot.haveJoined) return;
         
-        client.channels.cache.get(bot.defaultChannel).send(embed);
+        client.channels.cache.get(bot.defaultChannel).send({embeds: [embed]});
 
         if(bot.dev) return;
         
@@ -83,7 +82,7 @@ module.exports = {
 
             if(checkdata == undefined || guild == undefined) return;
                 
-            try { client.channels.cache.get(checkdata).send(embed); } catch(e) {}
+            try { client.channels.cache.get(checkdata).send({embeds: [embed]}); } catch(e) {}
         });
     }
 }

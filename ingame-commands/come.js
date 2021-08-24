@@ -4,10 +4,10 @@ const { Movements } = require('mineflayer-pathfinder')
 
 module.exports = {
     name: "come",
-    description: "come command.",
+    description: "Cho bot đi đến vị trí hiện tại của bạn",
     aliases: [''],
     
-    async execute(bot, username, args) {
+    execute(bot, username, args) {
 		const target = bot.players[username] ? bot.players[username].entity : null
 		if (!target) return bot.whisper(username, '> Không ở trong tầm nhìn!');
 

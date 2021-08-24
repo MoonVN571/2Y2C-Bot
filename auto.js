@@ -16,12 +16,12 @@ module.exports.start = (bot, client) => {
     var data;
     var afk;
 
-    if(event.getAuto()) {
+    if(!event.getAuto()) {
         clearInterval(topic)
         clearInterval(player)
         clearInterval(data)
         clearInterval(afk)
-        event.setAuto(false);
+        event.setAuto(true);
     }
 
     topic = setInterval(() => {
@@ -60,24 +60,9 @@ module.exports.start = (bot, client) => {
 
     afk = setInterval(() => {
         if(bot.lobby) return;
-        
-        bot.setControlState('forward', true);
-        setTimeout(() => {
-            bot.setControlState('forward', false);
-            bot.setControlState('back', true);
-            setTimeout(() => {
-                bot.setControlState('back', false);
-                bot.setControlState('right', true);
-                setTimeout(() => {
-                    bot.setControlState('right', false);
-                    bot.setControlState('left', true);
-                    setTimeout(() => {
-                        bot.setControlState('left', false);
-                    }, 500);
-                }, 500);
-            }, 500);
-        }, 500);
-
+        if(bot.dev) {
+            bot.chat(Math.floor(Math.random() * 10000000000));
+        }
         log("try to anti-afk.");
     }, 60 * 1000);
 
@@ -97,8 +82,8 @@ module.exports.start = (bot, client) => {
                         players2 = ".";
                     }
                 } catch {
-                    var players = 'Error';
-                    var players2 = 'Error';
+                    var players = '-1';
+                    var players2 = '-1';
                 }
 
                 var old = players.toString().replace(",§6Cựu binh: §l0", "");
@@ -109,10 +94,10 @@ module.exports.start = (bot, client) => {
                 var Scriptdb = require('script.db');
                 const data = new Scriptdb(`./data.json`);
 
-                data.set('status', status);
-                data.set('queue', queue);
-                data.set('prio', prio);
+                data.set('status', status + " " + Date.now());
+                data.set('queue', queue + " " + Date.now());
+                data.set('prio', prio + " " + Date.now());
             }
         });
-    }, 1 * 60 * 1000);
+    }, 5 * 60 * 1000);
 }
