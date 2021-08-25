@@ -39,8 +39,8 @@ module.exports = {
         if(tps.startsWith("*")) tps = data.replace("*", "")
 
         var dataa = new Scriptdb('./data.json');
-        var queue = dataa.get('queue') || 0;
-        var prio = dataa.get('prio') || 0;
+        var queue = dataa.get('queue') || "0 0";
+        var prio = dataa.get('prio') || "0 0";
 
         var headerr =  header.toString().split("§r§6")[1].split(/\\n/ig)[0];
         dataa.set('server-motd', headerr);

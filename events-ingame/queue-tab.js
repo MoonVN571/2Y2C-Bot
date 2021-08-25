@@ -39,11 +39,11 @@ module.exports = {
 
         const dataa = new Scriptdb(`./data.json`);
 
-        var que = dataa.get('queue') || 0;
+        var que = dataa.get('queue') || "0 0";
 
         if(que == String) que = que.split(" ")[0]
 
-        var q = currentQueue + "/" + que;
+        var q = currentQueue + "/" + que.split(" ")[0];
         var status = "In queue: " + q + " - Queue: " + que + " | $help for cmds";
 
         if(currentQueue == "None") currentQueue = que;
@@ -52,16 +52,6 @@ module.exports = {
             once = true;
             var timeQ = new Scriptdb('./data.json');
             timeQ.set('queueStart', Date.now());
-
-            var inter;
-
-            inter = setInterval(() => {
-                if(!bot.lobby) clearInterval(inter);
-                if(currentQueue == undefined) return;
-                
-                client.user.setActivity(status, { type: 'PLAYING' });
-                log("Set status to bot queue stats");
-            }, 2 * 60 * 1000);
         }
 
         if(!s7 || s7.includes("2YOUNG")) return;
@@ -73,6 +63,9 @@ module.exports = {
         if(bot.haveJoined) return;
         
         client.channels.cache.get(bot.defaultChannel).send({embeds: [embed]});
+
+        client.user.setActivity(status, { type: 'PLAYING' });
+        log("Set status to bot queue stats");
 
         if(bot.dev) return;
         

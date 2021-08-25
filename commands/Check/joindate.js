@@ -11,7 +11,7 @@ module.exports = {
     delay: 5,
     
     async execute(client, message, args) {
-		if (!args[0]) return message.reply({embeds: [client.inputusername]});
+		if (!args[0]) return message.reply({embeds: [client.inputUsername]});
 
 		let fj = new Scriptdb(`./data/joindate/${args}.json`);
 		let firstjoin = fj.get('date');

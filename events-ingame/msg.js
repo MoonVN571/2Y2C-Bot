@@ -51,7 +51,7 @@ module.exports = {
 			colorNotf = "0xFD00FF";
 		}
 
-		if(logger =="Đang vào 2y2c") {
+		if(logger == "Đang vào 2y2c") {
 			let data = new Scriptdb('./data.json');
 
 			bot.haveJoined = true; // check da thay chat dang vao 2y2c chua va tat queue
@@ -68,7 +68,7 @@ module.exports = {
 				} else {
 					client.channels.cache.get("806881615623880704").send({embeds: [quetime]});
 				}
-			}, 2 * 1000);
+			}, 5 * 1000);
 		}
 
 		if(logger == "đang vào 2y2c...") {

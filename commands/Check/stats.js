@@ -8,7 +8,7 @@ module.exports = {
     delay: 5,
     
     async execute(client, message, args) {
-		if (!args[0]) return message.reply({embeds: [client.inputusername]});
+		if (!args[0]) return message.reply({embeds: [client.inputUsername]});
 
 		const kd = new Scriptdb(`./data/kd/${args[0]}.json`);
 		let deads = kd.get('deaths');
