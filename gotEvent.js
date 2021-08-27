@@ -4,11 +4,11 @@ const Scriptdb = require('script.db');
 
 module.exports = event;
 
-function event() {
-    var data = new Scriptdb('./data.json');
-    
+function event() {    
     this.getTPS = () => {
         log('set tps');
+        var data = new Scriptdb('./data.json');
+
         var tps = data.get('startedTPS');
         setTimeout(() => { data.set('startedTPS', true) }, 5000);
         return tps;
@@ -16,13 +16,17 @@ function event() {
 
     this.getAuto = () => {
         log('get auto event');
+        var data = new Scriptdb('./data.json');
+
         var me = data.get('startedAuto');
         return me;
     }
 
     this.setAuto = (boolean) => {
         log('set auto event');
-        setTimeout(() => { data.set('startedAuto', boolean) }, 5000);
+        var data = new Scriptdb('./data.json');
+
+        setTimeout(() => { data.set('startedAuto', boolean) },5000);
         return boolean;
     }
 }

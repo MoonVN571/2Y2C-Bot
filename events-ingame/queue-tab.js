@@ -44,7 +44,7 @@ module.exports = {
         if(que == String) que = que.split(" ")[0]
 
         var q = currentQueue + "/" + que.split(" ")[0];
-        var status = "In queue: " + q + " - Queue: " + que + " | $help for cmds";
+        var status = "In queue: " + q + " - Queue: " + que.split(" ")[0] + " | $help for cmds";
 
         if(currentQueue == "None") currentQueue = que;
 
@@ -52,6 +52,7 @@ module.exports = {
             once = true;
             var timeQ = new Scriptdb('./data.json');
             timeQ.set('queueStart', Date.now());
+            console.log("set queue time")
         }
 
         if(!s7 || s7.includes("2YOUNG")) return;

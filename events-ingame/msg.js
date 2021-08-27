@@ -52,6 +52,7 @@ module.exports = {
 		}
 
 		if(logger == "Đang vào 2y2c") {
+			console.log("joining...");
 			let data = new Scriptdb('./data.json');
 
 			bot.haveJoined = true; // check da thay chat dang vao 2y2c chua va tat queue
@@ -74,6 +75,7 @@ module.exports = {
 		if(logger == "đang vào 2y2c...") {
 			let data = new Scriptdb('./data.json');
 			data.set(`uptime`, Date.now());
+			console.log('set uptime')
 		}
 
 		if (logger =="đang vào 2y2c..."
@@ -311,7 +313,7 @@ module.exports = {
 			client.channels.cache.get(bot.defaultChannel).send({embeds: [embedDeath]});
 		} catch(e) {}
 		
-		if(!bot.dev) return;
+		if(bot.dev) return;
 		
 		client.guilds.cache.forEach((guild) => {
 			const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);

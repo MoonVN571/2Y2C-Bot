@@ -3,9 +3,20 @@ var log = require('../log');
 module.exports = {
 	name: 'guildDelete',
 	once: false,
-	execute(client, guild) {
+	async execute(client, guild) {
 		if(!guild.name) return;
-		client.channels.cache.get("878817216127201310").send({embeds: [{
+        const verificationLevels = {
+            "NONE": 'Không',
+            "LOW": 'Thấp',
+            "MEDIUM": 'Vừa phải',
+            "HIGH": 'Cao',
+            "VERY_HIGH": 'Cao nhất'
+        };
+		var owner = "Không rõ";
+
+		await client.users.fetch(guild.ownerId).then(user => owner = user.tag + " (ID: " + guild.ownerId + ")");
+
+		await client.channels.cache.get("878817216127201310").send({embeds: [{
 			title: guild.name,
 			description: "Bot đã thoát khỏi nhóm!",
 			fields: [

@@ -1,127 +1,29 @@
 var Scriptdb = require('script.db');
-var log = require('./log');
 
 function API() {
-    /**
-     * locate: Vietnam, quoc_te
-     */
-    this.ageCalc = (time, quoc_te) => {
-        log(new Date(+time).toLocaleString());
-        log(new Date().toLocaleString());
+    this.ageCalc = (time) => {
+        var up = new Date(new Date().getTime() - new Date(time).getTime());
 
-        log(new Date(+time).getTime() +"old")
-        log(new Date().getTime() +"now")
-
-        var year = 0, month = 0, day = 0, hour = 0, minute = 0;
-
-        var up = new Date(new Date().getTime() - new Date(+time).getTime());
-        var d = up.toLocaleDateString();
-        var t = up.toLocaleTimeString();
-
-        log(t +"time");
-        log(d +"d");
-
-        if(!quoc_te) {
-            var dstr = d.split("/")[1];
-            var mstr = d.split("/")[0];
-            var ystr = d.split("/")[2];
-        } else {
-            var dstr = d.split("/")[0];
-            var mstr = d.split("/")[1];
-            var ystr = d.split("/")[2];    
-        }
-        if(dstr >= 1) dstr = dstr - 1;
-        if(mstr >= 1) mstr = mstr - 1;
-        if(ystr == 1970) ystr = ystr - 1970;
-
-        if(ystr > 1970) mstr = parseInt((ystr - 1970) * 12) + (mstr + 1);
-
-        var hstr = parseInt(t.split(":")[0]);
-        var minstr = parseInt(t.split(":")[1]);
-
-        if(t == "Invalid Date") return "không rõ";
-
-        if(t.split(" ")[1] == "PM") hstr = hstr + 12;
+        let years = up.getUTCFullYear() - 1970;
+        let months = up.getUTCMonth();
+        let days = up.getUTCDate() - 2;
+        let hours = up.getUTCHours();
+        let minutes = up.getUTCMinutes();
+    
+        var string = "vài giây";
+        if(hours == 0 && minutes > 0) string = minutes + " phút";
+        if(hours > 0 && minutes == 0) string = hours   + " giờ";
+    
+        if(hours > 0 && minutes > 0)  string = hours   + " giờ " + minutes + " phút";
+        if(hours > 0 && minutes == 0) string = hours   + " giờ";
+    
+        if(days > 0 && months > 0) string = months + " tháng " + days + " ngày ";
+        if(days > 0 && months == 0) string = days + " ngày " + string;
+        if(days == 0 && months > 0) string = months + " tháng";
         
-        if(d.split("/")[0] == 1) hstr = hstr - 8;
-        if(hstr <= 0) hstr = 0;
-
-        log(dstr +"d");
-        log(mstr +"m");
-        log(hstr +"h");
-        log(minstr +"min");
-        var year = parseInt(mstr/12);
-        var month = mstr - (year * 12);
-        var day = dstr;
-        var hour = hstr;
-        var minute = minstr;
-
-        var age;
-        if(year > 0) {
-            if(month > 0) {
-                if(day > 0) {
-                    age = `${year} năm ${month} tháng ${day} ngày`
-                } else {
-                    age = `${year} năm ${month} tháng`
-                }
-            } else {
-                if(day > 0) {
-                    age = `${year} năm ${day} ngày`
-                } else {
-                    age = `${year} năm`
-                }
-            }
-        } else { // year < 0
-            if(month > 0) {
-                if(day > 0) {
-                    age = `${month} tháng ${day} ngày`
-                } else {
-                    age = `${month} tháng`
-                }
-            } else { // month < 0
-                if(day > 0) {
-                    if(hour > 0) {
-                        age = `${day} ngày ${hour} giờ`
-                        if(minute > 0) {
-                            age = `${day} ngày ${hour} giờ ${minute} phút`
-                        } else {
-                            age = `${day} ngày ${hour} giờ`
-                        }
-                    } else { // hour < 0
-                        if(hour > 0) {
-                            if(minute > 0) {
-                                age = `${day} ngày ${hour} giờ ${minute} phút`
-                            } else {
-                                age = `${day} ngày ${hour} giờ`
-                            }
-                        } else { // hour < 0
-                            if(minute > 0) {
-                                age = `${day} ngày ${minute} phút`
-                            } else {
-                                age = `${day} ngày`
-                            }
-                        }
-                    }
-                } else { // day < 0
-                    if(hour > 0) {
-                        if(minute > 0) {
-                            age = `${hour} giờ ${minute} phút`
-                        } else {
-                            age = `${hour} giờ`
-                        }
-                    } else { // hour < 0
-                        if(minute > 0) {
-                            age = `${minute} phút`
-                        } else {
-                            age = `vài giây`
-                        }
-                    }
-                }
-            }
-        }
-
-        log("API is: " + age);
-        return age;
+        if(years > 0) string = years + " năm " + string;
+        
+        return string;
     }
 
     this.calc = (time) => {

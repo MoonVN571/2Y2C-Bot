@@ -39,8 +39,8 @@ module.exports = {
                 try { client.channels.cache.get(checkdata).send({embeds: [joinedd]}); } catch(e) {}
                 
             });
-
-            client.channels.cache.get("806881615623880704").send({embeds: [queuejoined]}); // devlog
+            
+            try { client.channels.cache.get("806881615623880704").send({embeds: [queuejoined]}); devlog } catch(e) {} // devlog
         }
     }
 }
