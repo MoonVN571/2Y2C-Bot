@@ -52,7 +52,6 @@ module.exports = {
             once = true;
             var timeQ = new Scriptdb('./data.json');
             timeQ.set('queueStart', Date.now());
-            console.log("set queue time")
         }
 
         if(!s7 || s7.includes("2YOUNG")) return;
