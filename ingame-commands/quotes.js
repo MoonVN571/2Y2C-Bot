@@ -2,8 +2,7 @@ var Scriptdb = require("script.db");
 
 module.exports = {
     name: "quotes",
-    description: "quotes command.",
-    aliases: ['quotes'],
+    description: "Xem tin nhắn ngẫu nhiên đã gửi.",
     
     execute(bot, username, args) {
         if(!args[0]) return;

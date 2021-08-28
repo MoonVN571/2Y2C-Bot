@@ -27,7 +27,7 @@ module.exports = {
                 
 
                 if(!data.get(vote.user)) {
-                    data.set(vote.user, new Date.now())
+                    data.set(vote.user, Date.now())
                 }
 
                 client.channels.cache.get('862215076698128396').send({embeds: [{

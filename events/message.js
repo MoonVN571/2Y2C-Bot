@@ -39,7 +39,7 @@ module.exports = {
         if(cmd.vote) {
             let checkVote = new Scriptdb('./voted.json').get(message.author.id);
 
-            if(!checkVote || new Date.now() - checkVote > ms("2d") && message.author.id != cfDir.DEVELOPERS) 
+            if(!checkVote || Date.now() - checkVote > ms("2d") && message.author.id != cfDir.DEVELOPERS) 
                 return message.channel.send("Bạn phải vote bot để sử dụng lệnh này.\n\nVote tại: https://top.gg/bot/768448728125407242/vote");
         }
         
