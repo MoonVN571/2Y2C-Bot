@@ -15,20 +15,20 @@ module.exports = {
         var color2 = cfDir.COLORS.GAME.DEFAULT; // multi channel
 
         if(!message) return;
-        var msg = message.toString();
 
+        var msg = message.toString();
         if (!msg.startsWith("<")) return;
 
         var username = msg.split(" ")[0].split("<")[1].split(">")[0];
-
         if(username.startsWith("[")) username = username.split("]")[1];
 
         logger = msg.substr(msg.split(" ")[0].length + 1);
     
         if (logger.startsWith(">")) color2 = cfDir.COLORS.GAME.DEFAULT;
-    
         if(logger.startsWith("[") && username == bot.username) color2 = 0x4983e7;
         
+        if(logger.endsWith(".")) logger = logger.replace(".", "");
+
         var chat = new MessageEmbed()
                         .setDescription(`**<${api.removeFormat(username)}>** ${api.removeFormat(logger)}`)
                         .setColor(color2);
@@ -77,7 +77,7 @@ module.exports = {
                 messages.set("times", times + " | " + Date.now())
             }
         }
-    
+        
         if(!logger.startsWith(bot.prefix)) return;
         const args = logger.slice(bot.prefix.length).split(/ +/);
         const cmdName = args.shift().toLowerCase();

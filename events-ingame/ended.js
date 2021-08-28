@@ -71,7 +71,9 @@ module.exports = {
                     console.log("Error: " + error);
                     return false;
                 }
-            }, () => {});
+            }, function done(result) {
+                console.log(result);
+            });
 
             event.setAuto(false);
             api.clean();

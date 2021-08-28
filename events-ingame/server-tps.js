@@ -89,9 +89,16 @@ module.exports = {
                     .setAuthor('Moon Bot', 'https://cdn.discordapp.com/avatars/768448728125407242/f18ec971961b23db96e6cf0f3f79ec1c.png?size=256')
                     .setDescription('Cảnh báo mức TPS giao động từ dưới 8.')
                     .addFields(
-                        { name: 'TPS trung bình', value: tpsAvg.toFixed(2) },
-                        { name: 'Thời gian lag', value: hours + ' giờ ' + minutes + ' phút ' + seconds + ' giây'},
-                        { name: 'TPS thấp nhất', value: minTps },
+                        {
+                            name: 'TPS trung bình',
+                            value: tpsAvg.toFixed(2).toString() 
+                        }, {
+                            name: 'Thời gian lag',
+                            value: hours + ' giờ ' + minutes + ' phút ' + seconds + ' giây'
+                        }, {
+                            name: 'TPS thấp nhất',
+                            value: minTps.toString()
+                        },
                     )
                     client.channels.cache.get('852158457624657941').send({embeds: [lagEmbed]});
                 }
