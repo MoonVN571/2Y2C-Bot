@@ -3,6 +3,7 @@ const Scriptdb = require('script.db');
 
 const cfDir = require('../config.json');
 const Api =  require("../api");
+const ms = require('ms');
 
 const timeout = new Collection();
 
@@ -36,9 +37,10 @@ module.exports = {
         }]});
 
         if(cmd.vote) {
-            let checkVote = new Scriptdb('./voted.json').get('users-' + new Date().getUTCDate() + (new Date().getUTCMonth()+1) + new Date().getUTCFullYear());
+            let checkVote = new Scriptdb('./voted.json').get(message.author.id);
 
-            if(!checkVote || checkVote.split(" ").indexOf(message.author.id) < 0 && message.author.id != cfDir.DEVELOPERS) return message.channel.send("Bạn phải vote bot để sử dụng lệnh này.\n\nVote tại: https://top.gg/bot/768448728125407242/vote");
+            if(!checkVote || new Date.now() - checkVote > ms("2d") && message.author.id != cfDir.DEVELOPERS) 
+                return message.channel.send("Bạn phải vote bot để sử dụng lệnh này.\n\nVote tại: https://top.gg/bot/768448728125407242/vote");
         }
         
         if(cmd.delay) {

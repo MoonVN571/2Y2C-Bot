@@ -3,14 +3,15 @@ var Scriptdb = require('script.db');
 function API() {
     this.ageCalc = (time) => {
         var up = new Date(new Date().getTime() - new Date(time).getTime());
-
+        
         let years = up.getUTCFullYear() - 1970;
         let months = up.getUTCMonth();
         let days = up.getUTCDate() - 2;
         let hours = up.getUTCHours();
         let minutes = up.getUTCMinutes();
-    
-        var string = "vài giây";
+        let seconds = up.getUTCSeconds();
+
+        var string = seconds;
         if(hours == 0 && minutes > 0) string = minutes + " phút";
         if(hours > 0 && minutes == 0) string = hours   + " giờ";
     
@@ -95,7 +96,7 @@ function API() {
         var formatMinutes;
         if(minutes == 0) {
             formatMinutes = "";
-        } else {
+        } else {z
             formatMinutes = minutes + " phút";
         }
 

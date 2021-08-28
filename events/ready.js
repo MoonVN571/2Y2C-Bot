@@ -1,5 +1,4 @@
-var Api = require('../api');
-
+const Api = require('../api');
 const log = require('../log');
 
 const Topgg = require('@top-gg/sdk')
@@ -7,9 +6,7 @@ const { AutoPoster } = require('topgg-autoposter')
 const express = require('express')
 
 const { Collection } = require('discord.js');
-
-var Scriptdb = require('script.db');
-
+const Scriptdb = require('script.db');
 
 module.exports = {
 	name: 'ready',
@@ -28,14 +25,13 @@ module.exports = {
             app.post('/dblwebhook', webhook.listener(vote => {
                 let data = new Scriptdb('./voted.json');
                 
-                if(!data.get("users-" + new Date().getUTCDate() + (new Date().getUTCMonth()+1) + new Date().getUTCFullYear())) {
-                    data.set('users-' + new Date().getUTCDate() + (new Date().getUTCMonth()+1) + new Date().getUTCFullYear(), vote.user);
-                } else {
-                    data.set('users-' + new Date().getUTCDate() + (new Date().getUTCMonth()+1) + new Date().getUTCFullYear(), vote.user + " " + data.get('users-' + new Date().getUTCDate() + (new Date().getUTCMonth()+1) + new Date().getUTCFullYear()));
+
+                if(!data.get(vote.user)) {
+                    data.set(vote.user, new Date.now())
                 }
 
                 client.channels.cache.get('862215076698128396').send({embeds: [{
-                    description: "**<@" + vote.user + ">** đã vote bot lúc: " + new Api().getTime(Date.now()),
+                    description: "**<@" + vote.user + ">** đã vote bot!",
                     color: client.config.DEF_COLOR
                 }]});
             }));
