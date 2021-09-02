@@ -52,12 +52,11 @@ module.exports = {
 		}
 
 		if(logger == "Đang vào 2y2c") {
+			bot.haveJoined = true; // check da thay chat dang vao 2y2c chua va tat queue
 			let data = new Scriptdb('./data.json');
 
-			bot.haveJoined = true; // check da thay chat dang vao 2y2c chua va tat queue
-
 			data.set('queueEnd', Date.now());
-			
+
 			setTimeout(() => {
 				var quetime = new MessageEmbed()
 							.setDescription(`Trong hàng chờ được ${api.queueTime()}.`)
@@ -68,12 +67,20 @@ module.exports = {
 				} else {
 					client.channels.cache.get("806881615623880704").send({embeds: [quetime]});
 				}
-			}, 5 * 1000);
+			}, 20 * 1000);
+		}
+
+
+		if(logger == "2y2c đã full") {
+			let data = new Scriptdb('./data.json');
+			data.set('queueStart', Date.now());
 		}
 
 		if(logger == "đang vào 2y2c...") {
-			let data = new Scriptdb('./data.json');
-			data.set(`uptime`, Date.now());
+			setTimeout(() => {
+				let data = new Scriptdb('./data.json');
+				data.set("uptime", 60000 + Date.now());
+			}, 60 * 1000);
 		}
 
 		if (logger =="đang vào 2y2c..."
@@ -82,6 +89,7 @@ module.exports = {
 		|| logger.startsWith("[Server]")
 		|| logger.startsWith("[AutoRestart]")
 		|| logger.startsWith("[Broadcast]")
+		|| logger.startsWith("!")
 		|| logger == "Unknown command"
 		|| logger === " diễn đàn của server https://www.reddit.com/r/2y2c/."
 		|| logger === "server thường back up vào 1h sáng nên tps đsẽ tụt vào khoảng thời gian này."
@@ -278,9 +286,11 @@ module.exports = {
 				log("try to save kill " + name);
 				const k = new Scriptdb(`./data/kills/${name}.json`);
 				if(k.get('kills') == undefined) {
+					log("new kill msg " + name);
 					k.set('deaths', logger);
 					k.set('times', Date.now());
 				} else {
+					log("save kill msg " + name);
 					k.set('deaths', k.get('deaths') + " | " + logger);
 					k.set('times', k.get('times') + " | " + Date.now());
 				}

@@ -37,10 +37,12 @@ module.exports = {
                     data.set(vote.user, Date.now())
                 }
 
-                client.channels.cache.get('862215076698128396').send({embeds: [{
-                    description: "**<@" + vote.user + ">** đã vote bot!",
-                    color: client.config.DEF_COLOR
-                }]});
+                client.users.fetch(vote.user).then(user => {
+                    client.channels.cache.get('862215076698128396').send({embeds: [{
+                        description: "**" + user.tag + "** đã vote bot!",
+                        color: client.config.DEF_COLOR
+                    }]});
+                });
             }));
 
             app.listen(3000);

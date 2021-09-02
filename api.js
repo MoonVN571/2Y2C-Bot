@@ -68,7 +68,7 @@ function API() {
         var end = data.get('queueEnd');
         var start = data.get('queueStart');
         let ticks = end - start;
-
+        
         if(ticks <= 0 || end == undefined || start == undefined) return '0h 0m 0s';
 
         var temp = ticks / 1000;
@@ -96,7 +96,7 @@ function API() {
         var formatMinutes;
         if(minutes == 0) {
             formatMinutes = "";
-        } else {z
+        } else {
             formatMinutes = minutes + " phút";
         }
 

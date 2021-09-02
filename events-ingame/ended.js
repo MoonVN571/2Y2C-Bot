@@ -1,8 +1,7 @@
-const start = require('../index');
+const { createBot } = require('../index');
 
 var { MessageEmbed } = require('discord.js');
 var Scriptdb = require('script.db');
-var waitUntil = require('wait-until');
 
 var a = require("../api");
 var api = new a();
@@ -11,7 +10,6 @@ var e = require("../goTevent");
 var event = new e();
 
 const log = require('../log');
-
 
 module.exports = {
 	name: 'end',
@@ -23,6 +21,8 @@ module.exports = {
         console.log('------------------------');
 
         log("Bot ended");
+
+        setTimeout(createBot, 10 * 60 * 1000);
 
         setTimeout(() => {
             if(!bot.joined) return;
@@ -61,19 +61,6 @@ module.exports = {
                     client.channels.cache.get("806881615623880704").send({embeds: [disconnectedLog]});
                 }
             } catch(e) {}
-            
-            waitUntil(120 * 1000, 50, function condition() {
-                try {
-                    start.createBot(client);
-                    console.log('Reconected to the server.');
-                    return true;
-                } catch (error) {
-                    console.log("Error: " + error);
-                    return false;
-                }
-            }, function done(result) {
-                console.log(result);
-            });
 
             event.setAuto(false);
             api.clean();

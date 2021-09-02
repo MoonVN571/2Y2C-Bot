@@ -1,12 +1,8 @@
 var check = false;
 
 const { MessageEmbed } = require('discord.js');
-
-var once = false;
-
-var log = require('../log');
-
 const Scriptdb = require('script.db');
+const log = require('../log');
 
 module.exports = {
 	name: 'playerlist_header',
@@ -48,13 +44,8 @@ module.exports = {
 
         if(currentQueue == "None") currentQueue = que;
 
-        if(!once) {
-            once = true;
-            var timeQ = new Scriptdb('./data.json');
-            timeQ.set('queueStart', Date.now());
-        }
-
         if(!s7 || s7.includes("2YOUNG")) return;
+
         var embed = new MessageEmbed()
                             .setDescription(s7)
                             .setColor("0xFFCE00");
