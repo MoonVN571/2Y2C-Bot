@@ -5,12 +5,19 @@ const Topgg = require('@top-gg/sdk')
 const { AutoPoster } = require('topgg-autoposter')
 const express = require('express')
 
-const { Collection } = require('discord.js');
+const { Collection, Permissions } = require('discord.js');
 const Scriptdb = require('script.db');
+
+const { Client } = require('discord.js');
 
 module.exports = {
 	name: 'ready',
     once: true,
+    /**
+     * 
+     * @param {Client} client 
+     * @returns 
+     */
     execute(client) {
         client.commands = new Collection();
         require('../handlers/command')(client);
@@ -69,11 +76,27 @@ module.exports = {
             if(client.dev) return;
 
             try {
+                // client.channels.cache.get(guild.id).me.permissions.has(Permissions.FLAGS.SEND_MESSAGES)
+
+                if(!client.guilds.cache.get(guild.id).me.permissionsIn(client.channels.cache.get(checkdata)).has(Permissions.FLAGS.SEND_MESSAGES)) {
+                    console.log(guild.id);
+                    const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+                    if(err.toString().includes("Missing Permissions")) data.delete('livechat');
+                    return;
+                }
+
                 client.channels.cache.get(checkdata).send({embeds: [{
                     description: "Đang khởi động lại bot.",
                     color: 0x15ff00
-                }]});
-            } catch(e) {}
+                }]}).catch(err => {
+                    // const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+                    // if(err.toString().includes("Missing Permissions")) data.delete('livechat');
+                    console.log(err);
+                    console.log(guild.id);
+                })
+            } catch(e) {
+
+            }
         });
     
         if(client.dev) return;

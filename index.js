@@ -37,6 +37,7 @@ client.PREFIX = prefix;
 client.FOOTER = cfDir.FOOTER + "";
 
 require('dotenv').config();
+require('./web-panel');
 
 const config = {
     DEF_COLOR: cfDir.COLORS.DISCORD.DEFAULT,
@@ -132,7 +133,7 @@ function createBot() {
         if(msg.author.bot || msg.author == client.user || msg.content.startsWith(prefix)) return;
 
         if (msg.channel.id === '797426761142632450') { // main
-            if(dev) return;
+            if(devMode) return;
         
             setTimeout(() => {
                 bot.chat(msg.content);
@@ -140,7 +141,7 @@ function createBot() {
         }
     
         if (msg.channel.id === '802456011252039680') {
-            if(dev) return; 
+            if(devMode) return; 
             
             setTimeout(() => {
                 bot.chat(msg.content);
