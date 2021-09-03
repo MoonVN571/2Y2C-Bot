@@ -95,7 +95,10 @@ function createBot() {
     bot.joined = joined;
 
     var haveJoined = false; // check da thay tin dang vao 2y2c chua
-    bot.haveJoined = haveJoined; 
+    bot.haveJoined = haveJoined;
+
+    var countPlayers = 0;
+    bot.countPlayers = countPlayers;
     
     // cmd  handler
     bot.commands = new Collection();

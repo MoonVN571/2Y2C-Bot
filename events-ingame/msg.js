@@ -16,22 +16,15 @@ module.exports = {
 		
 		if (nocheck.startsWith('<') && nocheck.endsWith(">")) return;
 
-		if(bot.dev) {
-			client.channels.cache.get("802456011252039680").send(logger);
-		} else {
-			client.channels.cache.get("797426761142632450").send(logger);	
-		}
+		if(bot.dev) client.channels.cache.get("802456011252039680").send(logger);
+		if(!bot.dev) client.channels.cache.get("797426761142632450").send(logger);
 
 		var notfMsg;
 		var colorNotf;
 		
-		if (logger === "[AutoRestart] Server Restarting!") {
-			if(bot.dev) return;
-			client.channels.cache.get('795534684967665695').send("@here " + logger);
-		}
-
+		if (logger === "[AutoRestart] Server Restarting!" && !bot.dev) client.channels.cache.get('795534684967665695').send("@here " + logger);
+		
 		var checkWhisper = logger.split(' ')[1];
-
 		if(checkWhisper == "nhắn:") {
 			var toLog = logger
 
