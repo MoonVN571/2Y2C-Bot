@@ -2,8 +2,8 @@ var Scriptdb = require('script.db');
 
 function API() {
     this.ageCalc = (time) => {
-        var up = new Date(new Date().getTime() - new Date(time).getTime());
-        
+        var up = new Date(new Date().getTime() - time);    
+
         let years = up.getUTCFullYear() - 1970;
         let months = up.getUTCMonth();
         let days = up.getUTCDate() - 2;
@@ -11,7 +11,9 @@ function API() {
         let minutes = up.getUTCMinutes();
         let seconds = up.getUTCSeconds();
 
-        var string = seconds;
+        console.log(years, months, days, hours, minutes, seconds);
+
+        var string = seconds + " giây";
         if(hours == 0 && minutes > 0) string = minutes + " phút";
         if(hours > 0 && minutes == 0) string = hours   + " giờ";
     

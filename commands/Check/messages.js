@@ -57,6 +57,8 @@ module.exports = {
 				msg3 = messages.split(" | ")[3]
 				msg4 = messages.split(" | ")[4]
 			}
+
+			console.log(time0, time1, time2, time3, time4)
 			
 			var data = `***${api.ageCalc(time0)} trước***: ${msg0}\n`
 			+ `***${api.ageCalc(time1)} trước***: ${msg1}\n`
@@ -90,7 +92,6 @@ module.exports = {
 									.setTitle(`Tin nhắn ${args[0]}`)
 									.setDescription(`*Tổng tin nhắn đã gửi: ${messages.split(" | ").length}*\n`)
 									.addField('*5 tin nhắn gần đây*', data)
-									.setFooter(client.footer)
 									.setTimestamp()
 									.setColor(0x2EA711);
 
@@ -100,7 +101,6 @@ module.exports = {
 									.setTitle(`Tin nhắn ${args[0]}`)
 									.setDescription(`*Tổng tin nhắn đã gửi: ${messages.split(" | ").length}*\n`)
 									.addField('*5 tin nhắn gần đây*', `***${api.ageCalc(times)} trước:*** ${messages}`)
-									.setFooter(client.footer)
 									.setTimestamp()
 									.setColor(0x2EA711);
 
