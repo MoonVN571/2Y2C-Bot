@@ -1,5 +1,6 @@
 var log = require('../log');
 const Api = require('../api');
+const Scriptdb = require('script.db');
 
 module.exports = {
 	name: 'guildDelete',
@@ -7,6 +8,9 @@ module.exports = {
 	async execute(client, guild) {
 		if(!guild.name) return;
 		var owner = "Không rõ";
+
+		const db = new Scriptdb('./data/guilds/setup-' + guild.id + ".json");
+		db.deleteAll();
 
 		await client.users.fetch(guild.ownerId).then(user => owner = user.tag + " (ID: " + guild.ownerId + ")");
 

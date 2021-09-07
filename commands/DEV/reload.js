@@ -43,9 +43,16 @@ module.exports = {
             }]});
         }
     
-        message.reply({embeds: [{
-            description: "Đã tải lại (các) lệnh " + reloaded.join(", ") + " thành công!",
-            color: client.config.DEF_COLOR
-        }]});
+        setTimeout(() => {
+            if(!reloaded) return message.reply({embeds: [{
+                description: "Không thể tải lại lệnh này.",
+                color: client.config.ERR_COLOR
+            }]});
+            
+            message.reply({embeds: [{
+                description: "Đã tải lại các lệnh " + reloaded.join(", ") + " thành công!",
+                color: client.config.DEF_COLOR
+            }]});
+        }, 1000);
     }
 }

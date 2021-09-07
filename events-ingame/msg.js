@@ -1,14 +1,19 @@
-var { MessageEmbed } = require('discord.js');
+var { MessageEmbed, Client, Message } = require('discord.js');
 var Scriptdb = require("script.db");
-
 var a = require('../api');
 var api = new a();
-
 var log = require('../log');
-
+require('dotenv').config();
 module.exports = {
 	name: 'message',
 	once: false,
+	/**
+	 * 
+	 * @param {*} bot 
+	 * @param {Client} client 
+	 * @param {Message} message 
+	 * @returns 
+	 */
 	execute(bot, client, message) {
 		var newcolor = 'DB2D2D';
 		var logger = message.toString();
@@ -22,8 +27,28 @@ module.exports = {
 		var notfMsg;
 		var colorNotf;
 		
-		if (logger === "[AutoRestart] Server Restarting!" && !bot.dev) client.channels.cache.get('795534684967665695').send("@here " + logger);
-		
+		if (logger === "[AutoRestart] Server Restarting!" && !bot.dev) {
+			const client2 = new Client();
+			client2.login(process.env.TOKEN);
+			client2.on('ready', () => {
+				client.channels.cache.get('795534684967665695').send("@here " + logger);
+				
+				client2.guilds.cache.forEach((guild) => {
+					const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+					const checkdata = data.get('restart-role');
+					const channel = data.get('restart');
+					if(checkdata == undefined || guild == undefined) return;
+					try {
+						let role = client.guild.cache.get(guild.id).roles.cache.get(checkdata);
+						if(!role) return;
+
+						if(bot.dev) return;
+						
+						if(client.channels.cache.get(channel)) client.channels.cache.get(channel).send({content: role.toString() + " " + logger, allowedMentions: {repliedUser: true}});
+					} catch(e) {console.log(e)}
+				});
+			});
+		}
 		var checkWhisper = logger.split(' ')[1];
 		if(checkWhisper == "nhắn:") {
 			var toLog = logger

@@ -11,8 +11,6 @@ function API() {
         let minutes = up.getUTCMinutes();
         let seconds = up.getUTCSeconds();
 
-        console.log(years, months, days, hours, minutes, seconds);
-
         var string = seconds + " giây";
         if(hours == 0 && minutes > 0) string = minutes + " phút";
         if(hours > 0 && minutes == 0) string = hours   + " giờ";

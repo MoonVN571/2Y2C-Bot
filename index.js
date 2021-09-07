@@ -54,6 +54,7 @@ client.on('ready', () => {
     setTimeout(createBot, 5 * 1000);
 });
 
+
 const notRepeat = new Set();
 const delayCheck = new Set();
 

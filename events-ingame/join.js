@@ -86,5 +86,16 @@ module.exports = {
 
         if(bot.dev) client.channels.cache.get("882849908892254230").send({embeds: [embed]});
         if(!bot.dev) client.channels.cache.get("882817156977410049").send({embeds: [embed]});
+
+
+        if(bot.dev) return;
+        client.guilds.cache.forEach((guild) => {
+            const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+            const checkdata = data.get('connection');
+    
+            if(checkdata == undefined || guild == undefined) return;
+
+            try { client.channels.cache.get(checkdata).send({embeds: [embed]}); } catch(e) {}
+        });
     }
 }

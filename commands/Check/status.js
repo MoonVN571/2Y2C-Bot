@@ -30,7 +30,7 @@ module.exports = {
         if(tps == "tps" || ping == "ping"|| players == "players")
                     return message.reply(`Lỗi, thử lại sau! Hãy báo cáo lỗi này với **${user.username}#${user.discriminator}`)
 
-        if(queue == undefined || prio == undefined) return message.channel.send("Không tìm thấy dữ liệu.");
+        if(queue == undefined || prio == undefined) return message.reply("Không tìm thấy dữ liệu.");
         
 		var embed = new MessageEmbed()
                 .setAuthor('2Y2C','https://cdn.discordapp.com/attachments/795842485133246514/821669964673974282/communityIcon_14otnpwidot51.png')
