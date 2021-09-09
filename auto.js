@@ -1,9 +1,5 @@
-var { readFile } = require('fs');
 var Scriptdb = require('script.db');
-
-var a = require('./api');
-var api = new a();
-
+const api = require('./utils');
 const mc = require("minecraft-protocol");
 const log = require('./log');
 

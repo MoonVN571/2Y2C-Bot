@@ -1,15 +1,11 @@
-const Api = require('../api');
 const log = require('../log');
-
-const Topgg = require('@top-gg/sdk')
-const { AutoPoster } = require('topgg-autoposter')
-const express = require('express')
-
+const Topgg = require('@top-gg/sdk');
+const { AutoPoster } = require('topgg-autoposter');
+const express = require('express');
 const { Collection, Permissions } = require('discord.js');
 const Scriptdb = require('script.db');
-
 const { Client } = require('discord.js');
-
+const api = require('../utils');
 module.exports = {
 	name: 'ready',
     once: true,
@@ -56,9 +52,9 @@ module.exports = {
         console.log('------------------------');
         console.log('       Moon Bot         ')
         console.log('------------------------');
-        console.log('Guilds: ' + client.guilds.cache.size);
-        console.log('Channels: ' + client.channels.cache.size);
-        console.log('Total users: ' + client.guilds.cache.reduce((a, g) => a + g.memberCount, 0));
+        console.log('Guilds: ' + Intl.NumberFormat().format(client.guilds.cache.size));
+        console.log('Channels: ' + Intl.NumberFormat().format(client.channels.cache.size));
+        console.log('Total users: ' + Intl.NumberFormat().format(client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)));
         console.log('------------------------');
     
         console.log('Bot started!');
@@ -66,7 +62,7 @@ module.exports = {
         
         log("Ready!");
         
-        new Api().clean();
+        api.clean();
         
         // started notify
         client.guilds.cache.forEach((guild) => {
@@ -104,13 +100,13 @@ module.exports = {
         if(client.dev) return;
     
         // guild count
-        client.channels.cache.get('856516410750664764').setName('Total Guilds: ' +  client.guilds.cache.size);
-        client.channels.cache.get('856517492372668426').setName('Total Channels: ' +  client.channels.cache.size);
-        client.channels.cache.get('856517721122406430').setName('Total Users: ' + client.guilds.cache.reduce((a, g) => a + g.memberCount, 0));
+        client.channels.cache.get('856516410750664764').setName('Total Guilds: ' +  Intl.NumberFormat().format(client.guilds.cache.size));
+        client.channels.cache.get('856517492372668426').setName('Total Channels: ' +  Intl.NumberFormat().format(client.channels.cache.size));
+        client.channels.cache.get('856517721122406430').setName('Total Users: ' + Intl.NumberFormat().format(client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)));
         setInterval(() => {
-            client.channels.cache.get('856516410750664764').setName('Total Guilds: ' +  client.guilds.cache.size);
-            client.channels.cache.get('856517492372668426').setName('Total Channels: ' +  client.channels.cache.size);
-            client.channels.cache.get('856517721122406430').setName('Total Users: ' +  client.guilds.cache.reduce((a, g) => a + g.memberCount, 0));
+            client.channels.cache.get('856516410750664764').setName('Total Guilds: ' +  Intl.NumberFormat().format(client.guilds.cache.size));
+            client.channels.cache.get('856517492372668426').setName('Total Channels: ' +  Intl.NumberFormat().format(client.channels.cache.size));
+            client.channels.cache.get('856517721122406430').setName('Total Users: ' + Intl.NumberFormat().format(client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)));
         }, 30 * 60 * 1000);
     
         // restart since

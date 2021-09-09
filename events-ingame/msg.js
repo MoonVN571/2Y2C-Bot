@@ -1,8 +1,7 @@
-var { MessageEmbed, Client, Message } = require('discord.js');
-var Scriptdb = require("script.db");
-var a = require('../api');
-var api = new a();
-var log = require('../log');
+const { MessageEmbed, Client, Message } = require('discord.js');
+const Scriptdb = require("script.db");
+const api = require('../utils');
+const log = require('../log');
 require('dotenv').config();
 module.exports = {
 	name: 'message',

@@ -1,7 +1,6 @@
 var log = require('../log');
-const Api = require('../api');
+const api = require('../utils');
 const Scriptdb = require('script.db');
-
 module.exports = {
 	name: 'guildDelete',
 	once: false,
@@ -25,7 +24,7 @@ module.exports = {
 				},
 				{
 					name: "Ngày tạo nhóm",
-					value: new Api().getTimestamp(guild.createdAt) + ` (tạo ${new Api().ageCalc(guild.createdAt, true)})`,
+					value: new Api().getTimestamp(guild.createdAt) + ` (tạo ${api.ageCalc(guild.createdAt, true)})`,
 					inline: true
 				},
 			],

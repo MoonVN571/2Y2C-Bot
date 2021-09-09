@@ -1,6 +1,5 @@
-var Scriptdb = require('script.db');
-var log = require('../log');
-
+const Scriptdb = require('script.db');
+const log = require('../log');
 
 module.exports = {
 	name: 'login',

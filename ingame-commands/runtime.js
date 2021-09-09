@@ -1,6 +1,4 @@
-var abc = require("../api");
-var api = new abc();
-
+const api = require('../utils');
 module.exports = {
     name: "runtime",
     description: "Xem thời gian bot đã hoạt động trong server",

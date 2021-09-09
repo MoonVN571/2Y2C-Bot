@@ -1,8 +1,5 @@
 var Scriptdb = require("script.db");
-
-var a = require('../api');
-var api = new a();
-
+const api = require('../utils');
 module.exports = {
     name: "lastword",
     description: "Xem tin nhắn đã chat mới nhất",
@@ -23,7 +20,7 @@ module.exports = {
         try {
             data = msgs.split(" | ")[0];
         } catch(e) {
-            data = mgs;
+            data = msgs;
         }
 
         try {

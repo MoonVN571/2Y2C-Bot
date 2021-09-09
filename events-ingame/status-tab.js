@@ -1,6 +1,6 @@
 var check = false;
 
-var Scriptdb = require('script.db');
+const Scriptdb = require('script.db');
 
 module.exports = {
 	name: 'playerlist_header',

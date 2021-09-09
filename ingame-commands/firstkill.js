@@ -1,8 +1,5 @@
-var Scriptdb = require("script.db");
-
-var a = require('../api');
-var api = new a();
-
+const Scriptdb = require("script.db");
+const api = require('../utils');
 module.exports = {
     name: "firstkill",
     description: "Xem lần tin nhắn lần đầu giết người chơi",

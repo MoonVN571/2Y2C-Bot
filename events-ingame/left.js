@@ -1,9 +1,7 @@
 var { MessageEmbed } = require('discord.js');
 var Scriptdb = require('script.db');
 var fs = require('fs');
-
-var ap = require('../api');
-var api = new ap();
+const api = require('../utils');
 
 module.exports = {
 	name: 'playerLeft',

@@ -1,8 +1,5 @@
-var abc = require("../api");
-var api = new abc();
-
-var Scriptdb = require("script.db");
-
+const api = require('../utils');
+const Scriptdb = require("script.db");
 module.exports = {
     name: "seen",
     description: "Xem lần cuối thấy người chơi",

@@ -40,19 +40,19 @@ module.exports = {
             return message.reply({embeds: [{
                 description: "Không thể tải lại lệnh này.",
                 color: client.config.ERR_COLOR
-            }]});
+            }], allowedMentions: { repliedUser: false } });
         }
     
         setTimeout(() => {
             if(!reloaded) return message.reply({embeds: [{
                 description: "Không thể tải lại lệnh này.",
                 color: client.config.ERR_COLOR
-            }]});
+            }], allowedMentions: { repliedUser: false } });
             
             message.reply({embeds: [{
                 description: "Đã tải lại các lệnh " + reloaded.join(", ") + " thành công!",
                 color: client.config.DEF_COLOR
-            }]});
+            }], allowedMentions: { repliedUser: false } });
         }, 1000);
     }
 }
