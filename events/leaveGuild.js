@@ -24,7 +24,7 @@ module.exports = {
 				},
 				{
 					name: "Ngày tạo nhóm",
-					value: new Api().getTimestamp(guild.createdAt) + ` (tạo ${api.ageCalc(guild.createdAt, true)})`,
+					value: api.getTimestamp(guild.createdAt) + ` (tạo ${api.ageCalc(guild.createdAt, true)})`,
 					inline: true
 				},
 			],

@@ -1,4 +1,4 @@
-const { MessageEmbed, Client, Message } = require('discord.js');
+const { MessageEmbed, Client, Message, Intents } = require('discord.js');
 const Scriptdb = require("script.db");
 const api = require('../utils');
 const log = require('../log');
@@ -27,10 +27,14 @@ module.exports = {
 		var colorNotf;
 		
 		if (logger === "[AutoRestart] Server Restarting!" && !bot.dev) {
-			const client2 = new Client();
+			const client2 = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGE] });
 			client2.login(process.env.TOKEN);
 			client2.on('ready', () => {
-				client.channels.cache.get('795534684967665695').send("@here " + logger);
+				client2.channels.cache.get('795534684967665695').send("@here " + logger).then(() => {
+						setTimeout(() => {
+							client2.destroy();
+						}, 5000);
+				});
 				
 				client2.guilds.cache.forEach((guild) => {
 					const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);

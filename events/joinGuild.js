@@ -6,6 +6,8 @@ module.exports = {
 	once: false,
 	async execute(client, guild) {
         if(!guild.name) return;
+        console.log(guild.name + " joined");
+        log(guild.name + " joined");
 		
         const verificationLevels = {
             "NONE": 'Không',
@@ -29,7 +31,7 @@ module.exports = {
 				},
 				{
 					name: "Ngày tạo nhóm",
-					value: new Api().getTimestamp(guild.createdAt) + ` (tạo ${api.ageCalc(guild.createdAt, true)})`,
+					value: api.getTimestamp(guild.createdAt) + ` (tạo ${api.ageCalc(guild.createdAt)})`,
 					inline: true
 				},
 				{
@@ -39,7 +41,7 @@ module.exports = {
 				},
 				{
 					name: "Tổng thành viên",
-					value: (Intl.NumberFormat().format(guild.memberCount)).toString() + ` (${client.guilds.cache.get(guild.id).members.cache.map(user => user.user.bot).length} bots)`,
+					value: (Intl.NumberFormat().format(guild.members.cache.filter(member => !member.user.bot).size)).toString() + ` (${guild.members.cache.filter(member => member.user.bot).size} bots)`,
 					inline: true
 				},
 				{
@@ -60,7 +62,5 @@ module.exports = {
 			},
 			color: client.config.DEF_COLOR
 		}]});
-        console.log(guild.name + " joined");
-        log(guild.name + " joined");
     }
 };
