@@ -6,16 +6,15 @@ const Database = require('simplest.db');
  * @returns Trả về giây phút giờ ngày tháng năm
  */
 function ageCalc(time) {
-    var up = new Date(new Date().getTime() - time);
+    var up = new Date(new Date().getTime() - new Date(time).getTime());
 
     let years = up.getUTCFullYear() - 1970;
     let months = up.getUTCMonth();
     let days = up.getUTCDate() - 2;
     let hours = up.getUTCHours();
     let minutes = up.getUTCMinutes();
-    let seconds = up.getUTCSeconds();
 
-    var string = seconds + " giây";
+    var string = "vài giây";
     if (hours == 0 && minutes > 0) string = minutes + " phút";
     if (hours > 0 && minutes == 0) string = hours + " giờ";
 
@@ -23,6 +22,7 @@ function ageCalc(time) {
     if (hours > 0 && minutes == 0) string = hours + " giờ";
 
     if (days > 0 && months > 0) string = months + " tháng " + days + " ngày ";
+    if (days > 0 && months == 0) string = days + " ngày " + string;
     if (days == 0 && months > 0) string = months + " tháng";
 
     if (years > 0) string = years + " năm " + string;
