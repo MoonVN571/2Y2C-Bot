@@ -41,7 +41,7 @@ module.exports = {
 				},
 				{
 					name: "Tổng thành viên",
-					value: (Intl.NumberFormat().format(guild.members.cache.filter(member => !member.user.bot).size)).toString() + ` (${guild.members.cache.filter(member => member.user.bot).size} bots)`,
+					value: (Intl.NumberFormat().format(guild.memberCount)).toString() + ` (${guild.members.cache.filter(member => member.user.bot).size} bots)`,
 					inline: true
 				},
 				{
