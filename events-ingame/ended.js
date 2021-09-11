@@ -1,6 +1,6 @@
 const { createBot } = require('../index');
 var { MessageEmbed } = require('discord.js');
-var Scriptdb = require('script.db');
+var Database = require('simplest.db');
 const api = require('../utils');
 const log = require('../log');
 
@@ -20,13 +20,13 @@ module.exports = {
 
         setTimeout(createBot, 10 * 60 * 1000);
 
+        const data = new Database({path:'./data.json'});
+
         setTimeout(() => {
             if (!bot.joined) return;
 
-            if (bot.lobby) {
-                var d = new Scriptdb('./data.json');
-                d.set('queueEnd', Date.now())
-            }
+            if (bot.lobby) data.set('queueEnd', Date.now());
+
             var disconnected = new MessageEmbed()
                 .setDescription("🏮 Bot đã mất kết nối đến server. 🏮")
                 .setColor("F71319");
@@ -35,7 +35,7 @@ module.exports = {
 
             if (!bot.dev) {
                 client.guilds.cache.forEach((guild) => {
-                    const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+                    const data = new Database({path:`./data/guilds/setup-${guild.id}.json`});
                     const checkdata = data.get('livechat');
 
                     if (checkdata == undefined || guild == undefined) return;

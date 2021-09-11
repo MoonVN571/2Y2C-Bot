@@ -2,7 +2,7 @@ const { MessageEmbed, Client } = require('discord.js');
 const { Bot } = require('mineflayer');
 const api = require('../utils');
 
-var Scriptdb = require('script.db');
+var Database = require('simplest.db');
 const cfDir = require('../config.json');
 
 module.exports = {
@@ -47,7 +47,7 @@ module.exports = {
         var setLogger = `**<${api.removeFormat(username)}>** ${api.removeFormat(logger)}`;
 
         client.guilds.cache.forEach((guild) => {
-            const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+			const data = new Database({path:`./data/guilds/setup-${guild.id}.json`});
             const checkdata = data.get('livechat');
 
             if (checkdata == undefined || guild == undefined) return;
@@ -70,11 +70,11 @@ module.exports = {
 
         saveMsgsData(username, logger);
         function saveMsgsData(username, logger) {
-            let messages = new Scriptdb(`./data/quotes/${username}.json`);
+			const messages = new Database({path:`./data/quotes/setup-${username}.json`});
             let msgs = messages.get("messages")
             let times = messages.get("times")
 
-            if (msgs == undefined) {
+            if (!msgs) {
                 messages.set("messages", logger)
                 messages.set("times", Date.now())
             } else {

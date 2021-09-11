@@ -1,5 +1,5 @@
 const { MessageEmbed, Client, Message, Intents } = require('discord.js');
-const Scriptdb = require("script.db");
+const Database = require("simplest.db");
 const api = require('../utils');
 const log = require('../log');
 require('dotenv').config();
@@ -8,7 +8,7 @@ module.exports = {
 	once: false,
 	/**
 	 * 
-	 * @param {*} bot 
+	 * @param {import('mineflayer').Bot} bot 
 	 * @param {Client} client 
 	 * @param {Message} message 
 	 * @returns 
@@ -37,7 +37,7 @@ module.exports = {
 				});
 				
 				client2.guilds.cache.forEach((guild) => {
-					const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+					const data = new Database({path:`./data/guilds/setup-${guild.id}.json`});
 					const checkdata = data.get('restart-role');
 					const channel = data.get('restart');
 					if(checkdata == undefined || guild == undefined) return;
@@ -74,34 +74,34 @@ module.exports = {
 
 		if(logger == "Đang vào 2y2c") {
 			bot.haveJoined = true; // check da thay chat dang vao 2y2c chua va tat queue
-			let data = new Scriptdb('./data.json');
+			let data = new Database({path:'./data.json'});
 
 			data.set('queueEnd', Date.now());
 
 			setTimeout(() => {
-				var quetime = new MessageEmbed()
-							.setDescription(`Trong hàng chờ được ${api.queueTime()}.`)
-							.setColor(0xeeee00);
+				if(bot.lobby) bot.quit();
+			}, 1 * 60 * 1000);
 
-				if(bot.dev) {
-					client.channels.cache.get("807045720699830273").send({embeds: [quetime]});
-				} else {
-					client.channels.cache.get("806881615623880704").send({embeds: [quetime]});
-				}
-			}, 20 * 1000);
+			var quetime = new MessageEmbed()
+						.setDescription(`Trong hàng chờ được ${api.queueTime()}.`)
+						.setColor(0xeeee00);
+
+			if(bot.dev) {
+				client.channels.cache.get("807045720699830273").send({embeds: [quetime]});
+			} else {
+				client.channels.cache.get("806881615623880704").send({embeds: [quetime]});
+			}
 		}
 
 
 		if(logger == "2y2c đã full") {
-			let data = new Scriptdb('./data.json');
+			let data = new Database({path:'./data.json'});
 			data.set('queueStart', Date.now());
 		}
 
 		if(logger == "đang vào 2y2c...") {
-			setTimeout(() => {
-				let data = new Scriptdb('./data.json');
-				data.set("uptime", 60000 + Date.now());
-			}, 60 * 1000);
+			let data = new Database({path:'./data.json'});
+			data.set("uptime", 60000 + Date.now());
 		}
 
 		if (logger =="đang vào 2y2c..."
@@ -148,7 +148,7 @@ module.exports = {
 
 			if(!bot.dev) {
 				client.guilds.cache.forEach((guild) => {
-					const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+					const data = new Database({path:`./data/guilds/setup-${guild.id}.json`});
 					const checkdata = data.get('livechat');
 			
 					if(checkdata == undefined || guild == undefined) return;
@@ -269,24 +269,18 @@ module.exports = {
 				if(users.indexOf(name) < 0) return;
 				// console.log("save dead " + name);
 				log("Try to save death " + name);
-				const d = new Scriptdb(`./data/deaths/${name}.json`);
+				const data = new Database({path: `./data/deaths/${name}.json`});
 
-				if(d.get('deaths') == undefined) {
-					d.set('deaths', logger);
-					d.set('times', Date.now());
+				if(data.get('deaths') == undefined) {
+					data.set('deaths', logger);
+					data.set('times', Date.now());
 				} else {
-					d.set('deaths', d.get('deaths') + " | " + logger);
-					d.set('times', d.get('times') + " | " + Date.now());
+					data.set('deaths', data.get('deaths') + " | " + logger);
+					data.set('times', data.get('times') + " | " + Date.now());
 				}
 
-				const death = new Scriptdb(`./data/kd/${name}.json`);
-				var data = death.get('deaths');
-
-				if(data == undefined) {
-					death.set('deaths', 1);
-				} else {
-					death.set('deaths', +data + 1);
-				}
+				const kd = new Database({path:`./data/kd/${name}.json`});
+				kd.number.add('deaths', 1);
 			} catch(e) {
 				log("Error to save dead " + name);
 				console.log(e);
@@ -305,8 +299,8 @@ module.exports = {
 				if(users.indexOf(name) < 0) return;
 				// console.log("Saved " + name);
 				log("try to save kill " + name);
-				const k = new Scriptdb(`./data/kills/${name}.json`);
-				if(k.get('kills') == undefined) {
+				const k = new Database({path:`./data/kills/${name}.json`});
+				if(!k.get('kills')) {
 					log("new kill msg " + name);
 					k.set('deaths', logger);
 					k.set('times', Date.now());
@@ -316,14 +310,8 @@ module.exports = {
 					k.set('times', k.get('times') + " | " + Date.now());
 				}
 				
-				const kill = new Scriptdb(`./data/kd/${name}.json`);
-				var data = kill.get('kills');
-
-				if(data == undefined) {
-					kill.set('kills', 1);
-				} else {
-					kill.set('kills', +data + 1);
-				}
+				const kd = new Database({path:`./data/kd/${name}.json`});
+				kd.number.add('kills', 1);
 			} catch(e) {
 				log("Error to save kill " + name);
 				console.log(e);
@@ -345,7 +333,7 @@ module.exports = {
 		if(bot.dev) return;
 		
 		client.guilds.cache.forEach((guild) => {
-			const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
+			const data = new Database({path:`./data/guilds/setup-${guild.id}.json`});
 			const checkdata = data.get('livechat');
 
 			if(checkdata == undefined || guild == undefined) return;

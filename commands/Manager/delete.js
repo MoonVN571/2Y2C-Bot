@@ -14,13 +14,12 @@ module.exports = {
      * @returns 
      */
     async execute(client, message, args) {
-        var prefix = client.prefix;
 
-        if (!args[0]) return message.reply({ content: "Cách dùng: " + prefix + "delete <livechat/connection/restart/restart-role>", allowedMentions: { repliedUser: false } });
+        if (!args[0]) return message.reply({ content: "Cách dùng: " + client.PREFIX + "delete <livechat/connection/restart/restart-role>", allowedMentions: { repliedUser: false } });
 
         switch (args[0]) {
             case "livechat": {
-                if (!args[1]) return message.reply({ content: "Cách dùng: " + prefix + "delete livechat <#kênh>", allowedMentions: { repliedUser: false } });
+                if (!args[1]) return message.reply({ content: "Cách dùng: " + client.PREFIX + "delete livechat <#kênh>", allowedMentions: { repliedUser: false } });
 
                 var channel = message.content.replace(/\D/g, '');
                 if (!channel) channel = args[2];
@@ -34,7 +33,7 @@ module.exports = {
                 break;
 
             case "connection": {
-                if (!args[1]) return message.reply({ content: "Cách dùng: " + prefix + "delete connection <#kênh>", allowedMentions: { repliedUser: false } });
+                if (!args[1]) return message.reply({ content: "Cách dùng: " + client.PREFIX + "delete connection <#kênh>", allowedMentions: { repliedUser: false } });
 
                 var channel = message.content.replace(/\D/g, '');
                 if (!channel) channel = args[2];
@@ -48,7 +47,7 @@ module.exports = {
                 break;
 
             case "restart": {
-                if (!args[1]) return message.reply({ content: "Cách dùng: " + prefix + "delete restart <#kênh>", allowedMentions: { repliedUser: false } });
+                if (!args[1]) return message.reply({ content: "Cách dùng: " + client.PREFIX + "delete restart <#kênh>", allowedMentions: { repliedUser: false } });
 
                 var channel;
                 channel = message.content.replace(/\D/g, '');
@@ -64,7 +63,7 @@ module.exports = {
                 break;
 
             case "restart-role": {
-                if (!args[1]) return message.reply({ content: "Cách dùng: " + prefix + "delete restart-role <tên role>", allowedMentions: { repliedUser: false } });
+                if (!args[1]) return message.reply({ content: "Cách dùng: " + client.PREFIX + "delete restart-role <tên role>", allowedMentions: { repliedUser: false } });
 
                 const data = new Database({ path: `./data/guilds/setup-${message.guildId}.json` });
 
@@ -74,7 +73,7 @@ module.exports = {
             }
 
             default: {
-                message.reply({ content: "Không thấy setting này. Cú pháp: " + client.client.config.prefix + "delete <chat/connection/restart/restart-role>", allowedMentions: { repliedUser: false } });
+                message.reply({ content: "Không thấy setting này. Cú pháp: " + client.client.PREFIX + "delete <chat/connection/restart/restart-role>", allowedMentions: { repliedUser: false } });
             }
         }
     }
