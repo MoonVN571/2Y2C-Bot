@@ -185,7 +185,7 @@ function createBot() {
 }
 
 client.on('messageCreate', msg => {
-    if (msg.author.bot || msg.author == client.user || msg.content.startsWith(prefix)) return;
+    if (msg.author.bot || msg.author == client.user || msg.content.startsWith(prefix) || !msg || !msg.channel) return;
 
     setTimeout(() => {
         if (msg.channel.id == defaultChannel) {
