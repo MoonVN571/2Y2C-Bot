@@ -16,7 +16,9 @@ module.exports = {
      */
     execute(client) {
         client.commands = new Collection();
+        client.slashCommands = new Collection();
         require('../handlers/command')(client);
+        require('../handlers/slash')(client);
 
         if(!client.dev) {
             const app = express()

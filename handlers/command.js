@@ -1,8 +1,6 @@
 const ascii = require('ascii-table');
 let table = new ascii("Commands");
-
 table.setHeading("Name", "Status");
-
 const { readdirSync } = require('fs');
 
 module.exports = (client) => {
