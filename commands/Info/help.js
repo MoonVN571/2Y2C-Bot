@@ -15,13 +15,13 @@ module.exports = {
             const getCMD = client.commands.get(args[0])
                 || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[0]));
 
-            if(!getCMD.name) return message.reply({
-                    embeds: [{
-                        title: "Lỗi",
-                        description: "Không tìm thấy lệnh bạn đã nhập.",
-                        color: client.config.ERR_COLOR
-                    }]
-                });
+            if (!getCMD) return message.reply({
+                embeds: [{
+                    title: "Lỗi",
+                    description: "Không tìm thấy lệnh bạn đã nhập.",
+                    color: client.config.ERR_COLOR
+                }]
+            });
 
             if (getCMD.name) {
                 await readdirSync('./commands').forEach(dir => {

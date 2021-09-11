@@ -31,7 +31,7 @@ module.exports = {
 				},
 				{
 					name: "Ngày tạo nhóm",
-					value: api.getTimestamp(guild.createdAt) + ` (tạo ${api.ageCalc(guild.createdAt)})`,
+					value: api.getTimestamp(guild.createdAt) + ` (tạo ${api.ageCalc(guild.createdAt)} trước)`,
 					inline: true
 				},
 				{

@@ -143,7 +143,7 @@ module.exports = {
                 break;
 
             default: {
-                message.reply({ content: "Không thấy setting này. Cú pháp: " + client.client.PREFIX + "setup <chat/connection/restart/restart-role>", allowedMentions: { repliedUser: false } });
+                message.reply({ content: "Không thấy setting này. Cú pháp: " + client.PREFIX + "setup <livechat/connection/restart/restart-role>", allowedMentions: { repliedUser: false } });
             }
         }
     }

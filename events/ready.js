@@ -30,11 +30,8 @@ module.exports = {
             app.post('/dblwebhook', webhook.listener(vote => {
                 let data = new Scriptdb('./voted.json');
                 
-
-                if(!data.get(vote.user)) {
-                    data.set(vote.user, Date.now())
-                }
-
+                data.set(vote.user, Date.now());
+                
                 client.users.fetch(vote.user).then(user => {
                     client.channels.cache.get('862215076698128396').send({embeds: [{
                         description: "**" + user.tag + "** đã vote bot!",
