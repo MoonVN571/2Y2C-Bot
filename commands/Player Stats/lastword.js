@@ -36,6 +36,6 @@ module.exports = {
             .setDescription("**" + args[0] + "** [" + timed + " trước]: " + data)
             .setColor(0x2EA711)
 
-        message.reply({ embeds: [embed] });
+        message.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
     }
 }

@@ -20,11 +20,11 @@ module.exports = {
                     title: "Lỗi",
                     description: "Không tìm thấy lệnh bạn đã nhập.",
                     color: client.config.ERR_COLOR
-                }]
+                }], allowedMentions: { repliedUser: false }
             });
 
             if (getCMD.name) {
-                await readdirSync('./commands').forEach(dir => {
+                readdirSync('./commands').forEach(dir => {
                     readdir(`./commands/${dir}`, async (err, files) => {
                         if (err) throw err;
 
@@ -68,7 +68,7 @@ module.exports = {
         }
 
         let totalCommands = 0;
-        await readdirSync('./commands/').forEach(async dir => {
+        readdirSync('./commands/').forEach(async dir => {
             const commands = readdirSync(`./commands/${dir}/`).filter(file => file.endsWith('.js'));
 
             commands.forEach((file) => {
@@ -89,16 +89,16 @@ module.exports = {
             .setColor(client.config.DEF_COLOR)
             .setThumbnail(client.user.avatarURL)
 
-        readdirSync('./commands/').forEach(async dir => {
+        await readdirSync('./commands/').forEach(async dir => {
             const commands = readdirSync(`./commands/${dir}/`).filter(file => file.endsWith('.js'));
 
             let cmds = [];
-            await commands.forEach((file) => {
+            commands.forEach((file) => {
                 const pull = require(`../../commands/${dir}/${file}`);
                 if (pull.name) cmds.push(pull.name);
             });
 
-            await defaultEmbed.addField(dir + ` [${cmds.length}]:`, "``" + cmds.join("``, ``") + "``");
+            defaultEmbed.addField(dir + ` [${cmds.length}]:`, "``" + cmds.join("``, ``") + "``");
         });
 
         await message.reply({ embeds: [defaultEmbed], allowedMentions: { repliedUser: false } }).then(() => {

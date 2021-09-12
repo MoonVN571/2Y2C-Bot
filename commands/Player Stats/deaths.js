@@ -86,7 +86,6 @@ module.exports = {
 				.setTitle(`Báo cáo của ${args[0]}`)
 				.setDescription(`*Tổng số ghi nhận người này: ${deaths.toString().split(" | ").length}*\n`)
 				.addField('*5 lần chết gần đây*', data + "\n")
-				.setFooter(client.footer)
 				.setTimestamp()
 				.setColor(0x2EA711);
 
@@ -96,7 +95,6 @@ module.exports = {
 				.setTitle(`Báo cáo của ${args[0]}`)
 				.setDescription(`*Tổng số ghi nhận người này: 1*\n`)
 				.addField('*5 lần chết gần đây*', deaths + "\n")
-				.setFooter(client.footer)
 				.setTimestamp()
 				.setColor(0x2EA711);
 

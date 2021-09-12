@@ -27,29 +27,21 @@ module.exports = {
 		var colorNotf;
 		
 		if (logger === "[AutoRestart] Server Restarting!" && !bot.dev) {
-			const client2 = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGE] });
-			client2.login(process.env.TOKEN);
-			client2.on('ready', () => {
-				client2.channels.cache.get('795534684967665695').send("@here " + logger).then(() => {
-						setTimeout(() => {
-							client2.destroy();
-						}, 5000);
-				});
-				
-				client2.guilds.cache.forEach((guild) => {
-					const data = new Database({path:`./data/guilds/setup-${guild.id}.json`});
-					const checkdata = data.get('restart-role');
-					const channel = data.get('restart');
-					if(checkdata == undefined || guild == undefined) return;
-					try {
-						let role = client.guild.cache.get(guild.id).roles.cache.get(checkdata);
-						if(!role) return;
+			client.channels.cache.get('795534684967665695').send("@here " + logger);
+			
+			client.guilds.cache.forEach((guild) => {
+				const data = new Database({path:`./data/guilds/setup-${guild.id}.json`});
+				const checkdata = data.get('restart-role');
+				const channel = data.get('restart');
+				if(checkdata == undefined || guild == undefined) return;
+				try {
+					let role = client.guild.cache.get(guild.id).roles.cache.get(checkdata);
+					if(!role) return;
 
-						if(bot.dev) return;
-						
-						if(client.channels.cache.get(channel)) client.channels.cache.get(channel).send({content: role.toString() + " " + logger, allowedMentions: {repliedUser: true}});
-					} catch(e) {console.log(e)}
-				});
+					if(bot.dev) return;
+					
+					if(client.channels.cache.get(channel)) client.channels.cache.get(channel).send({content: role.toString() + " " + logger});
+				} catch(e) {console.log(e)}
 			});
 		}
 		var checkWhisper = logger.split(' ')[1];

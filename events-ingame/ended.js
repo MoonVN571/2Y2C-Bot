@@ -42,8 +42,8 @@ module.exports = {
 
                     try { client.channels.cache.get(checkdata).send({ embeds: [disconnected] }); } catch (e) { }
                 });
+            }
             
-
             bot.joined = false;
 
             var disconnectedLog = new MessageEmbed()
@@ -57,7 +57,7 @@ module.exports = {
                     client.channels.cache.get("806881615623880704").send({ embeds: [disconnectedLog] });
                 }
             } catch (e) { }
-            }
+            
             event.setAuto(false);
             api.clean();
         }, 2 * 1000);

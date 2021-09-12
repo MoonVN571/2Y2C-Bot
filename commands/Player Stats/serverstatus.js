@@ -17,6 +17,6 @@ module.exports = {
             .setColor(0x000DFF)
             .setDescription(status);
 
-        message.reply({ embeds: [embed] });
+        message.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
     }
 }

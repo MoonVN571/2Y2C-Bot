@@ -20,6 +20,6 @@ module.exports = {
             .setDescription(`Bot đã nhìn thấy **${args[0]}** từ ${age} trước.`)
             .setColor(0x2EA711);
 
-        message.reply({ embeds: [embed] });
+        message.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
     }
 }

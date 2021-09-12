@@ -34,6 +34,6 @@ module.exports = {
             .setColor(0x2EA711)
             .setTimestamp();
 
-        message.reply({ embeds: [embed] });
+        message.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
     }
 }

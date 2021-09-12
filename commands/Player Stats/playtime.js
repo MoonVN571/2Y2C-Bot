@@ -21,6 +21,6 @@ module.exports = {
             .setDescription(`${args[0]}: ${string}`)
             .setColor(0x2EA711);
 
-        message.reply({ embeds: [embed] });
+        message.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
     }
 }
