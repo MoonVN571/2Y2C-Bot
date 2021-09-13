@@ -48,6 +48,20 @@ const config = {
     TOPGG_AUTH: process.env.TOPGG_AUTH
 }
 
+function sendError(desc, error) {
+    if(!error) return;
+    client.channels.cache.get("886796482538266715").send(desc + "\n\n" + error);
+}
+client.sendError = sendError;
+
+function sendLog(data) {
+    if(!data) return;
+    console.log(data);
+    client.channels.cache.get("886800209399664640").send(data);
+}
+client.sendLog = sendLog;
+
+
 client.config = config;
 
 client.on('ready', () => {

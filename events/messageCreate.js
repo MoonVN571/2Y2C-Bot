@@ -17,8 +17,7 @@ module.exports = {
     execute(client, message) {
         if (message.author.bot || !message.content.startsWith(client.PREFIX) || message.author == client.user || message.channel.type == "dm") return;
 
-        console.log(`[${new Date().toLocaleString()}] ${message.guild.name} ||${message.channel.name} || ${message.author.tag} - ${message.author.id}\nMessage: ${message.content}`);
-
+        client.sendLog(`[${new Date().toLocaleString()}] ${message.guild.name} \| ${message.channel.name} \| ${message.author.tag} - ${message.author.id}\nMessage: ${message.content}`);
         var args = message.content.slice(client.PREFIX.length).split(/ +/);
 
         if (args[0] == "") args = args.slice(1);
@@ -32,6 +31,15 @@ module.exports = {
         if (!cmd) return;
 
         if (cmd.dev && cfDir.DEVELOPERS != message.author.id) return;
+
+        if(!message.guild.me.permissions.has(Permissions.FLAGS.SEND_MESSAGES)) {
+            client.sendError(`${message.guild.name} - ${message.guildId}  - No perm to chatting`);
+            message.author.send("Hãy cấp quyền cho mình chat!").catch(err => {
+                console.log(err);
+                client.sendError(`${message.guild.name} - ${message.guildId} : Không thể gửi tin nhắn cho author.\n${err.message || err.toString()}\n\n${err}`);
+            });
+            return;
+        }
 
         if (cmd.admin && !message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return message.reply({
             embeds: [{
@@ -68,8 +76,6 @@ module.exports = {
             timeout.set(`${message.author.id}.${cmdDelay.name}`, Date.now() + cmdDelay.delay * 1000);
         }
 
-        if (!message.guild.me.permissions.has(Permissions.FLAGS.SEND_MESSAGES)) return;
-
         function userNotFound() {
             message.reply({
                 embeds: [new MessageEmbed()
@@ -94,9 +100,7 @@ module.exports = {
         client.inputUsername = new MessageEmbed()
             .setDescription('Hãy nhập tên người dùng.')
             .setColor('0xC51515');
-
-
-
+        
         try {
             cmd.execute(client, message, args);
         } catch (err) {

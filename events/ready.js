@@ -73,8 +73,6 @@ module.exports = {
             if(client.dev) return;
 
             try {
-                // client.channels.cache.get(guild.id).me.permissions.has(Permissions.FLAGS.SEND_MESSAGES)
-
                 if(!client.guilds.cache.get(guild.id).me.permissionsIn(client.channels.cache.get(checkdata)).has(Permissions.FLAGS.SEND_MESSAGES)) {
                     console.log(guild.id);
                     const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
@@ -86,10 +84,8 @@ module.exports = {
                     description: "Đang khởi động lại bot.",
                     color: 0x15ff00
                 }]}).catch(err => {
-                    // const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
-                    // if(err.toString().includes("Missing Permissions")) data.delete('livechat');
                     console.log(err);
-                    console.log(guild.id);
+                    client.sendError(`${message.guild.name} - ${message.guildId} : Không thể gửi tin nhắn cho author.\n${err.message || err.toString()}\n\n${err}`);
                 })
             } catch(e) {
 
