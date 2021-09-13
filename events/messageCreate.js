@@ -17,7 +17,7 @@ module.exports = {
     execute(client, message) {
         if (message.author.bot || !message.content.startsWith(client.PREFIX) || message.author == client.user || message.channel.type == "dm") return;
 
-        client.sendLog(`\`\`\`[${new Date().toLocaleString()}] ${message.guild.name} | ${message.channel.name} | ${message.author.tag} - ${message.author.id}\nMessage: ${message.content}\`\`\`\``);
+        client.sendLog(`\`\`\`[${new Date().toLocaleString()}] ${message.guild.name} | ${message.channel.name} | ${message.author.tag} - ${message.author.id}\nMessage: ${message.content}\`\`\``);
         var args = message.content.slice(client.PREFIX.length).split(/ +/);
 
         if (args[0] == "") args = args.slice(1);
@@ -32,7 +32,7 @@ module.exports = {
 
         if (cmd.dev && cfDir.DEVELOPERS != message.author.id) return;
 
-        if(!message.guild.me.permissions.has(Permissions.FLAGS.SEND_MESSAGES) || message.guild.me.permissionsIn(message.channel).has(Permissions.FLAGS.SEND_MESSAGES)) {
+        if(!message.guild.me.permissions.has(Permissions.FLAGS.SEND_MESSAGES) || !message.guild.me.permissionsIn(message.channel).has(Permissions.FLAGS.SEND_MESSAGES)) {
             client.sendError(`${message.guild.name} - ${message.guildId}  - No perm to chatting`);
             message.author.send("Hãy cấp quyền cho mình chat!").catch(err => {
                 console.log(err);

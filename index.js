@@ -202,6 +202,7 @@ client.on('messageCreate', msg => {
     if (msg.author.bot || msg.author == client.user || msg.content.startsWith(prefix) || !msg || !msg.channel) return;
 
     setTimeout(() => {
+        if(!msg.channel.isText()) return;
         if (msg.channel.id == defaultChannel) {
             if (delayCheck.has('inQueue')) return msg.reply("Bạn phải chờ vài giây trước khi tiếp tục chat.");
 

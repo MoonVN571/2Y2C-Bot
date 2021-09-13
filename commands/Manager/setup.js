@@ -31,9 +31,9 @@ module.exports = {
 
                 const data = new Database({ path: `./data/guilds/setup-${message.guildId}.json` });
 
-                if (!data.get('livechat')) return message.reply({ content: "Bạn đã setup kênh log livechat rồi. Xoá kênh loglivechat bằng lệnh " + client.PREFIX + "delete livechat <Kênh>", allowedMentions: { repliedUser: false } })
+                if (!data.get('livechat')) return message.reply({ content: "Bạn đã setup kênh log livechat rồi. Xoá kênh log livechat bằng lệnh " + client.PREFIX + "delete livechat <Kênh>", allowedMentions: { repliedUser: false } })
 
-                if (!message.guild.me.permissionsIn(channelPerm).has(Permissions.FLAGS.SEND_MESSAGES))
+                if (!message.guild.me.permissionsIn(channel).has(Permissions.FLAGS.SEND_MESSAGES))
                     return message.reply({ content: "Bot không có quyền gửi tin nhắn vào kênh này", allowedMentions: { repliedUser: false } });
 
                 if (isNaN(channel) || !client.channels.cache.get(channel)) return message.reply({ content: "Kênh không hợp lệ!", allowedMentions: { repliedUser: false } });
