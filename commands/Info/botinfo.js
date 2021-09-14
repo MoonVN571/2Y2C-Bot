@@ -19,7 +19,7 @@ module.exports = {
             var embed = new MessageEmbed()
                 .addField("Thông tin",
                     "-   **Name:** " + bot.user.tag + " - ID: " + client.user.id + "\n"
-                    + "-   **Created at:** " + new Api().getTimestamp(bot.joinedTimestamp) + "\n"
+                    + "-   **Created at:** " + api.getTimestamp(bot.joinedTimestamp) + "\n"
 
                     + "-   **Bot:** " + require("../../package.json").version + "\n"
                     + "-   **Mineflayer:** " + require("mineflayer/package").version + "\n"
@@ -34,7 +34,7 @@ module.exports = {
                 )
                 .addField("System",
                     `-   **Platform:** ${os.type()}` + "\n"
-                    + `-   **Process uptime:** ${new Api().calc(os.uptime())}` + "\n"
+                    + `-   **Process uptime:** ${api.calc(os.uptime())}` + "\n"
                     + `-   **Ram used:** ${(api.ageCalc(process.memoryUsage().heapUsed / 1024) / 1024).toFixed(2)} MB\n`
                     + "-   **CPU processors:** " + os.cpus()[0].model + "\n"
                     + "-   **CPU cores:** " + os.cpus().length + "\n"
