@@ -14,7 +14,7 @@ module.exports = {
         var prio = data.get('prio');
 
         var tab = data.get('tab-content');
-        if (!tab) return message.reply("Bot chưa kết nối đến server.");
+        if (!tab) return message.reply({content: "Bot chưa kết nối đến server.", allowedMentions: { repliedUser: false } });
 
         var uptime = tab.split(' - ')[3].split("restart từ")[1].split("trước")[0];
         var tps = tab.split('  ')[1].split(' tps')[0];
@@ -26,7 +26,7 @@ module.exports = {
         if (tps == "tps" || ping == "ping" || players == "players")
             return message.reply(`Lỗi, thử lại sau!`);
 
-        if (queue == undefined || prio == undefined) return message.reply("Không tìm thấy dữ liệu.");
+        if (queue == undefined || prio == undefined) return message.reply({content: "Không tìm thấy dữ liệu.", allowedMentions: { repliedUser: false } });
 
         var embed = new MessageEmbed()
             .setAuthor('2Y2C', 'https://cdn.discordapp.com/attachments/795842485133246514/821669964673974282/communityIcon_14otnpwidot51.png')
