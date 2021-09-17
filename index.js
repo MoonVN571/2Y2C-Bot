@@ -202,18 +202,21 @@ client.on('messageCreate', msg => {
     if (msg.author.bot || msg.author == client.user || msg.content.startsWith(prefix) || !msg || !msg.channel) return;
 
     setTimeout(() => {
-        if(!msg.channel.isText()) return;
-        if (msg.channel.id == defaultChannel) {
-            if (delayCheck.has('inQueue')) return msg.reply("Bạn phải chờ vài giây trước khi tiếp tục chat.");
+        try {
+            if(!msg.channel.isText()) return;
+            if (msg.channel.id == defaultChannel) {
+                if (delayCheck.has('inQueue')) return msg.reply("Bạn phải chờ vài giây trước khi tiếp tục chat.");
 
-            delayCheck.add('inQueue');
-            setTimeout(() => delayCheck.clear(), 2 * 1000);
+                delayCheck.add('inQueue');
+                setTimeout(() => delayCheck.clear(), 2 * 1000);
 
-            if (notRepeat.has(msg.content + " " + msg.author.id)) return msg.reply("Bạn không được lập lại tin nhắn.");
+                if (notRepeat.has(msg.content + " " + msg.author.id)) return msg.reply("Bạn không được lập lại tin nhắn.");
 
-            notRepeat.add(msg.content + " " + msg.author.id);
-            setTimeout(() => notRepeat.delete(msg.content + " " + msg.author.id), 5 * 60 * 1000);
-        }
+                notRepeat.add(msg.content + " " + msg.author.id);
+                setTimeout(() => notRepeat.delete(msg.content + " " + msg.author.id), 5 * 60 * 1000);
+            }
+            
+        } catch(e) { console.log(e); }
     }, 2 * 1000);
 });
 

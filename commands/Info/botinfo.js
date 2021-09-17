@@ -42,7 +42,6 @@ module.exports = {
                 )
                 .setColor(0x000DFF)
                 .setTimestamp()
-                .setFooter(client.FOOTER);
             msg.edit({ embeds: [embed], allowedMentions: { repliedUser: false } });
         })
     }
