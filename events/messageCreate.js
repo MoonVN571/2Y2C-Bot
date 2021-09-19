@@ -17,7 +17,7 @@ module.exports = {
     execute(client, message) {
         if (message.author.bot || !message.content.startsWith(client.PREFIX) || message.author == client.user || message.channel.type == "dm" || !message.channel || !message.channel.isText()) return;
 
-        client.sendLog(`\`\`\`[${new Date().toLocaleString()}] ${message.guild.name} | ${message.channel.name} | ${message.author.tag} - ${message.author.id}\nMessage: ${message.content}\`\`\``);
+        client.sendLog(`[${new Date().toLocaleString()}] ${message.guild.name} | ${message.channel.name} | ${message.author.tag} - ${message.author.id}\nMessage: ${message.content}`);
         var args = message.content.slice(client.PREFIX.length).split(/ +/);
 
         if (args[0] == "") args = args.slice(1);

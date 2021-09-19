@@ -4,11 +4,11 @@ module.exports = client => {
     // Slash handler
     const arrayOfSlashCommands = [];
 
-    readdirSync('./slashCOmmands/').forEach(dir => {
-        const commands = readdirSync(`./slashCOmmands/${dir}/`).filter(file => file.endsWith('.js'));
+    readdirSync('./slashCommands/').forEach(dir => {
+        const commands = readdirSync(`./slashCommands/${dir}/`).filter(file => file.endsWith('.js'));
 
         commands.forEach((file) => {
-            const pull = require(`../slashCOmmands/${dir}/${file}`);
+            const pull = require(`../slashCommands/${dir}/${file}`);
 
             if (pull.name) {
                 client.slashCommands.set(pull.name, pull);

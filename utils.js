@@ -93,8 +93,8 @@ function queueTime() {
  */
 function calcTime() {
     var d = uptimeCalc();
-    var minutes = d.split("h")[0]
-    var hours = d.split("h ")[1].split("m")[0];
+    var hours = d.split("h")[0]
+    var minutes = d.split("h ")[1].split("m")[0];
 
     var formatMinutes = "";
     if (minutes > 0) formatMinutes = minutes + " phút";
@@ -194,7 +194,7 @@ function soKhong(value, length) {
  * Dọn data của file data.json
  */
 function clean() {
-    require('fs').unlink('./data.json', (err) => { if (err) console.log("Sảy ra lỗi khi xoá file data.json") });
+    require('fs').unlink('./data.json', (err) => { });
 }
 
 function removeFormat(data) {

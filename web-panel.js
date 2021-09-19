@@ -1,7 +1,8 @@
-const express = require('express')
-const app = express()
-
+const express = require('express');
+const app = express();
 var Scriptdb = require('script.db');
+const Topgg = require('@top-gg/sdk');
+const client = require('./index');
 
 app.get('/status', function (req, res) {
     var data = new Scriptdb('./data.json').get('tab-content');
@@ -89,5 +90,20 @@ app.get('/data/2y2c/seen', function(req, res) {
 
     res.json([{"seen": data}])
 });
+
+
+const webhook = new Topgg.Webhook(client.config.TOPGG_AUTH)
+app.post('/dblwebhook', webhook.listener(vote => {
+    let data = new Scriptdb('./voted.json');
+    
+    data.set(vote.user, Date.now());
+    
+    client.users.fetch(vote.user).then(user => {
+        client.channels.cache.get('862215076698128396').send({embeds: [{
+            description: "**" + user.tag + "** đã vote bot!",
+            color: client.config.DEF_COLOR
+        }]});
+    });
+}));
 
 app.listen(80);

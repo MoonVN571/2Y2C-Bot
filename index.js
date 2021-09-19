@@ -57,7 +57,7 @@ client.sendError = sendError;
 function sendLog(data) {
     if(!data) return;
     console.log(data);
-    client.channels.cache.get("886800209399664640").send(data);
+    client.channels.cache.get("886800209399664640").send(`\`\`\`${data}\`\`\``);
 }
 client.sendLog = sendLog;
 
@@ -221,5 +221,6 @@ client.on('messageCreate', msg => {
 });
 
 module.exports = { createBot };
+module.exports = client;
 
 client.login(process.env.TOKEN).catch(err => console.log(err));

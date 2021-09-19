@@ -1,7 +1,5 @@
 const log = require('../log');
-const Topgg = require('@top-gg/sdk');
 const { AutoPoster } = require('topgg-autoposter');
-const express = require('express');
 const { Collection, Permissions } = require('discord.js');
 const Scriptdb = require('script.db');
 const { Client } = require('discord.js');
@@ -20,28 +18,7 @@ module.exports = {
         require('../handlers/command')(client);
         require('../handlers/slash')(client);
 
-        if(!client.dev) {
-            const app = express()
-            
-            const webhook = new Topgg.Webhook(client.config.TOPGG_AUTH)
-            
-            AutoPoster(client.config.TOPGG_TOKEN, client).on('posted', () => console.log('Posted stats to Top.gg!'));
-    
-            app.post('/dblwebhook', webhook.listener(vote => {
-                let data = new Scriptdb('./voted.json');
-                
-                data.set(vote.user, Date.now());
-                
-                client.users.fetch(vote.user).then(user => {
-                    client.channels.cache.get('862215076698128396').send({embeds: [{
-                        description: "**" + user.tag + "** đã vote bot!",
-                        color: client.config.DEF_COLOR
-                    }]});
-                });
-            }));
-
-            app.listen(3000);
-        }
+        if(!client.dev) AutoPoster(client.config.TOPGG_TOKEN, client).on('posted', () => console.log('Posted stats to Top.gg!'));
     
         
         client.user.setActivity("RESTARTING", { type: 'PLAYING' });

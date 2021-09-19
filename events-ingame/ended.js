@@ -4,7 +4,7 @@ var Database = require('simplest.db');
 const api = require('../utils');
 const log = require('../log');
 
-var e = require("../goTevent");
+var e = require("../gotEvent");
 var event = new e();
 
 module.exports = {

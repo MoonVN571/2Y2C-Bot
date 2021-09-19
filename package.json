@@ -17,6 +17,7 @@
     "mineflayer-tps": "^1.0.1",
     "ms": "^2.1.3",
     "os": "^0.1.1",
+    "reconlx": "^2.4.3",
     "request": "^2.88.2",
     "script.db": "^3.0.0",
     "simplest.db": "^1.0.1-2",
