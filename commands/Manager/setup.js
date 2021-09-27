@@ -33,7 +33,7 @@ module.exports = {
 
                 if (!data.get('livechat')) return message.reply({ content: "Bạn đã setup kênh log livechat rồi. Xoá kênh log livechat bằng lệnh " + client.PREFIX + "delete livechat <Kênh>", allowedMentions: { repliedUser: false } })
 
-                if (!message.guild.me.permissionsIn(channel).has(Permissions.FLAGS.SEND_MESSAGES))
+                if (!message.guild.me.permissionsIn(client.channels.cache.get(channel)).has(Permissions.FLAGS.SEND_MESSAGES))
                     return message.reply({ content: "Bot không có quyền gửi tin nhắn vào kênh này", allowedMentions: { repliedUser: false } });
 
                 if (isNaN(channel) || !client.channels.cache.get(channel)) return message.reply({ content: "Kênh không hợp lệ!", allowedMentions: { repliedUser: false } });
@@ -67,7 +67,7 @@ module.exports = {
 
                 if (isNaN(channel) || !client.channels.cache.get(channel)) return message.reply({ content: "Kênh không hợp lệ!", allowedMentions: { repliedUser: false } });
 
-                if (!message.guild.me.permissionsIn(channel).has(Permissions.FLAGS.SEND_MESSAGES))
+                if (!message.guild.me.permissionsIn(client.channels.cache.get(channel)).has(Permissions.FLAGS.SEND_MESSAGES))
                     return message.reply({ content: "Bot không có quyền gửi tin nhắn vào kênh này", allowedMentions: { repliedUser: false } });
 
                 message.reply({ content: "Bạn đã setup kênh log connection tại kênh <#" + channel + "> thành công!", allowedMentions: { repliedUser: false } }).then(() => {
@@ -122,7 +122,7 @@ module.exports = {
                 if (data.get('livechat') == channel || data.get('connection') == channel)
                     return message.reply({ content: "Bạn không thể setup cùng kênh đã setup lúc trước.", allowedMentions: { repliedUser: false } });
 
-                if (!message.guild.me.permissionsIn(channel).has(Permissions.FLAGS.SEND_MESSAGES))
+                if (!message.guild.me.permissionsIn(client.channels.cache.get(channel)).has(Permissions.FLAGS.SEND_MESSAGES))
                     return message.reply({ content: "Bot không có quyền gửi tin nhắn vào kênh này", allowedMentions: { repliedUser: false } });
 
                 if (isNaN(channel) || !client.channels.cache.get(channel)) return message.reply({ content: "Kênh không hợp lệ!", allowedMentions: { repliedUser: false } });

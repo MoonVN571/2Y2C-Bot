@@ -50,12 +50,13 @@ module.exports = {
             }]
         });
 
+        /*
         if (cmd.vote) {
             let checkVote = new Scriptdb('./voted.json').get(message.author.id);
 
             if ((!checkVote || Date.now() - checkVote > ms("2d")) && message.author.id !== cfDir.DEVELOPERS)
                 return message.reply({ content: "Bạn phải vote bot để sử dụng lệnh này.\n\nVote tại: https://top.gg/bot/768448728125407242/vote", allowedMentions: { repliedUser: false } });
-        }
+        } */
 
         if (cmd.delay) {
             let cmdDelay = client.commands.get(cmdName);
@@ -75,6 +76,10 @@ module.exports = {
             setTimeout(() => timeout.delete(`${message.author.id}.${cmdDelay.name}`), cmdDelay.delay * 1000);
             timeout.set(`${message.author.id}.${cmdDelay.name}`, Date.now() + cmdDelay.delay * 1000);
         }
+
+        
+        if(cfDir.USERS_BLACKLISTS.indexOf(message.author.id) > -1) return message.reply({content: "Bạn nằm trong sách đen của bot!", allowedMentions: { repliedUser: false }});
+        if(cfDir.GUILDS_BLACKLISTS.indexOf(message.guild.id) > -1) return message.reply({content: "Server này nằm trong sách đen của bot!", allowedMentions: { repliedUser: false }});
 
         function userNotFound() {
             message.reply({

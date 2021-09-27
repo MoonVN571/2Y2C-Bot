@@ -220,7 +220,7 @@ client.on('messageCreate', msg => {
     }, 2 * 1000);
 });
 
-module.exports = { createBot };
-module.exports = client;
+module.exports.createBot = createBot;
+module.exports.client = client;
 
 client.login(process.env.TOKEN).catch(err => console.log(err));
