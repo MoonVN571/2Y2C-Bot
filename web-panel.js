@@ -91,8 +91,8 @@ app.get('/data/2y2c/seen', function(req, res) {
     res.json([{"seen": data}])
 });
 
-
-const webhook = new Topgg.Webhook(client.config.TOPGG_AUTH)
+require('dotenv').config();
+const webhook = new Topgg.Webhook(process.env.TOPGG_AUTH)
 app.post('/dblwebhook', webhook.listener(vote => {
     let data = new Scriptdb('./voted.json');
     

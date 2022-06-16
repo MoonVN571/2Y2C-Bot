@@ -1,0 +1,27 @@
+{
+    "MAIN": {
+        "USERNAME": "",
+        "DISCORD_PREFIX": "",
+        "IG_PREFIX": "",
+        "CHANNEL": ""
+    },
+    "DEV": {
+        "USERNAME": "",
+        "DISCORD_PREFIX": "",
+        "IG_PREFIX": "",
+        "CHANNEL": ""
+    },
+    "COLORS": {
+        "GAME": {
+            "DEFAULT": "",
+            "HIGHLIGHT": ""
+        },
+        "DISCORD": {
+            "DEFAULT": "",
+            "ERROR": "",
+            "PROCESS": ""
+        }
+    },
+    "DEVELOPERS": "",
+    "DEV_MODE": true
+}

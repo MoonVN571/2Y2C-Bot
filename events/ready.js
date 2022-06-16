@@ -1,7 +1,7 @@
 const log = require('../log');
 const { AutoPoster } = require('topgg-autoposter');
 const { Collection, Permissions } = require('discord.js');
-const Scriptdb = require('script.db');
+const Database = require('simplest.db');
 const { Client } = require('discord.js');
 const api = require('../utils');
 module.exports = {
@@ -10,21 +10,11 @@ module.exports = {
     /**
      * 
      * @param {Client} client 
-     * @returns 
      */
     execute(client) {
-        client.commands = new Collection();
-        client.slashCommands = new Collection();
-        require('../handlers/command')(client);
-        require('../handlers/slash')(client);
-
-        if(!client.dev) AutoPoster(client.config.TOPGG_TOKEN, client).on('posted', () => console.log('Posted stats to Top.gg!'));
-    
         
-        client.user.setActivity("RESTARTING", { type: 'PLAYING' });
+        // if(!client.dev) AutoPoster(client.config.TOPGG_TOKEN, client).on('posted', () => console.log('Posted stats to Top.gg!'));
         
-        setTimeout(() => client.user.setActivity("Idling", { type: 'PLAYING' }), 10 * 1000);
-    
         console.log('------------------------');
         console.log('       Moon Bot         ')
         console.log('------------------------');
@@ -39,35 +29,6 @@ module.exports = {
         log("Ready!");
         
         api.clean();
-        
-        // started notify
-        client.guilds.cache.forEach((guild) => {
-            const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
-            const checkdata = data.get('livechat');
-    
-            if(checkdata == undefined || guild == undefined) return;
-    
-            if(client.dev) return;
-
-            try {
-                if(!client.guilds.cache.get(guild.id).me.permissionsIn(client.channels.cache.get(checkdata)).has(Permissions.FLAGS.SEND_MESSAGES)) {
-                    console.log(guild.id);
-                    const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
-                    if(err.toString().includes("Missing Permissions")) data.delete('livechat');
-                    return;
-                }
-
-                client.channels.cache.get(checkdata).send({embeds: [{
-                    description: "Đang khởi động lại bot.",
-                    color: 0x15ff00
-                }]}).catch(err => {
-                    console.log(err);
-                    client.sendError(`${message.guild.name} - ${message.guildId} : Không thể gửi tin nhắn cho author.\n${err.message || err.toString()}\n\n${err}`);
-                })
-            } catch(e) {
-
-            }
-        });
     
         if(client.dev) return;
     

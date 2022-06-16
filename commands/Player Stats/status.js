@@ -1,4 +1,4 @@
-const Scriptdb = require('script.db');
+const Database = require('simplest.db');
 const api = require("../../utils");
 const { MessageEmbed } = require('discord.js');
 module.exports = {
@@ -8,7 +8,7 @@ module.exports = {
     delay: 5,
 
     async execute(client, message, args) {
-        var data = new Scriptdb("./data.json");
+        var data = new Database({path:"./data.json"});
 
         var queue = data.get('queue');
         var prio = data.get('prio');

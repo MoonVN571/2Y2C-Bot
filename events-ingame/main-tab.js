@@ -18,10 +18,12 @@ module.exports = {
 
         setTimeout(() => {
             check = false;
-        }, 60 * 1000);
+        }, 10 * 1000);
 
         if (bot.lobby) return;
         var footer = data.footer;
+
+        console.log(footer)
 
         var ss1 = footer.replace(/\\n/ig, " ");
         var ss2 = ss1.replace(/-/ig, "");

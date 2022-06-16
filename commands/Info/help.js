@@ -83,13 +83,13 @@ module.exports = {
         });
 
         const defaultEmbed = new MessageEmbed()
-            .setAuthor("Help command", client.user.avatarURL)
+            .setAuthor("Help Commands", message.guild.iconURL())
             .setDescription(`\u300B Hãy gõ **${client.PREFIX}help <tên lệnh>** để biết thêm thông tin!\n\u300BTổng **${totalCommands}** lệnh có sẵn và trong server có **${totalIgCmd}** lệnh.\u200b\n\u200b`)
             .setTimestamp()
             .setColor(client.config.DEF_COLOR)
-            .setThumbnail(client.user.avatarURL)
+            .setThumbnail(client.user.avatarURL())
 
-        await readdirSync('./commands/').forEach(async dir => {
+        readdirSync('./commands/').forEach(async dir => {
             const commands = readdirSync(`./commands/${dir}/`).filter(file => file.endsWith('.js'));
 
             let cmds = [];

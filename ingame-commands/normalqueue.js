@@ -8,7 +8,7 @@ module.exports = {
     async execute(bot, username, args) {
 	    var data = new Scriptdb(`./data.json`);
 
-        var queue = await data.get('queue') || "0 0";
+        var queue = await data.get('queue');
         if(queue == undefined) return bot.whisper(username, "> Không tìm thấy dữ liệu.");
 
         if (queue == 0) return bot.whisper(username, `> Không có ai trong hàng chờ cả.`);

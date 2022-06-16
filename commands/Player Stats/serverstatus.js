@@ -1,4 +1,4 @@
-const Scriptdb = require('script.db');
+const Database = require('simplest.db');
 const api = require("../../utils");
 const { MessageEmbed } = require('discord.js');
 module.exports = {
@@ -8,7 +8,7 @@ module.exports = {
     delay: 5,
 
     async execute(client, message, args) {
-        const data = new Scriptdb(`./data.json`);
+        const data = new Database({path:`./data.json`});
 
         var status = data.get('status');
         if (!status) return message.reply("Không tìm thấy dữ liệu.")

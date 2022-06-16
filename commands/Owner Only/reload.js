@@ -50,7 +50,7 @@ module.exports = {
             }], allowedMentions: { repliedUser: false } });
             
             message.reply({embeds: [{
-                description: "Đã tải lại các lệnh " + reloaded.join(", ") + " thành công!",
+                description: "Đã tải lại lệnh `" + reloaded.join(", ") + "` thành công!",
                 color: client.config.DEF_COLOR
             }], allowedMentions: { repliedUser: false } });
         }, 1000);

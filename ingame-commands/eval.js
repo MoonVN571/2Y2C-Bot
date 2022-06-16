@@ -7,9 +7,7 @@ module.exports = {
         let evaled;
         try {
             evaled = await eval(args.join(' '));
-            bot.whisper(username, "Executed: " + args.join(" "));
-
-            bot.once("mesasge", msg => a = msg.toString());
+            bot.whisper(username, evaled.toString());
         } catch (err) {
             bot.whisper(username, `Err: ${err.toString()}`);
             console.log(err);

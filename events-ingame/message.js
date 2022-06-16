@@ -1,10 +1,9 @@
 const { MessageEmbed, Client } = require('discord.js');
 const { Bot } = require('mineflayer');
 const api = require('../utils');
-
-var Database = require('simplest.db');
+const Database = require('simplest.db');
 const cfDir = require('../config.json');
-
+const { sendLivechat } = require('../functions');
 module.exports = {
     name: 'message',
     once: false,
@@ -13,60 +12,24 @@ module.exports = {
      * @param {Bot} bot 
      * @param {Client} client 
      * @param {String} message 
-     * @returns 
      */
-    execute(bot, client, message) {
-        var color = cfDir.COLORS.GAME.DEFAULT; // single channel
-        var color2 = cfDir.COLORS.GAME.DEFAULT; // multi channel
-
-        if (!message) return;
-
-        var msg = message.toString();
+    async execute(bot, client, message) {
+        let msg = message.toString();
         if (!msg.startsWith("<")) return;
 
-        var username = msg.split(" ")[0].split("<")[1].split(">")[0];
+        let username = msg.split(" ")[0].split("<")[1].split(">")[0];
         if (username.startsWith("[")) username = username.split("]")[1];
+        
+        let color = 0x979797;
+        let logger = msg.substr(msg.split(" ")[0].length + 1);
+        if (logger.startsWith(">")) color = 0x2EA711;
+        if (logger.startsWith("[") && username == bot.username) color = 0x4983e7; // bot highlight
 
-        logger = msg.substr(msg.split(" ")[0].length + 1);
-
-        if (logger.startsWith(">")) color2 = cfDir.COLORS.GAME.DEFAULT;
-        if (logger.startsWith("[") && username == bot.username) color2 = 0x4983e7;
-
-        if (logger.endsWith(".")) logger = logger.replace(".", "");
-
-        var chat = new MessageEmbed()
+        let embedChat = new MessageEmbed()
             .setDescription(`**<${api.removeFormat(username)}>** ${api.removeFormat(logger)}`)
-            .setColor(color2);
+            .setColor(color);
 
-        try {
-            client.channels.cache.get(bot.defaultChannel).send({ embeds: [chat] });
-            color2 = "0x797979";
-        } catch (e) { }
-
-        // check if message start with > and change color 
-        var setLogger = `**<${api.removeFormat(username)}>** ${api.removeFormat(logger)}`;
-
-        client.guilds.cache.forEach((guild) => {
-			const data = new Database({path:`./data/guilds/setup-${guild.id}.json`});
-            const checkdata = data.get('livechat');
-
-            if (checkdata == undefined || guild == undefined) return;
-
-            if (setLogger.split(" ")[1].startsWith(">")) color = cfDir.COLORS.GAME.HIGHLIGHT;
-
-            if (setLogger.split(" ")[0].startsWith("[") && username == bot.username) color = 0x4983e7;
-
-            let embedChat = new MessageEmbed()
-                .setDescription(setLogger)
-                .setColor(color);
-
-            if (bot.dev) return;
-            try {
-                client.channels.cache.get(checkdata).send({ embeds: [embedChat] }).then(() => {
-                    color = cfDir.COLORS.GAME.DEFAULT;
-                });
-            } catch (e) { }
-        });
+        await sendLivechat({ embeds: [embedChat] });
 
         saveMsgsData(username, logger);
         function saveMsgsData(username, logger) {
@@ -97,20 +60,8 @@ module.exports = {
         bot.regex = /[a-z]|[A-Z]|[0-9]/i;
         bot.logger = logger;
 
-        if (cmd.admin && (username == "MoonVN" || username == "MoonZ" || username == "MoonOnTop" || username == "MoonX" || username == bot.username || username == "MoonzVN")) {
-            try {
-                cmd.execute(bot, username, args);
-            } catch (err) {
-                console.log(err);
-            }
-            return;
-        }
-        if (!cmd.admin) {
-            try {
-                cmd.execute(bot, username, args);
-            } catch (err) {
-                console.log(err);
-            }
-        }
+        if (cmd.admin && !(username == "MoonVN" || username == "MoonZ" || username == "MoonOnTop" || username == "MoonX" || username == bot.username || username == "MoonzVN")) return;
+
+        cmd.execute(bot, username, args);
     }
 }

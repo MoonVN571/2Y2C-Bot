@@ -20,6 +20,6 @@ module.exports = client => {
     });
 
     client.on("ready", async () => {
-        await client.application.commands.set(arrayOfSlashCommands)
+        await client.application.commands.set(arrayOfSlashCommands);
     });
 }

@@ -4,20 +4,11 @@ module.exports = {
     aliases: ['bp'],
     
     execute(bot, username, args) {
-        var oldArr = [];
-
-        Object.values(bot.players).map(p => oldArr.push(p.ping + " " + p.username));
-
-        var arr = [];
-        
-        oldArr.forEach(value => {
-            if(value.split(" ")[0] !== "0") arr.push(value) 
-        })
+        let arr = Object.values(bot.players).map(p => p.ping + " " + p.username).filter(d => d.split(" ")[0] !== "0");
 
         arr.sort((a, b) => b.split(" ")[0] - a.split(" ")[0]);
 
-        var after = arr.slice(arr.length - 1);
-
-        bot.whisper(username, "> Ping thấp nhất là " + after.toString().split(" ")[1] + " với " + after.toString().split(" ")[0] +"ms.")
+        let after = arr.slice(arr.length - 1);
+        bot.whisper(username, "> Ping thấp nhất là " + after.toString().split(" ")[1] + " với " + after.toString().split(" ")[0] +"ms.");
     }
 }

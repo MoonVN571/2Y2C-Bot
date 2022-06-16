@@ -1,0 +1,1 @@
+// xem thong so kenh da setup bao gom id

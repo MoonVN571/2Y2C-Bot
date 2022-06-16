@@ -7,12 +7,12 @@ module.exports = {
     delay: 5,
 
     execute(client, message, args) {
-        var format = api.calc(parseInt(process.uptime()));
+        console.log(process.uptime())
+        let format = api.calc(parseInt(process.uptime()));
 
-        var embed = new MessageEmbed()
-            .setDescription("Uptime hiện tại: " + format)
-            .setColor(0x000DFF);
-
-        message.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
+        message.reply({ embeds: [{
+            description: "**" + format + "**",
+            color: "BLUE"
+        }], allowedMentions: { repliedUser: false } });
     }
 }

@@ -1,6 +1,3 @@
-const ascii = require('ascii-table');
-let table = new ascii("Commands");
-table.setHeading("Name", "Status");
 const { readdirSync } = require('fs');
 
 module.exports = (client) => {
@@ -11,14 +8,10 @@ module.exports = (client) => {
             const pull = require(`../commands/${dir}/${file}`);
             
             if(pull.name) {
-                table.addRow(pull.name, "✅");
                 client.commands.set(pull.name, pull);
             } else {
-                table.addRow(pull, "❌ -> Requires cmd.name");
-                countinue;
+                console.log(pull, " -> Requires cmd.name");
             }
         });
     });
-
-    console.log(table.toString());
 }

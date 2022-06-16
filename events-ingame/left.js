@@ -1,51 +1,42 @@
-var { MessageEmbed } = require('discord.js');
-var Scriptdb = require('script.db');
-var fs = require('fs');
+const { MessageEmbed } = require('discord.js');
 const api = require('../utils');
+const { sendConnection } = require('../functions');
 
 module.exports = {
 	name: 'playerLeft',
 	once: false,
-	execute(bot, client, p) {
-        var username = p.username;
-        
-        let lastseen = new Scriptdb(`./data/seen/${username}.json`);
-        lastseen.set('seen', new Date().getTime());
-
-        fs.readFile("special-join.txt",  (err, data) => {
-            if (err) return console.log(err);
-
-            if(data.toString().split("\r\n").indexOf(username) > -1) {                
-                if(bot.dev) return;
-                var embed = new MessageEmbed()
-                                        .setDescription(api.removeFormat(username) + " đã thoát khỏi server.")
-                                        .setColor('0xb60000')
-
-                client.channels.cache.get("807506107840856064").send({embeds: [embed]});
-            }
-        });
-
-        if(bot.countPlayers <= Object.values(bot.players).map(p => p.username).length) return;
-
-        var embed = new MessageEmbed()
-                    .setDescription(api.removeFormat(username) + " đã thoát khỏi server.")
-                    .setColor(0xb60000);
-
-        if(bot.dev) client.channels.cache.get("882849908892254230").send({embeds: [embed]});
-        if(!bot.dev) client.channels.cache.get("882817156977410049").send({embeds: [embed]});
-
-        if(bot.dev) return;
-
-        client.guilds.cache.forEach((guild) => {
-            const data = new Scriptdb(`./data/guilds/setup-${guild.id}.json`);
-            const checkdata = data.get('connection');
     
-            if(checkdata == undefined || guild == undefined) return;
-            
-            if(bot.dev) return;
-            try {
-                client.channels.cache.get(checkdata).send({embeds: [embed]});
-            } catch(e) {}
-        });
+	async execute(bot, client, p) {
+        let username = p.username;
+        if(bot.countPlayers > Object.values(bot.players).map(p => p.username).length) {
+            var embed = new MessageEmbed()
+                .setDescription(api.removeFormat(username) + " đã thoát khỏi server.")
+                .setColor(0xb60000);
+
+            sendConnection({ embeds: [embed], dev: client.dev });
+        }
+        
+        let dataSeen = await seen.findOne({ username: username });
+        if(!dataSeen) await seen.create({ username: username, seen: Date.now() });
+        else {
+            dataSeen.seen = Date.now();
+            dataSeen.save();
+        }
+
+        checkOld();
+
+        async function checkOld() {
+            let svData = await server.findOne({})?.oldfag;
+            if(svData.indexOf(username) < 0) return;
+
+            let content = api.removeFormat(username) + " đã tham gia vào server.";
+            if(before) content = "Bot đã vào server và " + api.removeFormat(username) + " đang online.";
+
+            let embed = new MessageEmbed()
+                .setDescription(content)
+                .setColor(0xb60000);
+
+            client.channels.cache.get("807506107840856064").send({ embeds: [embed] });
+        }
     }
 }

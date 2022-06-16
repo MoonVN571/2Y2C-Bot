@@ -1,11 +1,9 @@
-
 const { GoalNear} = require('mineflayer-pathfinder').goals
 const { Movements } = require('mineflayer-pathfinder')
 
 module.exports = {
     name: "come",
     description: "Cho bot đi đến vị trí hiện tại của bạn",
-    aliases: [''],
     
     execute(bot, username, args) {
 		const target = bot.players[username] ? bot.players[username].entity : null

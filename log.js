@@ -1,12 +1,9 @@
 const api = require('./utils');
-const fs = require('fs');
 
 function logToFile(text) {
-    const logText = "[" + api.getTimestamp(Date.now()) + '] ' + text + '\r\n';
+    // const logText = "[" + api.getTimestamp(Date.now()) + '] ' + text;
 
-    fs.appendFile('./logs/' + api.getDate(Date.now()) + '.log', logText, 'utf8', function (error) {
-        if (error) console.log("[" + api.getTimestamp(Date.now()) + '] ' + error);
-    });
+    // console.log(logText);
 }
 
 module.exports = logToFile;

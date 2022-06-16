@@ -1,10 +1,8 @@
 const { createBot } = require('../index');
-var { MessageEmbed } = require('discord.js');
-var Database = require('simplest.db');
 const api = require('../utils');
 const log = require('../log');
-var e = require("../gotEvent");
-var event = new e();
+const e = require("../gotEvent");
+const event = new e();
 
 module.exports = {
     name: 'end',
@@ -17,7 +15,7 @@ module.exports = {
 
         log("Bot ended");
 
-        setTimeout(() => { createBot()}, 2 * 60 * 1000);
+        setTimeout(createBot, 2 * 60 * 1000);
 
         const data = new Database({path:'./data.json'});
 

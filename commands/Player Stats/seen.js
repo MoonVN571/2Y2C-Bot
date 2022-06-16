@@ -1,4 +1,4 @@
-const Scriptdb = require('script.db');
+const Database = require('simplest.db');
 const api = require("../../utils");
 const { MessageEmbed } = require('discord.js');
 module.exports = {
@@ -10,7 +10,7 @@ module.exports = {
     async execute(client, message, args) {
         if (!args[0]) return message.provideUser();
 
-        let ls = new Scriptdb(`./data/seen/${args[0]}.json`);
+        let ls = new database({path:`./data/seen/${args[0]}.json`});
         let seen = ls.get('seen')
 
         if (!seen) return message.userNotFound();

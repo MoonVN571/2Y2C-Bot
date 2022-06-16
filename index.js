@@ -15,54 +15,38 @@
  * Copyright © 2020 - 2021 Moon Bot
  */
 
-const { Client, Intents, Collection } = require("discord.js");
+const { Client, Intents, Collection, Message } = require("discord.js");
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES], retryLimit: 3 });
 
 const { readdirSync } = require('fs');
+const mongo = require('mongoose');
 
-var mineflayer = require('mineflayer');
-var tpsPlugin = require('mineflayer-tps')(mineflayer);
-var { pathfinder } = require('mineflayer-pathfinder');
+const mineflayer = require('mineflayer');
+const tpsPlugin = require('mineflayer-tps')(mineflayer);
+const { pathfinder } = require('mineflayer-pathfinder');
 
 const log = require('./log');
 const cfDir = require('./config.json');
 
-var devMode = cfDir.DEV_MODE;
-var prefix = cfDir.MAIN.DISCORD_PREFIX;
+let devMode = cfDir.DEV_MODE;
+let prefix = cfDir.MAIN.DISCORD_PREFIX;
 
 if (devMode) prefix = cfDir.DEV.DISCORD_PREFIX;
 
 client.dev = devMode;
 client.PREFIX = prefix;
 
+client.commands = new Collection();
+client.slashCommands = new Collection();
+
 require('dotenv').config();
 require('./web-panel');
-require('./handlers/event')(client);
 
-const config = {
-    DEF_COLOR: cfDir.COLORS.DISCORD.DEFAULT,
-    ERR_COLOR: cfDir.COLORS.DISCORD.ERROR,
-    PROCESS_COLOR: cfDir.COLORS.DISCORD.PROCESS,
-    AUTHOR: cfDir.DEVELOPERS,
-    TOPGG_TOKEN: process.env.TOPGG_TOKEN,
-    TOPGG_AUTH: process.env.TOPGG_AUTH
-}
+readdirSync('./handlers/').forEach(f => require('./handlers/' + f)(client));
 
-function sendError(desc, error) {
-    if(!error) return;
-    client.channels.cache.get("886796482538266715").send(desc + "\n\n" + error);
-}
-client.sendError = sendError;
-
-function sendLog(data) {
-    if(!data) return;
-    console.log(data);
-    client.channels.cache.get("886800209399664640").send(`\`\`\`${data}\`\`\``);
-}
-client.sendLog = sendLog;
-
-
-client.config = config;
+mongo.connect(process.env.MONGO_STRING).then(() => {
+    console.log("Connected to mongoose!");
+});
 
 client.on('ready', () => {
     setTimeout(createBot, 5 * 1000);
@@ -113,6 +97,9 @@ function createBot() {
 
     var countPlayers = 0;
     bot.countPlayers = countPlayers;
+
+    let sendable = true;
+    bot.sendable = sendable;
 
     // cmd  handler
     bot.commands = new Collection();
@@ -171,18 +158,18 @@ function createBot() {
             let member = msg.guild.members.cache.get(msg.author.id);
             let role = msg.guild.roles.cache.find(r => r.name == "bypass chat");
             if (!member.roles.cache.get(role.id)) {
-                if (msg.author.username.length + content.length > 88) return msg.reply("Rút ngắn tin nhắn của bạn lại để có thể gửi.");
+                if (msg.author.username.length + content.length > 90) return msg.reply({content:"Rút ngắn tin nhắn của bạn lại để có thể gửi.", allowedMentions: { repliedUser: false }});
 
-                let regex = /[a-z]|[A-Z]|[0-9]/i;
+                let regex = /[a-z]|[A-Z]|[0-9]| |/i;
 
-                if (!msg.author.username.match(regex)) return msg.reply("Tên bạn có ký tự đặc biệt. Hãy đặt biệt danh");
+                if (msg.member.nickname && !msg.author.username.match(regex)) return msg.reply({content:"Tên bạn có ký tự đặc biệt. Hãy đặt biệt danh", allowedMentions:{repliedUser: false}});
             }
 
             var str = msg.content.split('\n')[0];
             var chat = str.charAt(0).toUpperCase() + str.substr(1);
             var fixes = content.charAt(0).toLowerCase();
 
-            if (msg.content.includes("§") || !fixes) return msg.reply("Kí tự không hợp lệ.");
+            if (msg.content.includes("§") || !fixes) return msg.reply({contnet: "Kí tự không hợp lệ.", allowedMentions: { repliedUser: false}});
 
             if (!chat.endsWith(".")) chat = chat + ".";
 
@@ -193,7 +180,7 @@ function createBot() {
             bot.chat(`[${tag}]  ${chat}`);
 
             const send = client.emojis.cache.find(emoji => emoji.name === "1505_yes");
-            msg.react(send).catch();
+            msg.react(send).catch(() => {});
         }
     });
 }
@@ -203,24 +190,21 @@ client.on('messageCreate', msg => {
 
     setTimeout(() => {
         try {
-            if(!msg.channel.isText()) return;
             if (msg.channel.id == defaultChannel) {
-                if (delayCheck.has('inQueue')) return msg.reply("Bạn phải chờ vài giây trước khi tiếp tục chat.");
+                if (delayCheck.has('inQueue')) return msg.reply({content: "Bạn phải chờ vài giây trước khi tiếp tục chat.", allowedMentions: { repliedUser: false}}).catch(() => {});
 
                 delayCheck.add('inQueue');
                 setTimeout(() => delayCheck.clear(), 2 * 1000);
 
-                if (notRepeat.has(msg.content + " " + msg.author.id)) return msg.reply("Bạn không được lập lại tin nhắn.");
+                if (notRepeat.has(msg.content + " " + msg.author.id)) return msg.reply({content: "Bạn không được lập lại tin nhắn.", allowedMentions: { repliedUser: false }}).catch(() => {});
 
                 notRepeat.add(msg.content + " " + msg.author.id);
                 setTimeout(() => notRepeat.delete(msg.content + " " + msg.author.id), 5 * 60 * 1000);
             }
-            
         } catch(e) { console.log(e); }
     }, 2 * 1000);
 });
 
 module.exports.createBot = createBot;
 module.exports.client = client;
-
 client.login(process.env.TOKEN).catch(err => console.log(err));

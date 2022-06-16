@@ -17,9 +17,7 @@ function ageCalc(time) {
     var string = "vài giây";
     if (hours == 0 && minutes > 0) string = minutes + " phút";
     if (hours > 0 && minutes == 0) string = hours + " giờ";
-
     if (hours > 0 && minutes > 0) string = hours + " giờ " + minutes + " phút";
-    if (hours > 0 && minutes == 0) string = hours + " giờ";
 
     if (days > 0 && months > 0) string = months + " tháng " + days + " ngày ";
     if (days > 0 && months == 0) string = days + " ngày " + string;
@@ -43,7 +41,17 @@ function calc(temp) {
     minutes = parseInt(((temp - days * 86400 - hours * 3600)) / 60)
     seconds = parseInt(temp % 60)
 
-    return days + " ngày " + hours + " giờ " + minutes + " phút " + seconds + " giây";
+    let string = "";
+    if(seconds > 0) string = seconds + "S";
+    if (hours == 0 && minutes > 0) string = minutes + "M";
+    if (hours > 0 && minutes == 0) string = hours + "H";
+    if (hours > 0 && minutes > 0) string = hours + "H " + minutes + "M";
+    if (minutes > 0 && seconds > 0) string = minutes + "M " + seconds + "S";
+    if (hours > 0 && seconds > 0) string = minutes + "M " + seconds + "S";
+    
+    if(days > 0) string = days + "D " + string;
+
+    return string;
 }
 
 /**
@@ -62,6 +70,8 @@ function uptimeCalc() {
         minutes = parseInt(((temp - day * 86400 - hours * 3600)) / 60)
         seconds = parseInt(temp % 60)
     }
+
+    if(seconds < 0) seconds = 0;
 
     return hours + "h " + minutes + "m " + seconds + "s";
 }
@@ -96,13 +106,10 @@ function calcTime() {
     var hours = d.split("h")[0]
     var minutes = d.split("h ")[1].split("m")[0];
 
-    var formatMinutes = "";
-    if (minutes > 0) formatMinutes = minutes + " phút";
-
-    var format = "";
-    if (hours > 0) format = hours + " giờ " + formatMinutes;
-
-    if (minutes == 0 && hours == 0) format = "vài giây";
+    let format = "";
+    if(hours == 0 && minutes > 0) format = minutes + " phút";
+    if(hours > 0 && minutes == 0) format = hours + " giờ";
+    if(hours > 0 && minutes > 0) format = hours + " giờ " + minutes + " phút";
     return format;
 }
 
@@ -119,27 +126,12 @@ function playtimeCalc(time) {
     hour = parseInt(((temp - day * 86400) / 3600))
     minutes = parseInt(((temp - day * 86400 - hour * 3600)) / 60)
     var string;
-    if (day == 0) {
-        if (minutes > 0 && hour > 0) {
-            string = hour + " giờ " + minutes + " phút";
-        }
-        if (minutes == 0 && hour > 0) {
-            string = hour + " giờ";
-        }
-        if (minutes > 0 && hour == 0) {
-            string = minutes + " phút";
-        }
-    } else {
-        if (minutes > 0 && hour > 0) {
-            string = day + " ngày " + hour + " giờ " + minutes + " phút";
-        }
-        if (minutes == 0 && hour > 0) {
-            string = day + " ngày " + hour + " giờ";
-        }
-        if (minutes > 0 && hour == 0) {
-            string = day + " ngày " + minutes + " phút";
-        }
-    }
+
+    if (hours == 0 && minutes > 0) string = minutes + " phút";
+    if (hours > 0 && minutes == 0) string = hours + " giờ";
+    if (hours > 0 && minutes > 0) string = hours + " giờ " + minutes + " phút";
+
+    if (day > 0) string = days + " ngày " + string;
     return string;
 }
 

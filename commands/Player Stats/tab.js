@@ -1,6 +1,6 @@
 const Canvas = require('canvas')
 const { MessageAttachment } = require('discord.js')
-
+const Database = require('simplest.db');
 module.exports = {
     name: "tab",
     description: "Xem tab của server",
@@ -29,9 +29,7 @@ module.exports = {
         context.globalAlpha = 0.8;
         // await context.drawImage(playerFrame, 160, 190+num, 150, 25 );
 
-        const Scriptdb = require('script.db');
-
-        const data = new Scriptdb('./data.json');
+        const data = new Database({path:'./data.json'});
 
         var arr = data.get("players");
 

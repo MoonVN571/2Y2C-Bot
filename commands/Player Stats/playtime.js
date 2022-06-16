@@ -1,4 +1,4 @@
-const Scriptdb = require('script.db');
+const Database = require('simplest.db');
 const api = require("../../utils");
 const { MessageEmbed } = require('discord.js');
 module.exports = {
@@ -10,7 +10,7 @@ module.exports = {
     async execute(client, message, args) {
         if (!args[0]) return message.provideUser();
 
-        let pt = new Scriptdb(`./data/playtime/${args[0]}.json`);
+        let pt = new Database({path:`./data/playtime/${args[0]}.json`});
         let playtime = pt.get('time')
 
         if (playtime === undefined) return message.userNotFound();

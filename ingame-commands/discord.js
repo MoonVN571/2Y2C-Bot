@@ -3,6 +3,6 @@ module.exports = {
     description: "Lấy link discord server bot",
     
     execute(bot, username, args) {
-        bot.whisper(username, `> Discord : http://discord.gg/yrNvvkqp6w`)
+        bot.whisper(username, `> Discord : https://discord.gg/BMJ9T8Dqr4`);
     }
 }
