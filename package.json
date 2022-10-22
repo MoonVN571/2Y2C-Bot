@@ -18,7 +18,7 @@
     "os": "^0.1.1",
     "request": "^2.88.2",
     "script.db": "^3.0.0",
-    "simplest.db": "^1.0.1-2",
+    "simplest.db": "^2.0.0",
     "topgg-autoposter": "^2.0.0"
   },
   "devDependencies": {
