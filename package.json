@@ -10,7 +10,7 @@
     "common-tags": "^1.8.0",
     "covid19-stats": "^1.1.1",
     "discord.js": "^13.1.0",
-    "dotenv": "^10.0.0",
+    "dotenv": "^16.0.3",
     "express": "^4.17.1",
     "mineflayer": "^3.11.0",
     "mineflayer-pathfinder": "^1.6.1",
